@@ -1,0 +1,4 @@
+ai-edge-litert==2.3.0
+litert-lm-builder==0.18.0
+flatbuffers==25.12.19
+numpy==2.5.4
