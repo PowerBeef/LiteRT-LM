@@ -1,5 +1,5 @@
 """Summarize the results in results/ (no dependencies)."""
-import glob, json, os
+import glob, json, os, statistics
 
 here = os.path.dirname(os.path.abspath(__file__))
 load = lambda f: [json.loads(l) for l in open(f)]
@@ -51,7 +51,7 @@ def medians(rows_by_id, key):
     groups = {}
     for r in rows_by_id.values():
         groups.setdefault(r["prefill"], []).append(r[key])
-    return {p: sorted(v)[len(v) // 2] for p, v in groups.items()}
+    return {p: statistics.median(v) for p, v in groups.items()}
 
 speed = {name: {} for name in ("split FP16", "original FP16", "original FP32")}
 for (cases, model, config), rows in arms.items():
@@ -112,8 +112,8 @@ if os.path.exists(p12_path):
         cells = []
         for p in sorted(groups):
             g = groups[p]
-            pre = sorted(r["prefillTPS"] for r in g)[len(g) // 2]
-            dec = sorted(r["decodeTPS"] for r in g)[len(g) // 2]
+            pre = statistics.median(r["prefillTPS"] for r in g)
+            dec = statistics.median(r["decodeTPS"] for r in g)
             cells.append(f"{p}: {sum(r['exact'] for r in g)}/{len(g)} {pre:.0f}/{dec:.1f}")
         print(f"  {arm:<18} " + "  ".join(cells))
     text = lambda arm: {(r["sentences"], r["seed"]): r["output"] for r in p12 if r["arm"] == arm}
