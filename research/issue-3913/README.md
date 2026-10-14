@@ -74,6 +74,11 @@ At the same lengths the original FP16 runs at the same speed as the split
 model (8K: 378 / 16.0 tok/s; 30K: 301 / 11.7). The patch costs nothing; it
 removes the errors.
 
+The patched file is published at
+[PowerBeef02/gemma-4-E4B-it-litert-lm-fp16-rope](https://huggingface.co/PowerBeef02/gemma-4-E4B-it-litert-lm-fp16-rope)
+(commit `13d5aa4c`, sha256 `4a691f036fb06f7d4761da0026ad69a8b16cd7d9bc3965de9c2765edec7cb15f`).
+`patch_rope.py --split` regenerates it byte for byte from the original.
+
 Two findings on the WebGPU delegate shaped the design:
 - **FULLY_CONNECTED with float32 weights** computed wrong results, even with FP32 activations.
 - **REDUCE_MAX over an inner axis**, or over a 3-D tensor, effectively returned
