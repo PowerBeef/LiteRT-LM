@@ -2,3 +2,6 @@
 /bazel-*
 /js/packages/core/wasm/
 node_modules/
+
+# Agello: the locally built CLiteRTLM.xcframework (agello/build-xcframework.sh).
+/dist/

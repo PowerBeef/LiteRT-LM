@@ -32,29 +32,16 @@ let package = Package(
     ),
   ],
   targets: [
-    // The Prebuilt Binary Target for iOS (Official Stable Release)
-    // For nightly builds or pinning to specific nightly dates, switch to the 'nightly' branch or see:
-    // https://github.com/google-ai-edge/LiteRT-LM/tree/main/samples/ios_and_mac#1-add-dependency
+    // Agello: one XCFramework with iPhone and Mac slices, built from this branch with LiteRT's
+    // Metal accelerator linked statically (agello/build-xcframework.sh writes dist/).
     .binaryTarget(
       name: "CLiteRTLM",
-      url:
-        "https://storage.googleapis.com/litert/litert_lm/swift/nightly/CLiteRTLM_0.19.0-20261013.xcframework.zip",
-      checksum: "06c9fda145bc4ba52623b967827cadf84d0e82cb141d156761e04cfc3232d65a"
-    ),
-    // The Prebuilt Binary Target for Mac
-    .binaryTarget(
-      name: "CLiteRTLM_mac",
-      url:
-        "https://storage.googleapis.com/litert/litert_lm/swift/nightly/CLiteRTLM_mac_0.19.0-20261013.xcframework.zip",
-      checksum: "da3644b9c849ceea91579359357c454a79c5df8427acfd2001d9d7b99773cdc6"
+      path: "dist/CLiteRTLM.xcframework"
     ),
     // The Swift Wrapper Target
     .target(
       name: "LiteRTLM",
-      dependencies: [
-        .target(name: "CLiteRTLM", condition: .when(platforms: [.iOS])),
-        .target(name: "CLiteRTLM_mac", condition: .when(platforms: [.macOS])),
-      ],
+      dependencies: ["CLiteRTLM"],
       path: "swift",
       exclude: [
         "apple_fm",

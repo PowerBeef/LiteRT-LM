@@ -554,8 +554,10 @@ build:hermetic_linux --repo_env=SYSROOT_DIST=linux_glibc_2_31
 # statically (//runtime/executor:default_static_gpu_accelerator).
 # Without Google's closed constraint provider.
 build:agello --define=LITERT_LM_FST_CONSTRAINTS_DISABLED=1
-# Objective-C++ gets the same C++ standard as C++ (-std=c++20 above): absl's status API differs
-# between C++17 and C++20.
+# C++20 everywhere, Objective-C++ included (build:macos sets it for C++ only, and the
+# XCFramework's iOS slice doesn't use build:macos): absl's status API differs between C++17 and
+# C++20, so mixing them breaks the link.
+build:agello --cxxopt=-std=c++20 --host_cxxopt=-std=c++20
 build:agello --objccopt=-std=gnu++20
 # A missing symbol is a link error, not a null pointer at run time (build:macos links with
 # -undefined dynamic_lookup).
