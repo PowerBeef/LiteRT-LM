@@ -716,7 +716,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
         TensorBuffer* prefill_input_embeddings_buffer =
             &(prefill_input_buffers[signatures_.input_embeddings.value()]);
         if (embedding_lookup_ != nullptr) {
-          AGELLO_SPAN(kEmbeddingLookup, processed_input_tokens.size());
+          AGELLO_SPAN(kEmbeddingLookupPrefill, processed_input_tokens.size());
           AGELLO_COUNT(kEmbeddingLookups, processed_input_tokens.size());
           ABSL_RETURN_IF_ERROR(embedding_lookup_->LookupPrefill(
               processed_input_tokens, prefill_input_embeddings_buffer,
@@ -742,7 +742,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
               &(prefill_input_buffers[signatures_.input_per_layer_embeddings
                                           .value()]);
           if (per_layer_embedding_lookup_ != nullptr) {
-            AGELLO_SPAN(kEmbeddingLookup, processed_input_tokens.size());
+            AGELLO_SPAN(kEmbeddingLookupPrefill, processed_input_tokens.size());
             AGELLO_COUNT(kEmbeddingLookups, processed_input_tokens.size());
             ABSL_RETURN_IF_ERROR(per_layer_embedding_lookup_->LookupPrefill(
                 processed_input_tokens,
@@ -767,7 +767,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
       }
       if (signatures_.input_attn_mask.has_value() &&
           !skip_cpu_global_causal_mask) {
-        AGELLO_SPAN(kMaskFill, prefill_length + input_idx);
+        AGELLO_SPAN(kMaskFillPrefill, prefill_length + input_idx);
         AGELLO_COUNT(kMaskFills);
         AGELLO_COUNT(kTokenHistoryCopies);
         const AttentionMaskParams& attn_params = prefill_attn_params;
@@ -793,7 +793,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
         }
       }
       if (gpu_optimized_single_buffer_cache_) {
-        AGELLO_SPAN(kParamFill);
+        AGELLO_SPAN(kParamFillPrefill);
         LITERT_RETURN_IF_ERROR(signatures_.input_int32_param.has_value());
         ABSL_RETURN_IF_ERROR(FillSingleBufferCacheParamTensor(
             prefill_input_buffers[signatures_.input_int32_param.value()],
@@ -809,6 +809,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
         // Look up the embeddings for the last token so they can be used in the
         // next prefill or decode. This has to be done now in the case of
         // multi-modal prefill so the embeddings are used in the correct order.
+        AGELLO_SPAN(kEmbeddingLookupPrefill, 1);
         ABSL_RETURN_IF_ERROR(embedding_lookup_->LookupPrefill(
             last_input_token->id(), last_input_token->mutable_embedding()));
         if (use_per_layer_embedding) {

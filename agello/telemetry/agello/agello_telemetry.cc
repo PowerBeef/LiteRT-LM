@@ -36,6 +36,7 @@
 #include <os/log.h>
 #include <os/signpost.h>
 #include <pthread.h>
+#include <sys/resource.h>
 #if TARGET_OS_IPHONE
 #include <os/proc.h>
 #endif
@@ -178,6 +179,15 @@ AnomalyRecord anomalies[kAnomalyRing];
 int64_t anomaly_total = 0;
 
 std::atomic<int> current_run{kGpuOther};
+
+double CpuMs(bool user) {
+  rusage usage = {};
+  getrusage(RUSAGE_SELF, &usage);
+  const timeval& t = user ? usage.ru_utime : usage.ru_stime;
+  return t.tv_sec * 1e3 + t.tv_usec / 1e3;
+}
+double cpu_base_user = 0;
+double cpu_base_system = 0;
 
 #if defined(__APPLE__)
 os_log_t SignpostLog() {
@@ -440,11 +450,16 @@ std::string SnapshotJson() {
     out += "}";
   }
 #endif
+  // Process CPU time since the last reset: busy-waiting and host work show up here.
+  Append(out, ",\"cpu\":{\"user_ms\":%.1f,\"system_ms\":%.1f}", CpuMs(true) - cpu_base_user,
+         CpuMs(false) - cpu_base_system);
   out += "}";
   return out;
 }
 
 void Reset() {
+  cpu_base_user = CpuMs(true);
+  cpu_base_system = CpuMs(false);
   for (auto& counter : counters) counter.store(0, std::memory_order_relaxed);
   for (auto& stats : span_stats) {
     stats.count.store(0, std::memory_order_relaxed);

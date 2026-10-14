@@ -713,6 +713,7 @@ cc_library(
     srcs = ["llm_executor_settings_utils.cc"],
     hdrs = ["llm_executor_settings_utils.h"],
     deps = [
+        "@agello_telemetry//:telemetry",
         ":executor_settings_base",
         ":litert_compiled_model_executor_utils",
         ":llm_executor_settings",

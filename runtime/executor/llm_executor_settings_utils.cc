@@ -37,6 +37,7 @@
 #include "runtime/executor/llm_executor_settings.h"
 #include "runtime/util/file_util.h"
 #include "runtime/util/status_macros.h"
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 
 namespace litert::lm {
 
@@ -222,7 +223,16 @@ absl::StatusOr<litert::Options> CreateCompilationOptions(
         gpu_compilation_options.WaitForWeightsConversionComplete(
             advanced_settings
                 .wait_for_weights_conversion_complete_in_benchmark);
+      } else {
+        // Agello: the Metal delegate's default wait busy-spins a CPU core for
+        // the whole of every GPU wait (nearly all of each decode step); sleep
+        // until the command buffer completes instead.
+        gpu_compilation_options.SetSyncExecutionModeWaitType(
+            GpuOptions::SyncExecutionModeWaitType::kPassive);
       }
+      ::agello::telemetry::SetFact(
+          "gpu_wait_requested",
+          advanced_settings.is_benchmark ? "active (benchmark mode)" : "passive");
       if (advanced_settings.gpu_context_low_priority.has_value() &&
           advanced_settings.gpu_context_low_priority.value()) {
         gpu_compilation_options.SetPriority(GpuOptions::Priority::kLow);

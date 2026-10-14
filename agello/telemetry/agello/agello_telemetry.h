@@ -98,6 +98,9 @@ enum Counter : int {
   X(kEmbeddingLookup, "embedding_lookup")             \
   X(kMaskFill, "mask_fill")                           \
   X(kParamFill, "param_fill")                         \
+  X(kEmbeddingLookupPrefill, "prefill.embedding_lookup") \
+  X(kMaskFillPrefill, "prefill.mask_fill")            \
+  X(kParamFillPrefill, "prefill.param_fill")          \
   X(kBind, "bind")                                    \
   X(kRunPrefill, "run.prefill")                       \
   X(kRunDecode, "run.decode")                         \
