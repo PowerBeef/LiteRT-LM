@@ -67,6 +67,7 @@
 #include "runtime/util/executor_data_util.h"
 #include "runtime/util/status_macros.h"
 #include "runtime/util/tensor_buffer_util.h"
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 
 #if defined(LITERT_LM_DEBUGGER_ENABLED)
 #include "runtime/util/runtime_debugger.h"
@@ -386,6 +387,17 @@ absl::Status ThreadedExecutionManager::QueueTask(TaskId task_id) {
   }
 
   auto task = std::move(task_lookup_.at(task_id).task);
+  AGELLO_COUNT(kTasksScheduled);
+  if (::agello::telemetry::Enabled(::agello::telemetry::kSpans)) {
+    // Time spent queued behind other sessions' work on the single execution thread.
+    task = [task = std::move(task),
+            queued = ::agello::telemetry::NowTicks()]() mutable {
+      ::agello::telemetry::RecordDuration(::agello::telemetry::kTaskQueueWait,
+                                          queued,
+                                          ::agello::telemetry::NowTicks());
+      task();
+    };
+  }
 
   if (execution_thread_pool_ != nullptr) {
     ABSL_RETURN_IF_ERROR(execution_thread_pool_->Schedule(std::move(task)));
@@ -536,8 +548,14 @@ absl::Status ThreadedExecutionManager::FinishTask(
   if (callback_thread_pool_ != nullptr) {
     // TODO b/476205457 - Consider to use a asynchronous approach to handle the
     // callback, and remove this WaitUntilDone.
-    ABSL_RETURN_IF_ERROR(
-        callback_thread_pool_->WaitUntilDone(absl::Seconds(10)));
+    AGELLO_SPAN(kTaskCallback, task_id);
+    const uint64_t wait_start = ::agello::telemetry::NowTicks();
+    const absl::Status wait_status =
+        callback_thread_pool_->WaitUntilDone(absl::Seconds(10));
+    ::agello::telemetry::CheckSlowWait(wait_start, task_id,
+                                       "final callback blocked the execution thread",
+                                       /*warn_ms=*/1000);
+    ABSL_RETURN_IF_ERROR(wait_status);
   }
 
   return absl::OkStatus();
@@ -799,10 +817,12 @@ absl::Status ThreadedExecutionManager::WaitUntilDone(TaskId task_id,
     return task_lookup_.contains(task_id) &&
            IsTaskEndState(task_lookup_.at(task_id).task_state);
   };
+  const uint64_t wait_start = ::agello::telemetry::NowTicks();
   absl::MutexLock lock(session_and_task_lookup_mutex_);
-  return session_and_task_lookup_mutex_.AwaitWithTimeout(
-             absl::Condition(&task_done), timeout)
-             ? absl::OkStatus()
+  const bool done = session_and_task_lookup_mutex_.AwaitWithTimeout(
+      absl::Condition(&task_done), timeout);
+  ::agello::telemetry::CheckSlowWait(wait_start, task_id, "task wait");
+  return done ? absl::OkStatus()
              : absl::DeadlineExceededError(absl::StrCat(
                    "Task ", task_id, " did not complete within the timeout of ",
                    absl::FormatDuration(timeout), "."));
@@ -815,10 +835,12 @@ absl::Status ThreadedExecutionManager::WaitUntilSessionDone(
     return session_lookup_.contains(session_id) &&
            session_lookup_.at(session_id)->active_tasks.empty();
   };
+  const uint64_t wait_start = ::agello::telemetry::NowTicks();
   absl::MutexLock lock(session_and_task_lookup_mutex_);
-  return session_and_task_lookup_mutex_.AwaitWithTimeout(
-             absl::Condition(&session_done), timeout)
-             ? absl::OkStatus()
+  const bool done = session_and_task_lookup_mutex_.AwaitWithTimeout(
+      absl::Condition(&session_done), timeout);
+  ::agello::telemetry::CheckSlowWait(wait_start, session_id, "session wait");
+  return done ? absl::OkStatus()
              : absl::DeadlineExceededError(
                    absl::StrCat("Session ", session_id,
                                 " did not complete within the timeout of ",
@@ -1062,8 +1084,16 @@ absl::Status ThreadedExecutionManager::AddDecodeTask(
             CopyToTensorBuffer<int>(decoded_ids, {num_output_candidates, 1});
         if (!decoded_ids_buffer_or.HasValue()) {
           llm_executor.value().reset();
-          callback(
-              absl::InternalError(decoded_ids_buffer_or.Error().Message()));
+          // Agello: finish the task, not just call back; otherwise it stays in
+          // Processing and session waits block until their 10-minute timeout.
+          ::agello::telemetry::ReportAnomaly(
+              ::agello::telemetry::kTaskNeverFinished,
+              ::agello::telemetry::kError, task_id, 0,
+              "decode setup failed (sampler ids buffer)");
+          FinishTaskAndLogErrors(
+              task_id,
+              absl::InternalError(decoded_ids_buffer_or.Error().Message()),
+              std::move(callback));
           return;
         }
         decoded_ids_buffer = std::move(decoded_ids_buffer_or.Value());
