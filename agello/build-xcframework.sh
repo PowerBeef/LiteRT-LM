@@ -10,10 +10,19 @@ bazelisk build --config=agello -c opt "$@" //agello:CLiteRTLM
 rm -rf dist/CLiteRTLM.xcframework
 mkdir -p dist
 unzip -q bazel-bin/agello/CLiteRTLM.xcframework.zip -d dist
+# A repository overridden in .bazelrc.user (a local checkout) reports that checkout's commit.
+source_of() {
+  dir="$(sed -n "s|^build \"*--override_repository=$1=\([^\"]*\)\"*\$|\1|p" .bazelrc.user 2>/dev/null | tail -n 1)"
+  if [ -n "$dir" ]; then
+    echo "$(git -C "$dir" rev-parse HEAD)$(git -C "$dir" diff --quiet HEAD || echo ' (modified)') (local: $dir)"
+  else
+    sed -n "s/^$2 = \"\(.*\)\"/\1/p" WORKSPACE
+  fi
+}
 {
   echo "LiteRT-LM: $(git rev-parse HEAD)$(git diff --quiet HEAD || echo ' (modified)')"
-  echo "LiteRT: $(sed -n 's/^LITERT_REF = "\(.*\)"/\1/p' WORKSPACE)"
-  echo "ML Drift: $(sed -n 's/^ML_DRIFT_COMMIT = "\(.*\)"/\1/p' WORKSPACE)"
+  echo "LiteRT: $(source_of litert AGELLO_LITERT_COMMIT)"
+  echo "ML Drift: $(source_of ml_drift ML_DRIFT_COMMIT)"
   echo "Bazel: $(bazelisk version 2>/dev/null | sed -n 's/^Build label: //p')"
   echo "Xcode: $(xcodebuild -version | tr '\n' ' ')"
   echo "Flags: --config=agello -c opt $*"

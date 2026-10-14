@@ -47,6 +47,9 @@ enum Level : int { kOff = 0, kCounters = 1, kSpans = 2, kTrace = 3, kDeep = 4 };
   X(kHostLocks, "host_locks")                               \
   X(kHostLockCopies, "host_lock_copies")                    \
   X(kHostLockCopyBytes, "host_lock_copy_bytes")             \
+  X(kHostUnlockCopies, "host_unlock_copies")                \
+  X(kHostUnlockCopyBytes, "host_unlock_copy_bytes")         \
+  X(kHostShadowAllocs, "host_shadow_allocs")                \
   X(kCommandBuffers, "command_buffers")                     \
   X(kGpuWaits, "gpu_waits")                                 \
   X(kMaskFills, "mask_fills")                               \
@@ -63,6 +66,12 @@ enum Level : int { kOff = 0, kCounters = 1, kSpans = 2, kTrace = 3, kDeep = 4 };
   X(kProgramCacheMisses, "program_cache_misses")           \
   X(kWeightCacheHits, "weight_cache_hits")                 \
   X(kWeightCacheMisses, "weight_cache_misses")             \
+  X(kCompiledModels, "compiled_models")                     \
+  X(kGraphNodes, "graph_nodes")                             \
+  X(kGraphNodesGpu, "graph_nodes_gpu")                      \
+  X(kGraphNodesCpuDelegate, "graph_nodes_cpu_delegate")     \
+  X(kGraphNodesUndelegated, "graph_nodes_undelegated")      \
+  X(kGpuPartitions, "gpu_partitions")                       \
   X(kDecodeAllocations, "decode_allocations")              \
   X(kRunOptionParses, "run_option_parses")                 \
   X(kTasksScheduled, "tasks_scheduled")                    \
@@ -115,6 +124,8 @@ enum Counter : int {
   X(kMtpDraft, "mtp.draft")                           \
   X(kMtpVerify, "mtp.verify")                         \
   X(kKvClone, "kv_clone")                             \
+  X(kHostLockRead, "host.lock_read")                  \
+  X(kHostUnlockWrite, "host.unlock_write")            \
   X(kContextSwitch, "context_switch")                 \
   X(kSessionWait, "session_wait")                     \
   X(kEngineInit, "engine.init")                       \
@@ -157,7 +168,8 @@ inline constexpr int kMaxSpans = kStaticSpanCount + 512;
   X(kStopSequenceFailed, "stop_sequence_failed")                  \
   X(kCommandBufferError, "command_buffer_error")                  \
   X(kKvFull, "kv_full")                                           \
-  X(kNumerics, "numerics")
+  X(kNumerics, "numerics")                                        \
+  X(kPartialDelegation, "partial_gpu_delegation")
 
 enum Anomaly : int {
 #define AGELLO_TELEMETRY_ENUM(id, name) id,
