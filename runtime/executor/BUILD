@@ -315,6 +315,7 @@ cc_library(
     srcs = ["llm_litert_compiled_model_executor.cc"],
     hdrs = ["llm_litert_compiled_model_executor.h"],
     deps = [
+        "@agello_telemetry//:telemetry",
         ":common_utils",
         ":executor_settings_base",
         ":executor_stats",
@@ -1287,6 +1288,7 @@ cc_library(
     srcs = ["llm_litert_mtp_drafter.cc"],
     hdrs = ["llm_litert_mtp_drafter.h"],
     deps = [
+        "@agello_telemetry//:telemetry",
         ":executor_settings_base",
         ":litert_compiled_model_executor_utils",
         ":llm_executor_settings",

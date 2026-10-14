@@ -41,6 +41,7 @@
 #include "runtime/executor/executor_settings_base.h"
 #include "runtime/proto/sampler_params.pb.h"
 #include "runtime/util/status_macros.h"  // IWYU pragma: keep
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 
 namespace litert::lm {
 namespace {
@@ -766,8 +767,18 @@ absl::StatusOr<std::unique_ptr<Sampler>> CreateSampler(
       if (sampler_or.ok() ||
           sampler_or.status().code() != absl::StatusCode::kUnavailable) {
         // For a normal failure or success, return the result.
+        if (sampler_or.ok()) {
+          AGELLO_COUNT(kSamplerGpu);
+          ::agello::telemetry::SetFact("sampler", "gpu");
+        }
         return sampler_or;
       }
+      AGELLO_COUNT(kSamplerCpu);
+      ::agello::telemetry::SetFact("sampler", "cpu (GPU sampler unavailable)");
+      ::agello::telemetry::ReportAnomaly(
+          ::agello::telemetry::kSamplerFallback, ::agello::telemetry::kWarning,
+          vocab_size.value(), batch_size,
+          "GPU sampler unavailable: sampling on the CPU (full logits readback per step)");
       // For a failure due to GPU sampler unavailable, fall back to CPU.
       ABSL_LOG(WARNING)
           << "GPU sampler unavailable. Falling back to CPU sampling. To use "
@@ -780,6 +791,7 @@ absl::StatusOr<std::unique_ptr<Sampler>> CreateSampler(
       ABSL_FALLTHROUGH_INTENDED;
     }
     case Backend::CPU:
+      if (backend == Backend::CPU) AGELLO_COUNT(kSamplerCpu);
       return CreateCpuSampler(batch_size, sequence_size_value, sampler_params);
     default:
       return absl::InvalidArgumentError(

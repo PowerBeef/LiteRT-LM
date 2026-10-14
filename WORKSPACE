@@ -492,6 +492,13 @@ http_archive(
     url = "https://github.com/google-ai-edge/LiteRT/archive/" + LITERT_REF + ".tar.gz",
 )
 
+# Agello: telemetry probes (agello/telemetry), a repository of its own so LiteRT and ML Drift can
+# depend on it too.
+local_repository(
+    name = "agello_telemetry",
+    path = "agello/telemetry",
+)
+
 # Agello: ML Drift, the GPU engine behind LiteRT's Metal accelerator, so the
 # accelerator can be linked statically (//runtime/executor:default_static_gpu_accelerator).
 # Bazel doesn't read @litert's WORKSPACE, so this repeats its declaration;

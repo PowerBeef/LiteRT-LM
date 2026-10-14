@@ -29,6 +29,7 @@ apple_xcframework(
         "//c:error_reporter.h",
         "//c:experimental.h",
         "//c:model_info.h",
+        "//c:telemetry.h",
     ],
     deps = ["//swift:CLiteRTLM_objc"],
 )

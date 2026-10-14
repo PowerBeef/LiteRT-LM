@@ -46,6 +46,8 @@
 #include "runtime/util/status_macros.h"  // IWYU pragma: keep
 #include "support/tokenizer/tokenizer.h"
 
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
+
 #if defined(LITERT_LM_DEBUGGER_ENABLED)
 #include "runtime/util/runtime_debugger.h"
 #endif
@@ -124,10 +126,13 @@ SessionAdvanced::RunPrefillAsync(
     } else {
       content_type = ContentType::kNA;
     }
+    ::agello::telemetry::ScopedSpan template_span(::agello::telemetry::kTemplate);
     ABSL_ASSIGN_OR_RETURN(std::vector<InputData> templated_contents,
                           ApplyPromptTemplates(contents, content_type,
                                                session_info_->session_config,
                                                *tokenizer_, is_first_turn));
+    template_span.End();
+    AGELLO_SPAN(kTokenize);
     ABSL_ASSIGN_OR_RETURN(
         preprocessed_contents,
         PreprocessContents(templated_contents, session_info_->session_config,
@@ -477,7 +482,13 @@ SessionAdvanced::CloneAsyncLocked(
 }
 
 SessionAdvanced::~SessionAdvanced() {
+  // Agello: a session destroyed mid-generation waits here for its tasks (up to
+  // 10 minutes) without cancelling them.
+  const uint64_t wait_start = ::agello::telemetry::NowTicks();
   WaitUntilDone().IgnoreError();
+  ::agello::telemetry::CheckSlowWait(wait_start, session_id_,
+                                     "session destroyed while its tasks ran",
+                                     /*warn_ms=*/1000);
   auto execution_manager_lock = execution_manager_.lock();
   if (execution_manager_lock == nullptr) {
     ABSL_LOG(ERROR) << "Execution manager is not available.";

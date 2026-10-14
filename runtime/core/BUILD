@@ -273,6 +273,7 @@ cc_library(
         "//conditions:default": [],
     }),
     deps = [
+        "@agello_telemetry//:telemetry",
         ":session_utils",
         "@com_google_absl//absl/base:core_headers",
         "@com_google_absl//absl/base:nullability",
@@ -477,6 +478,7 @@ cc_library(
     srcs = ["tasks.cc"],
     hdrs = ["tasks.h"],
     deps = [
+        "@agello_telemetry//:telemetry",
         "@com_google_absl//absl/base:nullability",
         "@com_google_absl//absl/functional:any_invocable",
         "@com_google_absl//absl/log:absl_log",

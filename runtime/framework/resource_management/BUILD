@@ -60,6 +60,7 @@ cc_library(
         "//conditions:default": [],
     }),
     deps = [
+        "@agello_telemetry//:telemetry",
         ":execution_manager",
         ":resource_manager",
         "@com_google_absl//absl/base:core_headers",
@@ -207,6 +208,7 @@ cc_test(
 )
 
 RESOURCE_MANAGER_DEPS = [
+    "@agello_telemetry//:telemetry",
     "@com_google_absl//absl/base:core_headers",
     "@com_google_absl//absl/base:nullability",
     "@com_google_absl//absl/container:flat_hash_map",

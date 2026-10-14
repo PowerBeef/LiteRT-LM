@@ -1,0 +1,3 @@
+# Agello telemetry: its own repository (local_repository in LiteRT-LM's WORKSPACE) so LiteRT and
+# ML Drift can depend on it as @agello_telemetry.
+workspace(name = "agello_telemetry")

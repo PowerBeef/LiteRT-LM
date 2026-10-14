@@ -63,6 +63,7 @@
 #include "runtime/executor/state_interface.h"
 #include "runtime/util/convert_tensor_buffer.h"
 #include "runtime/util/status_macros.h"
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 
 namespace litert::lm {
 
@@ -530,9 +531,14 @@ LlmLiteRtMtpDrafter::RunDraftingLoop(
     }
 
     bool async = true;
-    LITERT_RETURN_IF_ERROR(mtp_drafter_model_.RunAsync(
-        drafter_signature_.Key(), active_drafter_input_buffers_,
-        active_drafter_output_buffers_, async));
+    {
+      AGELLO_SPAN(kRunDrafter);
+      AGELLO_COUNT(kRunsDrafter);
+      ::agello::telemetry::SetCurrentRun(::agello::telemetry::kGpuDrafter);
+      LITERT_RETURN_IF_ERROR(mtp_drafter_model_.RunAsync(
+          drafter_signature_.Key(), active_drafter_input_buffers_,
+          active_drafter_output_buffers_, async));
+    }
 
     if (constraint != nullptr && current_draft_state != nullptr) {
       ABSL_ASSIGN_OR_RETURN(auto mask,
@@ -658,9 +664,14 @@ absl::StatusOr<std::vector<int>> LlmLiteRtMtpDrafter::RunVerification(
     const std::vector<std::unique_ptr<Constraint::State>>&
         draft_constraint_states) {
   bool async = true;
-  LITERT_RETURN_IF_ERROR(base_model_.RunAsync(
-      verify_signature_.Key(), active_verifier_input_buffers_,
-      active_verifier_output_buffers_, async));
+  {
+    AGELLO_SPAN(kRunVerify);
+    AGELLO_COUNT(kRunsVerify);
+    ::agello::telemetry::SetCurrentRun(::agello::telemetry::kGpuVerify);
+    LITERT_RETURN_IF_ERROR(base_model_.RunAsync(
+        verify_signature_.Key(), active_verifier_input_buffers_,
+        active_verifier_output_buffers_, async));
+  }
 
   // Apply constraint masks to verifier logits for all positions in a single
   // pass.

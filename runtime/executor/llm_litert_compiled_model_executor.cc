@@ -81,6 +81,7 @@
 #include "runtime/util/lora_util.h"
 #include "runtime/util/status_macros.h"  // IWYU pragma: keep
 #include "runtime/util/tensor_buffer_util.h"
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 #include "tflite/types/half.h"  // from @litert
 
 namespace litert::lm {
@@ -576,6 +577,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
     absl::flat_hash_map<absl::string_view, TensorBuffer>&
         prefill_output_buffers,
     Span<const int> ids, bool async, const ExecutorInputs* inputs) {
+  AGELLO_SPAN(kPrefillChunk, ids.size());
   ABSL_RETURN_IF_ERROR(RollBackProcessedTokens());
 
   auto [internal_start_step_initial, pending_input_token_initial] =
@@ -714,6 +716,8 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
         TensorBuffer* prefill_input_embeddings_buffer =
             &(prefill_input_buffers[signatures_.input_embeddings.value()]);
         if (embedding_lookup_ != nullptr) {
+          AGELLO_SPAN(kEmbeddingLookup, processed_input_tokens.size());
+          AGELLO_COUNT(kEmbeddingLookups, processed_input_tokens.size());
           ABSL_RETURN_IF_ERROR(embedding_lookup_->LookupPrefill(
               processed_input_tokens, prefill_input_embeddings_buffer,
               /*offset=*/input_idx));
@@ -738,6 +742,8 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
               &(prefill_input_buffers[signatures_.input_per_layer_embeddings
                                           .value()]);
           if (per_layer_embedding_lookup_ != nullptr) {
+            AGELLO_SPAN(kEmbeddingLookup, processed_input_tokens.size());
+            AGELLO_COUNT(kEmbeddingLookups, processed_input_tokens.size());
             ABSL_RETURN_IF_ERROR(per_layer_embedding_lookup_->LookupPrefill(
                 processed_input_tokens,
                 prefill_input_per_layer_embeddings_buffer,
@@ -761,6 +767,9 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
       }
       if (signatures_.input_attn_mask.has_value() &&
           !skip_cpu_global_causal_mask) {
+        AGELLO_SPAN(kMaskFill, prefill_length + input_idx);
+        AGELLO_COUNT(kMaskFills);
+        AGELLO_COUNT(kTokenHistoryCopies);
         const AttentionMaskParams& attn_params = prefill_attn_params;
         auto tokens_copy = llm_context_->processed_context()
                                .processed_tokens()
@@ -784,6 +793,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::PrefillInternal(
         }
       }
       if (gpu_optimized_single_buffer_cache_) {
+        AGELLO_SPAN(kParamFill);
         LITERT_RETURN_IF_ERROR(signatures_.input_int32_param.has_value());
         ABSL_RETURN_IF_ERROR(FillSingleBufferCacheParamTensor(
             prefill_input_buffers[signatures_.input_int32_param.value()],
@@ -896,6 +906,9 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::BindTensorsAndRunPrefill(
   }
 
   litert::Options run_options = GetRunOptions();
+  AGELLO_SPAN(kRunPrefill);
+  AGELLO_COUNT(kRunsPrefill);
+  ::agello::telemetry::SetCurrentRun(::agello::telemetry::kGpuPrefill);
   if (async) {
     LITERT_RETURN_IF_ERROR(compiled_model_->RunAsync(
         prefill_signature, input_buffers, output_buffers, async, &run_options));
@@ -987,6 +1000,8 @@ LlmLiteRtCompiledModelExecutorBase::GetTokenToDecode(
             "Decode requires embedding_lookup_ when input_embeddings are used, "
             "but embedding_lookup_ is null.");
       }
+      AGELLO_SPAN(kEmbeddingLookup, 1);
+      AGELLO_COUNT(kEmbeddingLookups);
       ABSL_RETURN_IF_ERROR(embedding_lookup_->LookupDecode(
           token->id(), token->mutable_embedding()));
       if (signatures_.input_per_layer_embeddings.has_value()) {
@@ -995,6 +1010,8 @@ LlmLiteRtCompiledModelExecutorBase::GetTokenToDecode(
               "Decode requires per_layer_embedding_lookup_ when required by "
               "signature, but per_layer_embedding_lookup_ is null.");
         }
+        AGELLO_SPAN(kEmbeddingLookup, 1);
+        AGELLO_COUNT(kEmbeddingLookups);
         ABSL_RETURN_IF_ERROR(per_layer_embedding_lookup_->LookupDecode(
             token->id(), token->mutable_per_layer_embedding()));
       }
@@ -1115,6 +1132,9 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::DecodeInternal(
       decode_attn_mask_local_buffer);
 
   if (signatures_.input_attn_mask.has_value() && !skip_cpu_global_causal_mask) {
+    AGELLO_SPAN(kMaskFill, 1);
+    AGELLO_COUNT(kMaskFills);
+    AGELLO_COUNT(kTokenHistoryCopies);
     ABSL_RETURN_IF_ERROR(InitializeAttentionMask(
         decode_input_buffers_[signatures_.input_attn_mask.value()],
         use_fp16_precision_));
@@ -1143,6 +1163,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::DecodeInternal(
     }
   }
   if (gpu_optimized_single_buffer_cache_) {
+    AGELLO_SPAN(kParamFill);
     LITERT_RETURN_IF_ERROR(signatures_.input_int32_param.has_value());
     ABSL_RETURN_IF_ERROR(FillSingleBufferCacheParamTensor(
         decode_input_buffers_[signatures_.input_int32_param.value()], step, 1));
@@ -1201,9 +1222,14 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::BindTensorsAndRunDecode(
 
   litert::Options run_options = GetRunOptions();
   bool async = true;
-  LITERT_RETURN_IF_ERROR(
-      compiled_model_->RunAsync(kDecodeSignatureRunner, decode_input_buffers,
-                                decode_output_buffers, async, &run_options));
+  {
+    AGELLO_SPAN(kRunDecode);
+    AGELLO_COUNT(kRunsDecode);
+    ::agello::telemetry::SetCurrentRun(::agello::telemetry::kGpuDecode);
+    LITERT_RETURN_IF_ERROR(
+        compiled_model_->RunAsync(kDecodeSignatureRunner, decode_input_buffers,
+                                  decode_output_buffers, async, &run_options));
+  }
 
   if (post_graph_run_callback_) {
     ABSL_ASSIGN_OR_RETURN(auto current_step, GetCurrentStep());
@@ -1318,13 +1344,17 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
       auto dimensions = decoded_logits_type.Layout().Dimensions();
       // Shape of decoded_logits is [batch_size, Token_length, vocab_size].
       RET_CHECK_EQ(dimensions.size(), 3);
+      AGELLO_COUNT(kDecodeAllocations);
       LITERT_ASSIGN_OR_RETURN(
           output_tokens,
           CreateTensorBuffer<int>({dimensions[0], dimensions[1]}));
     }
     ABSL_RETURN_IF_ERROR(SampleLogits(decoded_logits, *output_tokens));
-    LITERT_ASSIGN_OR_RETURN(output_tokens_vector,
-                            CopyFromTensorBuffer2D<int>(*output_tokens));
+    {
+      AGELLO_SPAN(kLogitsReadback);
+      LITERT_ASSIGN_OR_RETURN(output_tokens_vector,
+                              CopyFromTensorBuffer2D<int>(*output_tokens));
+    }
     executor_stats_.AccumulatePlainStep(absl::Now() - plain_start);
   } else {
     const absl::Time round_start = absl::Now();
@@ -1375,10 +1405,12 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
         auto dimensions = decoded_logits_type.Layout().Dimensions();
         // Shape of decoded_logits is [batch_size, Token_length, vocab_size].
         RET_CHECK_EQ(dimensions.size(), 3);
+        AGELLO_COUNT(kDecodeAllocations);
         LITERT_ASSIGN_OR_RETURN(
             auto output_tokens,
             CreateTensorBuffer<int>({dimensions[0], dimensions[1]}));
         ABSL_RETURN_IF_ERROR(SampleLogits(decoded_logits, output_tokens));
+        AGELLO_SPAN(kLogitsReadback);
         LITERT_ASSIGN_OR_RETURN(output_tokens_vector,
                                 CopyFromTensorBuffer2D<int>(output_tokens));
         RET_CHECK_EQ(output_tokens_vector.size(), 1);
@@ -1405,6 +1437,9 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
     }
     const absl::Duration round_elapsed = absl::Now() - round_start;
     const auto& round_stats = mtp_drafter_->last_round_stats();
+    AGELLO_COUNT(kMtpRounds);
+    AGELLO_COUNT(kMtpDrafted, round_stats.drafted_tokens);
+    AGELLO_COUNT(kMtpAccepted, round_stats.accepted_tokens);
     executor_stats_.AccumulateMtpRound(
         round_stats.drafted_tokens, round_stats.accepted_tokens,
         round_stats.emitted_tokens, round_stats.drafting_time,
@@ -1423,6 +1458,10 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
     }
   }
   if (has_invalid_output_token) {
+    ::agello::telemetry::ReportAnomaly(
+        ::agello::telemetry::kInvalidToken, ::agello::telemetry::kError,
+        llm_context_->runtime_state().current_step, 0,
+        "negative sampled token, replaced by 0 (overflowed logits?)");
     const auto& advanced_settings = executor_settings_.GetAdvancedSettings();
     if (advanced_settings.has_value() &&
         advanced_settings->error_on_invalid_sampled_token_id) {
@@ -1517,6 +1556,8 @@ LlmLiteRtCompiledModelExecutorBase::DecodeLogitsImpl(
           constrained_decoder->UpdateState(absl::MakeSpan(current_token_ids)));
     }
     // Process logits based on the current constraint state.
+    AGELLO_SPAN(kConstraint);
+    AGELLO_COUNT(kLogitMasks);
     ABSL_RETURN_IF_ERROR(constrained_decoder->ProcessLogits(output_logits));
   }
 
@@ -1560,6 +1601,8 @@ LlmLiteRtCompiledModelExecutorBase::CloneState() const {
   if (active_state == nullptr) {
     return nullptr;
   }
+  AGELLO_SPAN(kKvClone);
+  AGELLO_COUNT(kKvCopies);
   return active_state->DeepCopy();
 }
 
@@ -1587,6 +1630,8 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::RestoreState(
   auto* restored = dynamic_cast<LitertState*>(state.get());
   if (current != nullptr && restored != nullptr && !current->IsHostMemory() &&
       restored->IsHostMemory()) {
+    AGELLO_SPAN(kKvClone, 1);
+    AGELLO_COUNT(kKvCopies);
     return current->CopyContentsFrom(*restored);
   }
 
@@ -1801,6 +1846,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::SampleLogits(
     ABSL_RETURN_IF_ERROR(SwapSamplerInputTensors());
   }
 
+  AGELLO_SPAN(kSample);
   ABSL_RETURN_IF_ERROR(sampler_->SampleToIdAndScoreBuffer(
       logits, ids_tensor, /*scores_tensor=*/nullptr));
   return absl::OkStatus();

@@ -61,6 +61,7 @@
 #include "runtime/util/status_macros.h"  //NOLINT
 #include "support/tokenizer/buffered_streaming_detokenizer.h"
 #include "tflite/types/half.h"  // from @litert
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 
 namespace litert::lm::Tasks {
 namespace {
@@ -303,6 +304,7 @@ class DecodeOneStep {
   // For internal sampling, `decoded_ids` is ignored.
   absl::StatusOr<bool> Run(
       std::optional<litert::TensorBuffer> decoded_ids = std::nullopt) {
+    AGELLO_SPAN(kDecodeStep);
     ABSL_ASSIGN_OR_RETURN(auto token_ids,
                           DecodeAndSample(std::move(decoded_ids)));
 
@@ -328,6 +330,7 @@ class DecodeOneStep {
       ABSL_ASSIGN_OR_RETURN(auto tokens_to_feed,
                             stop_token_filter_.ProcessStep(step_tokens));
 
+      AGELLO_SPAN(kDetokenize);
       ABSL_ASSIGN_OR_RETURN(auto released_outputs,
                             detokenizer_.ProcessStep(tokens_to_feed));
 
@@ -557,12 +560,14 @@ class DecodeOneStep {
 absl::StatusOr<Responses> Prefill(
     LlmExecutor& executor, ExecutorInputs& inputs, bool wait_for_completion,
     std::optional<BenchmarkInfo>& benchmark_info) {
+  AGELLO_SPAN(kTurnPrefill);
   const int max_num_tokens = TryGetMaxNumTokens(executor);
   ABSL_ASSIGN_OR_RETURN(auto text_data, inputs.GetTextDataPtr());
   RET_CHECK(text_data != nullptr) << "text_data must not be null.";
   LITERT_ASSIGN_OR_RETURN(auto token_id_tensor_type,
                           text_data->GetTokenIds().TensorType());
   auto num_tokens = token_id_tensor_type.Layout().Dimensions().back();
+  AGELLO_COUNT(kTokensPrefilled, num_tokens);
   if (num_tokens >= max_num_tokens) {
     return absl::InvalidArgumentError(absl::StrCat(
         "Input token ids are too long. Exceeding the maximum number of tokens "
@@ -621,6 +626,7 @@ absl::StatusOr<Responses> Decode(
     const std::vector<int>& thinking_end_token_ids,
     const std::vector<int>& thinking_start_token_ids,
     std::optional<bool> enable_speculative_decoding) {
+  AGELLO_SPAN(kTurnDecode);
   const bool is_streaming = callback != nullptr;
   const bool is_custom_sampling = sampler.has_value();
 
@@ -732,6 +738,7 @@ absl::StatusOr<Responses> Decode(
           return status.status();
         }
       }
+      AGELLO_COUNT(kStopCancelled);
       return absl::CancelledError("Process cancelled.");
     }
     std::optional<litert::TensorBuffer> decoded_ids_to_use = std::nullopt;
@@ -781,6 +788,9 @@ absl::StatusOr<Responses> Decode(
     }
 
     if (is_streaming && any_updates) {
+      // Runs on the execution thread, between decode steps.
+      AGELLO_SPAN(kStreamCallback);
+      AGELLO_COUNT(kStreamChunks);
       callback(Responses(TaskState::kProcessing, std::move(step_texts),
                          std::move(step_scores), /*token_lengths=*/{},
                          std::move(step_token_ids)));
@@ -829,6 +839,17 @@ absl::StatusOr<Responses> Decode(
 
   int num_decode_steps =
       executor.GetCurrentStep().value() - executor_step_before_decode;
+  AGELLO_COUNT(kTokensDecoded, num_decode_steps * num_output_candidates);
+  if (executor.GetCurrentStep().value() >= max_num_tokens) {
+    AGELLO_COUNT(kStopKvFull);
+    ::agello::telemetry::ReportAnomaly(
+        ::agello::telemetry::kKvFull, ::agello::telemetry::kWarning,
+        max_num_tokens, num_decode_steps, "decode stopped: KV cache full");
+  } else if (num_decode_steps >= max_output_tokens) {
+    AGELLO_COUNT(kStopMaxTokens);
+  } else {
+    AGELLO_COUNT(kStopEos);
+  }
   if (benchmark_info.has_value()) {
     ABSL_RETURN_IF_ERROR(benchmark_info->TimeDecodeTurnEnd(
         num_decode_steps * num_output_candidates));

@@ -61,6 +61,7 @@
 #include "runtime/util/logging.h"
 #include "runtime/util/scoped_file.h"
 #include "runtime/util/status_macros.h"
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 
 namespace litert::lm {
 namespace {
@@ -785,6 +786,14 @@ ResourceManager::AcquireExecutorWithContextHandler(
     // If the new handler is not sharing the same processed context with the
     // current handler, clone the processed context to the new handler. Then
     // restore the executor with the new LlmContext.
+    // Agello: a full KV snapshot and restore (through host memory on Metal).
+    AGELLO_SPAN(kContextSwitch);
+    AGELLO_COUNT(kContextSwitches);
+    if (current_handler_ != nullptr) {
+      ::agello::telemetry::ReportAnomaly(
+          ::agello::telemetry::kKvContextSwitch, ::agello::telemetry::kInfo, 0,
+          0, "executor switched sessions: KV snapshot and restore");
+    }
     if (current_handler_ != nullptr) {
       ABSL_ASSIGN_OR_RETURN(auto current_llm_context,
                             llm_executor_->CloneContext());
