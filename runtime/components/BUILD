@@ -170,6 +170,7 @@ cc_library(
     srcs = ["top_p_cpu_sampler.cc"],
     hdrs = ["top_p_cpu_sampler.h"],
     deps = [
+        "@agello_telemetry//:telemetry",
         ":sampler",
         ":sampling_cpu_util",
         "@com_google_absl//absl/memory",

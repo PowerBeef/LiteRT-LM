@@ -29,6 +29,7 @@
 #include "absl/status/statusor.h"  // from @com_google_absl
 #include "absl/strings/str_cat.h"  // from @com_google_absl
 #include "absl/types/span.h"  // from @com_google_absl
+#include "agello/agello_telemetry.h"  // from @agello_telemetry
 #include "litert/cc/litert_element_type.h"  // from @litert
 #include "litert/cc/litert_macros.h"  // from @litert
 #include "litert/cc/litert_tensor_buffer.h"  // from @litert
@@ -204,6 +205,12 @@ absl::Status TopPSampler::SampleToIdAndScoreBuffer(
     return absl::InvalidArgumentError(
         "Unsupported logits data type for sampler.");
   }
+
+  // Agello telemetry: NaN/Inf, max, top-1 margin and entropy of the logits (sampled calls).
+  ::agello::telemetry::ProbeLogits(
+      logits_data_span.data(), static_cast<int64_t>(batch_size_) * sequence_size_,
+      static_cast<int64_t>(logits_data_span.size()) /
+          std::max<int64_t>(1, static_cast<int64_t>(batch_size_) * sequence_size_));
 
   std::vector<std::vector<float>> sampled_scores;
   auto sampled_ids =

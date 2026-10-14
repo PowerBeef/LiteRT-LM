@@ -12,11 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cmath>
 #include <cstdio>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <thread>
+#include <vector>
 
 #include <gtest/gtest.h>
 #include "agello/agello_telemetry.h"
@@ -101,6 +103,60 @@ TEST_F(TelemetryTest, TraceIsWritten) {
   contents << file.rdbuf();
   EXPECT_NE(contents.str().find("\"name\":\"prefill.chunk\""), std::string::npos);
   EXPECT_NE(contents.str().find("\"arg\":1024"), std::string::npos);
+}
+
+TEST_F(TelemetryTest, LogitsProbeFindsNonFiniteValuesAndMargins) {
+  SetLevel(kDeep);  // Every call is checked.
+  std::vector<float> logits(2 * 1000, 0.0f);
+  logits[7] = 20.0f;  // Row 0: top-1 margin 20.
+  logits[1000 + 3] = 5.0f;
+  logits[1000 + 4] = 5.03f;  // Row 1: a near tie (margin 0.03)...
+  logits[1000 + 9] = std::nanf("");  // ...and a NaN.
+  ProbeLogits(logits.data(), 2, 1000);
+  const std::string json = SnapshotJson();
+  EXPECT_NE(json.find("\"logits_rows_checked\":2"), std::string::npos) << json;
+  EXPECT_NE(json.find("\"logits_nonfinite\":1"), std::string::npos) << json;
+  EXPECT_NE(json.find("\"logits_near_ties\":1"), std::string::npos) << json;
+  EXPECT_NE(json.find("\"code\":\"numerics\""), std::string::npos) << json;
+  EXPECT_NE(json.find("\"logits.top1_margin\":{\"count\":2"), std::string::npos) << json;
+  EXPECT_NE(json.find("\"max\":20}"), std::string::npos) << json;
+}
+
+TEST_F(TelemetryTest, LogitsEntropyOfAUniformRowIsLogVocab) {
+  SetLevel(kDeep);
+  std::vector<float> logits(4096, 1.5f);
+  logits[0] = 1.5f + 1e-3f;  // Not quite flat, so no anomaly.
+  ProbeLogits(logits.data(), 1, 4096);
+  const std::string json = SnapshotJson();
+  // log(4096) = 8.318
+  EXPECT_NE(json.find("\"logits.entropy_nats\":{\"count\":1,\"mean\":8.318"), std::string::npos)
+      << json;
+  EXPECT_EQ(json.find("\"code\":\"numerics\""), std::string::npos) << json;
+}
+
+TEST_F(TelemetryTest, GaugePercentilesAreExactThenSampled) {
+  for (int i = 1; i <= 1000; ++i) RecordValue(kLogitsMargin, i);
+  std::string json = SnapshotJson();
+  EXPECT_NE(json.find("\"logits.top1_margin\":{\"count\":1000,\"mean\":500.5,\"min\":1,"
+                      "\"p10\":100,\"p50\":500,\"p90\":900,\"max\":1000}"),
+            std::string::npos)
+      << json;
+  // Past the reservoir's 4,096 values, percentiles come from a uniform sample.
+  Reset();
+  for (int i = 0; i < 100000; ++i) RecordValue(kLogitsEntropy, i % 1000);
+  json = SnapshotJson();
+  const size_t at = json.find("\"logits.entropy_nats\"");
+  ASSERT_NE(at, std::string::npos) << json;
+  const double p50 = std::stod(json.substr(json.find("\"p50\":", at) + 6));
+  EXPECT_NEAR(p50, 500, 50) << json;
+}
+
+TEST_F(TelemetryTest, LogitsProbeSamplesBelowLevelFour) {
+  SetLevel(kSpans);
+  std::vector<float> logits(100, 0.0f);
+  logits[1] = 3.0f;
+  for (int i = 0; i < 64; ++i) ProbeLogits(logits.data(), 1, 100);
+  EXPECT_NE(SnapshotJson().find("\"logits_rows_checked\":2"), std::string::npos);
 }
 
 }  // namespace

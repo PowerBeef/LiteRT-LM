@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <array>
 #include <atomic>
+#include <cfloat>
 #include <cmath>
 #include <cstdarg>
 #include <cstdint>
@@ -179,6 +180,50 @@ AnomalyRecord anomalies[kAnomalyRing];
 int64_t anomaly_total = 0;
 
 std::atomic<int> current_run{kGpuOther};
+
+constexpr const char* kGaugeNames[] = {
+#define AGELLO_TELEMETRY_NAME(id, name) name,
+    AGELLO_TELEMETRY_GAUGES(AGELLO_TELEMETRY_NAME)
+#undef AGELLO_TELEMETRY_NAME
+};
+constexpr size_t kGaugeReservoir = 4096;
+struct GaugeStats {
+  int64_t count = 0;
+  double sum = 0;
+  double min = 0;
+  double max = 0;
+  std::vector<float> sample;  // Uniform over all values recorded (reservoir sampling).
+};
+std::mutex gauge_mutex;
+GaugeStats gauges[kGaugeCount];
+uint64_t gauge_random = 0x9E3779B97F4A7C15ull;
+
+// e^x for x <= 0 (clamped at -87) as 2^(x log2 e), with a degree-6 polynomial for the fraction:
+// relative error about 1e-6, and the loop vectorizes (std::exp doesn't).
+inline float ExpNonPositive(float x) {
+  x = x > -87.0f ? x : -87.0f;
+  const float t = x * 1.44269504f;
+  const float whole = std::floor(t);
+  const float f = t - whole;
+  float p = 1.5403530e-4f;
+  p = p * f + 1.3333558e-3f;
+  p = p * f + 9.6181291e-3f;
+  p = p * f + 5.5504109e-2f;
+  p = p * f + 2.4022651e-1f;
+  p = p * f + 6.9314718e-1f;
+  p = p * f + 1.0f;
+  const int32_t bits = (static_cast<int32_t>(whole) + 127) << 23;
+  float scale;
+  std::memcpy(&scale, &bits, sizeof(scale));
+  return p * scale;
+}
+
+// The value at `fraction` of a sorted sample (nearest rank).
+double SamplePercentile(const std::vector<float>& sorted, double fraction) {
+  if (sorted.empty()) return 0;
+  const size_t rank = static_cast<size_t>(std::ceil(fraction * sorted.size()));
+  return sorted[std::min(sorted.size(), std::max<size_t>(rank, 1)) - 1];
+}
 
 double CpuMs(bool user) {
   rusage usage = {};
@@ -359,6 +404,112 @@ std::mutex facts_mutex;
 std::vector<std::pair<const char*, std::string>> facts;
 }  // namespace
 
+void RecordValue(Gauge gauge, double value) {
+  if (GetLevel() < kCounters || gauge < 0 || gauge >= kGaugeCount || !std::isfinite(value)) return;
+  std::lock_guard<std::mutex> lock(gauge_mutex);
+  GaugeStats& stats = gauges[gauge];
+  stats.min = stats.count ? std::min(stats.min, value) : value;
+  stats.max = stats.count ? std::max(stats.max, value) : value;
+  stats.count++;
+  stats.sum += value;
+  if (stats.sample.size() < kGaugeReservoir) {
+    stats.sample.push_back(static_cast<float>(value));
+  } else {
+    gauge_random = gauge_random * 6364136223846793005ull + 1442695040888963407ull;
+    const uint64_t slot = (gauge_random >> 11) % static_cast<uint64_t>(stats.count);
+    if (slot < kGaugeReservoir) stats.sample[slot] = static_cast<float>(value);
+  }
+}
+
+void ProbeLogits(const float* logits, int64_t rows, int64_t vocab) {
+  const int level = GetLevel();
+  if (level < kCounters || logits == nullptr || rows <= 0 || vocab <= 1) return;
+  static std::atomic<uint64_t> calls{0};
+  const uint64_t call = calls.fetch_add(1, std::memory_order_relaxed);
+  if (level < kDeep) {
+    if (call % 32 != 0) return;
+    rows = 1;  // Sampled: the first row (position) of the call.
+  }
+  const int base = CurrentRun() == kGpuDrafter ? kDrafterLogitsMax : kLogitsMax;
+  const auto gauge = [base](Gauge model_gauge) {
+    return static_cast<Gauge>(base + (model_gauge - kLogitsMax));
+  };
+  for (int64_t r = 0; r < rows; ++r) {
+    const float* row = logits + r * vocab;
+    // Pass 1, branchless: non-finite count, max and min of the finite values.
+    int64_t nonfinite = 0;
+    float top1 = -FLT_MAX, lowest = FLT_MAX;
+    for (int64_t begin = 0; begin < vocab; begin += 1024) {
+      const int n = static_cast<int>(std::min<int64_t>(1024, vocab - begin));
+      const float* block = row + begin;
+      int block_nonfinite = 0;
+      for (int v = 0; v < n; ++v) {
+        const float x = block[v];
+        const bool finite = std::fabs(x) <= FLT_MAX;
+        block_nonfinite += !finite;
+        // Plain max and min over masked values, so the loop vectorizes as a reduction.
+        const float high = finite ? x : -FLT_MAX;
+        const float low = finite ? x : FLT_MAX;
+        top1 = high > top1 ? high : top1;
+        lowest = low < lowest ? low : lowest;
+      }
+      nonfinite += block_nonfinite;
+    }
+    Count(kLogitsRowsChecked);
+    if (nonfinite > 0) {
+      Count(kLogitsNonFinite, nonfinite);
+      ReportAnomaly(kNumerics, kError, nonfinite, vocab, "NaN or Inf in logits (a of b)");
+      if (nonfinite == vocab) continue;
+    }
+    if (top1 == lowest) {
+      ReportAnomaly(kNumerics, kWarning, static_cast<int64_t>(top1), vocab,
+                    "flat logits: every token scores the same");
+    }
+    // Pass 2: the runner-up (or a tie for first) and, from level 2 on finite rows, the entropy at
+    // temperature 1: H = log Z - sum(e^x' x') / Z with x' = x - max, summed in float per block.
+    const bool entropy = level >= kSpans && nonfinite == 0;
+    float top2 = -FLT_MAX;
+    int64_t at_top = 0;
+    double z = 0, weighted = 0;
+    for (int64_t begin = 0; begin < vocab; begin += 1024) {
+      const int n = static_cast<int>(std::min<int64_t>(1024, vocab - begin));
+      const float* block = row + begin;
+      int block_at_top = 0;
+      float block_top2 = -FLT_MAX;
+      for (int v = 0; v < n; ++v) {
+        const float x = block[v];
+        block_at_top += x == top1;
+        const float below = x < top1 ? x : -FLT_MAX;
+        block_top2 = below > block_top2 ? below : block_top2;
+      }
+      at_top += block_at_top;
+      top2 = std::max(top2, block_top2);
+      if (entropy) {
+        float block_z = 0, block_weighted = 0;
+        for (int v = 0; v < n; ++v) {
+          const float shifted = block[v] - top1;
+          const float e = ExpNonPositive(shifted);
+          block_z += e;
+          block_weighted += e * shifted;
+        }
+        z += block_z;
+        weighted += block_weighted;
+      }
+    }
+    RecordValue(gauge(kLogitsMax), top1);
+    if (at_top > 1) top2 = top1;
+    if (top2 > -FLT_MAX) {
+      const double margin = static_cast<double>(top1) - top2;
+      RecordValue(gauge(kLogitsMargin), margin);
+      if (margin < 1.0 / 16 && base == kLogitsMax) Count(kLogitsNearTies);
+    }
+    if (entropy && z > 0) {
+      RecordValue(gauge(kLogitsEntropy), std::log(z) - weighted / z);
+      RecordValue(gauge(kLogitsTop1Prob), 1.0 / z);
+    }
+  }
+}
+
 void SetFact(const char* key, const std::string& value) {
   std::lock_guard<std::mutex> lock(facts_mutex);
   for (auto& fact : facts) {
@@ -445,6 +596,27 @@ std::string SnapshotJson() {
     }
   }
   out += "}";
+  out += ",\"gauges\":{";
+  {
+    std::lock_guard<std::mutex> lock(gauge_mutex);
+    bool first_gauge = true;
+    for (int g = 0; g < kGaugeCount; ++g) {
+      const GaugeStats& stats = gauges[g];
+      if (stats.count == 0) continue;
+      if (!first_gauge) out += ",";
+      first_gauge = false;
+      std::vector<float> sorted = stats.sample;
+      std::sort(sorted.begin(), sorted.end());
+      AppendJsonString(out, kGaugeNames[g]);
+      Append(out,
+             ":{\"count\":%lld,\"mean\":%.4g,\"min\":%.4g,\"p10\":%.4g,\"p50\":%.4g,"
+             "\"p90\":%.4g,\"max\":%.4g}",
+             (long long)stats.count, stats.sum / stats.count, stats.min,
+             SamplePercentile(sorted, 0.10), SamplePercentile(sorted, 0.50),
+             SamplePercentile(sorted, 0.90), stats.max);
+    }
+  }
+  out += "}";
 #if defined(__APPLE__)
   task_vm_info_data_t info = {};
   mach_msg_type_number_t count = TASK_VM_INFO_COUNT;
@@ -481,6 +653,10 @@ void Reset() {
   {
     std::lock_guard<std::mutex> lock(anomaly_mutex);
     anomaly_total = 0;
+  }
+  {
+    std::lock_guard<std::mutex> lock(gauge_mutex);
+    for (auto& stats : gauges) stats = GaugeStats();
   }
   std::lock_guard<std::mutex> lock(rings_mutex);
   for (Ring* ring : rings) ring->written.store(0, std::memory_order_relaxed);

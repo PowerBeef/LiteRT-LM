@@ -44,7 +44,7 @@ public enum Telemetry {
     return String(cString: text)
   }
 
-  /// `snapshotJSON()` decoded: `counters`, `spans`, `anomalies`, `memory`.
+  /// `snapshotJSON()` decoded: counters, spans, gauges, anomalies, facts, memory, cpu.
   public static func snapshot() -> [String: Any] {
     let data = Data(snapshotJSON().utf8)
     return (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]

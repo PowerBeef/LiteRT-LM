@@ -84,6 +84,9 @@ enum Level : int { kOff = 0, kCounters = 1, kSpans = 2, kTrace = 3, kDeep = 4 };
   X(kStopCancelled, "stop_cancelled")                       \
   X(kStreamChunks, "stream_chunks")                         \
   X(kStreamChunkBytes, "stream_chunk_bytes")                \
+  X(kLogitsRowsChecked, "logits_rows_checked")              \
+  X(kLogitsNonFinite, "logits_nonfinite")                   \
+  X(kLogitsNearTies, "logits_near_ties")                    \
   X(kErrors, "errors")                                      \
   X(kAnomalies, "anomalies")
 
@@ -180,6 +183,26 @@ enum Anomaly : int {
 
 enum Severity : int { kInfo = 0, kWarning = 1, kError = 2 };
 
+// X(identifier, "name"): value distributions. Snapshots give count, mean, min, max and the 10th,
+// 50th and 90th percentiles of a uniform sample of up to 4,096 values (reservoir sampling).
+// The drafter's logits (MTP) have their own set, in the same order.
+#define AGELLO_TELEMETRY_GAUGES(X)                               \
+  X(kLogitsMax, "logits.max")                                    \
+  X(kLogitsMargin, "logits.top1_margin")                         \
+  X(kLogitsTop1Prob, "logits.top1_prob")                         \
+  X(kLogitsEntropy, "logits.entropy_nats")                       \
+  X(kDrafterLogitsMax, "drafter.logits.max")                     \
+  X(kDrafterLogitsMargin, "drafter.logits.top1_margin")          \
+  X(kDrafterLogitsTop1Prob, "drafter.logits.top1_prob")          \
+  X(kDrafterLogitsEntropy, "drafter.logits.entropy_nats")
+
+enum Gauge : int {
+#define AGELLO_TELEMETRY_ENUM(id, name) id,
+  AGELLO_TELEMETRY_GAUGES(AGELLO_TELEMETRY_ENUM)
+#undef AGELLO_TELEMETRY_ENUM
+      kGaugeCount
+};
+
 namespace internal {
 extern std::atomic<int> level;
 extern std::atomic<int64_t> counters[kCounterCount];
@@ -249,6 +272,17 @@ void CheckSlowWait(uint64_t start_ticks, int64_t id, const char* what, double wa
 
 // The GPU wait span for the model run in flight (prefill, decode, or other).
 int GpuWaitSpanForCurrentRun();
+
+// Adds a value to a gauge's distribution (level 1+).
+void RecordValue(Gauge gauge, double value);
+
+// Numerical probe on logits in host memory, `rows` rows of `vocab` floats: counts NaN and Inf
+// values (an error anomaly), records the max logit and the top-1 margin, counts the model's near
+// ties (top two within 1/16, four FP16 steps for logits in [16, 32)), and from level 2 the entropy
+// and top-1 probability at temperature 1. Below level 4 it checks the first row of every 32nd
+// call (about 0.25 ms for 262,144 logits); at level 4, every row of every call. Logits read after
+// an MTP drafter run (CurrentRun) go to the drafter's gauges.
+void ProbeLogits(const float* logits, int64_t rows, int64_t vocab);
 
 // Facts about the engine that outlive Reset (sampler path, GPU family, async mode...), shown in
 // every snapshot. `key` must be a string literal.
