@@ -100,3 +100,24 @@ p11 = json.load(open(os.path.join(here, "results/iphone/probe11_shifted_rotary.j
 for arm in ("original", "ishift-2048"):
     rows = [r for r in p11 if r["arm"] == arm]
     print(f"  probe 11, FP16, {arm}: {sum(r['exact'] for r in rows)}/{len(rows)} exact")
+
+p12_path = os.path.join(here, "results/iphone/probe12_split_rotary.json")
+if os.path.exists(p12_path):
+    p12 = json.load(open(p12_path))["results"]
+    print("\n== iPhone, split patch (probe 12, maxNumTokens 32768): exact, prefill / decode tok/s (medians)")
+    arms12 = {}
+    for r in p12:
+        arms12.setdefault(r["arm"], {}).setdefault(r["prefill"], []).append(r)
+    for arm, groups in arms12.items():
+        cells = []
+        for p in sorted(groups):
+            g = groups[p]
+            pre = sorted(r["prefillTPS"] for r in g)[len(g) // 2]
+            dec = sorted(r["decodeTPS"] for r in g)[len(g) // 2]
+            cells.append(f"{p}: {sum(r['exact'] for r in g)}/{len(g)} {pre:.0f}/{dec:.1f}")
+        print(f"  {arm:<18} " + "  ".join(cells))
+    text = lambda arm: {(r["sentences"], r["seed"]): r["output"] for r in p12 if r["arm"] == arm}
+    for a, b in (("split-fp16", "original-fp32"), ("split-fp32", "original-fp32"), ("split-fp16-mtp", "original-fp32-mtp")):
+        ta, tb = text(a), text(b)
+        keys = [k for k in ta if k in tb]
+        print(f"  {a} text identical to {b}: {sum(ta[k] == tb[k] for k in keys)}/{len(keys)}")

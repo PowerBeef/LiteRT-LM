@@ -58,6 +58,22 @@ The first MTP group (703 tokens) includes each engine's warm-up run. Repeated
 after warm-up, the split model with the drafter decodes at 123.7 tok/s, and
 with only the main section patched at 124.4.
 
+On the iPhone 17 Pro (Metal accelerator, probe 12, `maxNumTokens` 32768):
+
+| Check | Split, FP16 | Original, FP32 |
+| --- | --- | --- |
+| Exact copies, 0.7K–30K tokens | 14/14, text identical to original FP32 in 14/14 | 14/14 |
+| Original, FP16 | n/a | 0/3 (2K, 8K, 30K) |
+| FP32: split text vs original text | identical, 4/4 | n/a |
+| Prefill tok/s (2K · 8K · 30K) | 512 · 385 · 288 | 243 · 229 · 154 |
+| Decode tok/s (2K · 8K · 30K) | 22.2 · 16.1 · 11.2 | 14.2 · 13.7 · 10.4 |
+| With MTP: decode tok/s (2K · 6K · 16K) | 38.6 · 40.5 · 34.7, 6/6 exact, identical to FP32 + MTP | 25.2 · 24.2 · 17.1 |
+| Footprint after load | 2.04 GB | 2.76 GB |
+
+At the same lengths the original FP16 runs at the same speed as the split
+model (8K: 378 / 16.0 tok/s; 30K: 301 / 11.7). The patch costs nothing; it
+removes the errors.
+
 Two findings on the WebGPU delegate shaped the design:
 - **FULLY_CONNECTED with float32 weights** computed wrong results, even with FP32 activations.
 - **REDUCE_MAX over an inner axis**, or over a 3-D tensor, effectively returned
