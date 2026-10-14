@@ -20,6 +20,7 @@ left out, repetitions combined), it prints:
     per-step allocations, host locks), MTP acceptance;
   - host copies between GPU tensors and host memory (bytes per generated token);
   - delegation coverage and program and weight cache use (in load snapshots);
+  - the logits probes: NaN/Inf, max logit, top-1 margin, near ties, entropy (model and drafter);
   - anomalies, and LiteRT's own trace sites ranked by time.
 """
 import argparse
@@ -118,8 +119,11 @@ def combine(records):
     counters = defaultdict(int)
     spans = defaultdict(lambda: {"count": 0, "total_ms": 0.0, "max_us": 0.0})
     anomalies = defaultdict(int)
+    gauges = defaultdict(list)
     for r in records:
         t = r["telemetry"]
+        for k, v in (t.get("gauges") or {}).items():
+            gauges[k].append(v)
         for k, v in (t.get("cpu") or {}).items():
             counters["cpu." + k] += v
         for k, v in t["counters"].items():
@@ -131,7 +135,7 @@ def combine(records):
             s["max_us"] = max(s["max_us"], v["max_us"])
         for a in t["anomalies"]:
             anomalies[(a["code"], a["message"])] += 1
-    return counters, spans, anomalies
+    return counters, spans, anomalies, gauges
 
 
 def main():
@@ -160,7 +164,7 @@ def main():
         groups[(r["label"], r["id"])].append(r)
 
     for (label, case), records in groups.items():
-        counters, spans, anomalies = combine(records)
+        counters, spans, anomalies, gauges = combine(records)
         n = len(records)
         decoded = sum(r["decode"] for r in records)
         prefilled = sum(r["prefill"] for r in records)
@@ -243,6 +247,18 @@ def main():
         caches = {k: counters[k] // n for k in LOAD_COUNTERS[6:] if counters.get(k)}
         if caches:
             print("  caches: " + ", ".join(f"{k} {v}" for k, v in caches.items()))
+        rows_checked = counters.get("logits_rows_checked", 0)
+        if rows_checked:
+            print(f"  logits probes ({rows_checked} rows checked; every 32nd sampler call below level 4): "
+                  f"NaN/Inf {counters.get('logits_nonfinite', 0)}, model near ties (top two within 1/16) "
+                  f"{counters.get('logits_near_ties', 0)}; percentiles from the first run")
+            for key in sorted(gauges):
+                parts = gauges[key]
+                count = sum(g["count"] for g in parts)
+                mean = sum(g["mean"] * g["count"] for g in parts) / count
+                print(f"    {key:<30} n {count:<5} mean {mean:7.3f}  min {min(g['min'] for g in parts):7.3f}  "
+                      f"p10 {parts[0]['p10']:7.3f}  p50 {parts[0]['p50']:7.3f}  p90 {parts[0]['p90']:7.3f}  "
+                      f"max {max(g['max'] for g in parts):7.3f}")
         drafted, accepted = counters.get("mtp_drafted", 0), counters.get("mtp_accepted", 0)
         if drafted:
             print(f"  MTP: {counters.get('mtp_rounds', 0) // n} rounds per run, acceptance "

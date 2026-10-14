@@ -85,6 +85,17 @@ public struct TelemetrySnapshot: Codable, Sendable {
     }
   }
 
+  /// A value distribution, such as `logits.top1_margin`.
+  public struct Gauge: Codable, Sendable {
+    public var count: Int
+    public var mean: Double
+    public var min: Double
+    public var p10: Double
+    public var p50: Double
+    public var p90: Double
+    public var max: Double
+  }
+
   public var level: Int
   public var counters: [String: Int64]
   public var spans: [String: Span]
@@ -95,9 +106,11 @@ public struct TelemetrySnapshot: Codable, Sendable {
   public var facts: [String: String]?
   /// Process CPU time since the reset: `user_ms`, `system_ms`.
   public var cpu: [String: Double]?
+  /// Value distributions: the logits probes (max, top-1 margin, top-1 probability, entropy).
+  public var gauges: [String: Gauge]?
 
   enum CodingKeys: String, CodingKey {
-    case level, counters, spans, anomalies, memory, facts, cpu
+    case level, counters, spans, anomalies, memory, facts, cpu, gauges
     case anomaliesTotal = "anomalies_total"
   }
 }

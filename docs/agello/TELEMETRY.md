@@ -60,9 +60,15 @@ Every probe is an inline check of one atomic level before any work.
   across partitions or left on the CPU, KV context switches, constraint creation skipped.
 - **Memory** on every snapshot: `phys_footprint`, its peak, `ledger_tag_graphics_footprint`,
   `MTLDevice.currentAllocatedSize`, `os_proc_available_memory` (iOS), thermal state, low power.
-- **Numerical probes** (level 4): on the CPU sampler path, per step logits NaN/Inf count, max,
-  top-1 margin and entropy; on the GPU, stats kernels as ML Drift optional nodes on selected
-  tensors (rotary angles, attention scores, logits) for FP16 saturation and precision loss.
+- **Numerical probes** (logits on the CPU sampler path, done): NaN and Inf count (an error
+  anomaly), flat rows, max logit, top-1 margin, near ties (top two within 1/16: four FP16 steps
+  for logits in [16, 32), where FP16 rounding can flip the argmax), and from level 2 the entropy
+  and top-1 probability at temperature 1. Model and MTP drafter logits have separate gauges.
+  Levels 1–3 check the first row of every 32nd sampler call (0.38 ms for 262,144 logits, about
+  0.1% of decode); level 4 checks every row. Next: stats kernels on the GPU (ML Drift optional
+  nodes on rotary angles and attention scores) for FP16 saturation and precision loss.
+- **Gauges**: value distributions (count, mean, min, max, and the 10th, 50th and 90th
+  percentiles of a uniform sample of up to 4,096 values), in the snapshot's `gauges`.
 - **Kernel identity** (always, no per-dispatch cost): ML Drift sets pipeline labels from node
   names; debug groups per kernel at level 3+.
 
@@ -139,6 +145,20 @@ recover most of the 10%; it belongs to T5, and T7 (sampling on the GPU) removes 
 The decode graph's 1,766 dispatches per token point at T6 (encoding) and at fusing the
 elementwise chains around the norms.
 
+### Logits (level 4, 2K prompt, 128 generated, MTP)
+
+| | Model (129 positions) | Drafter (96 drafts) |
+| --- | --- | --- |
+| NaN / Inf | 0 | 0 |
+| Max logit | mean 23.8, max 29.3 (under Gemma's soft cap of 30) | mean 17.5 |
+| Top-1 margin | min 1.03, p10 8.9, p50 12.6: no near ties | min 0.13, p50 12.3 |
+| Top-1 probability | p10 1.000, min 0.27 | p10 0.998, min 0.52 |
+| Entropy, nats | p90 0.004, max 4.0 | p90 0.019, max 3.2 |
+
+On this repetitive text the model is nearly certain at almost every position, which matches the
+100% MTP acceptance. The near-tie count is the one to watch on long contexts at FP16 (#3913):
+positions whose top two logits differ by less than FP16's resolution.
+
 ### Metal waits
 
 The Metal delegate busy-spins a CPU core for every GPU wait by default; benchmark mode isn't the
@@ -158,4 +178,6 @@ locks), T7 (an open GPU sampler, which also closes most of the MTP gap to Google
 2. Done (2026-10-14): pipeline labels, GPU family probe and per-kernel timing; the GPU graph
    dump (built or restored); LiteRT buffer lock and copy counters with per-size spans, program
    and weight cache events, delegation coverage per compiled model, the async fallback fact.
-3. Numerical probes and invariant checks; Agello harness integration.
+3. Done (2026-10-14): numerical probes on logits (CPU sampler path) and gauges; Agello's
+   harness carries them in each scenario's snapshot. Next: GPU-side stats kernels, invariant
+   checks (KV positions, sampled ids against constraints).
