@@ -105,7 +105,7 @@ MTP=1 ./run_arm.sh split gpu fp16 mtp mtp-split 32768
 - Mac: Apple M6, macOS 27.0.1. GPU runs on the WebGPU delegate (Metal adapter).
 - iPhone 17 Pro, iOS 27.0.1. GPU runs on the Metal accelerator. The iPhone
   runs use the same prompts, in
-  [iRTChat's probes](https://github.com/PowerBeef/iRTChat/blob/055585262d3b156ca6bacb52ee7cd14360d59ae5/iRTChatDeviceTests/ProbeScenarioTests.swift)
+  [Agello's probes](https://github.com/PowerBeef/Agello/blob/055585262d3b156ca6bacb52ee7cd14360d59ae5/iRTChatDeviceTests/ProbeScenarioTests.swift)
   (`test10_PositionBoundary`, `test11_ShiftedRotaryPositions`).
 
 ## Method
@@ -154,5 +154,5 @@ python3 summarize.py
 | `runner/` | macOS copy-fidelity runner (Swift, this repository's package) |
 | `cases/` | Prompt cases: `baseline` (the iPhone probe's cases), `short`, `long`, `long3`, `cross4096`, `xl` (6K–30K tokens), `speed`, `mtp` |
 | `results/mac/` | One JSON line per reply: `<cases>__<model>__<backend>-<precision>.jsonl` |
-| `results/iphone/` | iRTChat probe results: probe 10 (position boundary), probe 11 (INT32 shift) |
+| `results/iphone/` | Agello probe results: probe 10 (position boundary), probe 11 (INT32 shift) |
 | `summarize.py` | Prints the tables from the results (no dependencies) |

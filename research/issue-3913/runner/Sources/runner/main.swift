@@ -1,4 +1,4 @@
-// LiteRT-LM #3913 copy-fidelity runner (same prompts as iRTChat's probe 10).
+// LiteRT-LM #3913 copy-fidelity runner (same prompts as Agello's probe 10).
 // Usage: runner <model.litertlm> <gpu|cpu> <default|fp32> <cases.json>
 //   cases.json: [{"id": "...", "sentences": 120, "late": false, "seed": 1}, ...]
 // Prints one JSON object per case.
