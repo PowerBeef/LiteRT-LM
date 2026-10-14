@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Modified by Patrice Déry for Agello (PowerBeef/LiteRT-LM, branch agello):
+// Modified by Patrice Déry for Agello (PowerBeef/agello-litert-lm, branch agello):
 // a tool call that fails is answered with an error response the model can
 // read, instead of throwing and ending the turn (see handleToolCalls).
 
