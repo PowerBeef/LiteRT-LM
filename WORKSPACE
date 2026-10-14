@@ -473,23 +473,17 @@ http_archive(
     url = "https://github.com/google/sentencepiece/archive/refs/tags/v0.2.2.tar.gz",
 )
 
+# Agello: our LiteRT fork (PowerBeef/LiteRT, branch agello-next): LITERT_REF above plus the commits
+# that build it as an external repository and feed Agello telemetry (formerly patch_cmds here).
+AGELLO_LITERT_COMMIT = "b66a46e6d870eab04bff5377fa6fdf4e3cca4942"
+
+AGELLO_LITERT_SHA256 = "100b280abe5c3fb89d152d44fed555c2a8670c9ab2338196f6d53bde36329b85"
+
 http_archive(
     name = "litert",
-    patch_cmds = [
-        # Replace @//third_party with @litert//third_party in files under third_party/.
-        # Only regular files are passed to `sed -i`, which fails on directories such as
-        # third_party/py/numpy. Uses a shell loop rather than `find`, which may resolve
-        # to find.exe on Windows.
-        "for f in third_party/*/*; do if [ -f \"$f\" ]; then sed -i -e 's|\"@//third_party/|\"@litert//third_party/|g' \"$f\" || exit 1; fi; done",
-        # Agello: the Metal delegate's aspect hint points at an internal package; alias it to
-        # rules_swift's.
-        "mkdir -p tools/build_defs/swift && echo 'alias(name = \"no_module\", actual = \"@build_bazel_rules_swift//swift:no_module\", visibility = [\"//visibility:public\"])' > tools/build_defs/swift/BUILD",
-        # Agello: an internal include path the export didn't rewrite.
-        "sed -i -e 's|\"third_party/odml/litert/ml_drift/delegate/|\"ml_drift_delegate/delegate/|g' ml_drift_delegate/delegate/gpu_backend_metal_litert.mm",
-    ],
-    sha256 = LITERT_SHA256,
-    strip_prefix = "LiteRT-" + LITERT_REF,
-    url = "https://github.com/google-ai-edge/LiteRT/archive/" + LITERT_REF + ".tar.gz",
+    sha256 = AGELLO_LITERT_SHA256,
+    strip_prefix = "LiteRT-" + AGELLO_LITERT_COMMIT,
+    url = "https://github.com/PowerBeef/LiteRT/archive/" + AGELLO_LITERT_COMMIT + ".tar.gz",
 )
 
 # Agello: telemetry probes (agello/telemetry), a repository of its own so LiteRT and ML Drift can
@@ -501,21 +495,15 @@ local_repository(
 
 # Agello: ML Drift, the GPU engine behind LiteRT's Metal accelerator, so the
 # accelerator can be linked statically (//runtime/executor:default_static_gpu_accelerator).
-# Bazel doesn't read @litert's WORKSPACE, so this repeats its declaration;
-# keep the commit and sha256 in step with the LiteRT pinned above.
-ML_DRIFT_COMMIT = "1b18771f44c0be3d972847b31a80f6dc3d6964b5"
+# Bazel doesn't read @litert's WORKSPACE, so this repeats its declaration. Our fork
+# (PowerBeef/ml-drift, branch agello-next): the commit LiteRT pins (1b18771f) plus the commits that
+# build it as an external repository of LiteRT-LM and feed Agello telemetry (formerly patch_cmds).
+ML_DRIFT_COMMIT = "04fe7b712c777a10d4d43388a6dca65d38597f66"
 
-ML_DRIFT_SHA256 = "0a7384901754a4ee84220561bcf5447fde4363cbc8a42c94743f183d178feb30"
+ML_DRIFT_SHA256 = "9fb8810907458767f1921e14501ac8d04cb0e099c95cf22e001ed2076ac38e1c"
 
 http_archive(
     name = "ml_drift",
-    patch_cmds = [
-        # Add external/ml_drift to flatc include paths for gl_inference_context_cc_fbs.
-        "sed -i -e 's|\"-I .\",|\"-I .\", \"-I external/ml_drift\",|g' ml_drift/gl/BUILD",
-        # Agello: ML Drift names LiteRT's delegate packages as the main repository (`@//`), which
-        # LiteRT is in its own build but LiteRT-LM is not.
-        "grep -rl '\"@//ml_drift_delegate/' --include=BUILD ml_drift | while read f; do sed -i -e 's|\"@//ml_drift_delegate/|\"@litert//ml_drift_delegate/|g' \"$f\" || exit 1; done",
-    ],
     repo_mapping = {
         "@fp16": "@FP16",
         "@com_github_google_re2": "@com_googlesource_code_re2",
@@ -523,7 +511,7 @@ http_archive(
     sha256 = ML_DRIFT_SHA256,
     strip_prefix = "ml-drift-" + ML_DRIFT_COMMIT,
     urls = [
-        "https://github.com/google-ai-edge/ml-drift/archive/" + ML_DRIFT_COMMIT + ".tar.gz",
+        "https://github.com/PowerBeef/ml-drift/archive/" + ML_DRIFT_COMMIT + ".tar.gz",
     ],
 )
 
