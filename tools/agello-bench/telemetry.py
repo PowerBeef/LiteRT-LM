@@ -4,6 +4,9 @@
 Usage: python3 telemetry.py results/run.jsonl [more.jsonl ...] [--label ARM] [--case ID]
                             [--weights-gb 2.198]
        python3 telemetry.py <Agello build/…/harness-report.json>   (each scenario is a case)
+       python3 telemetry.py results/run.jsonl.load-telemetry.json   (an engine load: delegation,
+                                                                     caches, anomalies)
+       python3 telemetry.py --graph DIR   (GPU graphs written with AGELLO_TELEMETRY_GRAPH_DIR=DIR)
 
 Needs records from our LiteRT-LM builds (they carry a `telemetry` snapshot per case); run them
 with `--telemetry 2` or higher for span timings and GPU time. For each arm and case (warm-ups
@@ -15,11 +18,15 @@ left out, repetitions combined), it prints:
   - effective weight bandwidth (GB of weights read per decode run divided by GPU time);
   - counters that flag waste or silent fallbacks (CPU sampler, KV copies, context switches,
     per-step allocations, host locks), MTP acceptance;
+  - host copies between GPU tensors and host memory (bytes per generated token);
+  - delegation coverage and program and weight cache use (in load snapshots);
   - anomalies, and LiteRT's own trace sites ranked by time.
 """
 import argparse
+import glob
 import json
-from collections import defaultdict
+import os
+from collections import Counter, defaultdict
 
 # Spans normalized per generated token (decode path).
 DECODE_SPANS = [
@@ -30,6 +37,8 @@ DECODE_SPANS = [
     ("param_fill", "  host: KV parameter fill"),
     ("sample", "  host: sampling"),
     ("logits_readback", "  host: token readback (waits for the GPU)"),
+    ("host.lock_read", "  host: GPU → host buffer copies"),
+    ("host.unlock_write", "  host: host → GPU buffer copies"),
     ("constraint", "  host: constraint mask"),
     ("detokenize", "  host: detokenize"),
     ("stream_callback", "  host: stream callback"),
@@ -56,8 +65,14 @@ WATCH_COUNTERS = [
     "runs_prefill", "runs_decode", "runs_verify", "runs_drafter", "command_buffers", "gpu_waits",
     "sampler_gpu", "sampler_cpu", "logit_masks", "embedding_lookups", "mask_fills",
     "token_history_copies", "decode_allocations", "kv_copies", "context_switches",
-    "host_locks", "host_lock_copy_bytes", "run_option_parses", "tasks_scheduled",
+    "host_locks", "host_lock_copies", "host_lock_copy_bytes", "host_unlock_copies",
+    "host_unlock_copy_bytes", "host_shadow_allocs", "run_option_parses", "tasks_scheduled",
     "stop_eos", "stop_max_tokens", "stop_kv_full", "stop_cancelled", "errors",
+]
+LOAD_COUNTERS = [
+    "compiled_models", "graph_nodes", "graph_nodes_gpu", "graph_nodes_cpu_delegate",
+    "graph_nodes_undelegated", "gpu_partitions", "program_cache_hits", "program_cache_misses",
+    "weight_cache_hits", "weight_cache_misses",
 ]
 
 
@@ -70,6 +85,12 @@ def load(paths):
             report = json.loads(text)
             if isinstance(report, dict) and "scenarios" in report:
                 rows += agello_rows(report, path)
+                continue
+            if isinstance(report, dict) and "counters" in report:
+                # A bare snapshot, such as agello-bench's <out>.load-telemetry.json.
+                rows.append({"label": "snapshot", "id": os.path.basename(path), "telemetry": report,
+                             "warmup": False, "prefill": 0, "decode": 0, "prefillTPS": 0,
+                             "decodeTPS": 0})
                 continue
         rows += [json.loads(line) for line in text.splitlines() if line.strip()]
     return [r for r in rows if not r.get("warmup") and r.get("telemetry")]
@@ -115,7 +136,8 @@ def combine(records):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("files", nargs="+")
+    parser.add_argument("files", nargs="*")
+    parser.add_argument("--graph", metavar="DIR", help="summarize GPU graph dumps in DIR")
     parser.add_argument("--label")
     parser.add_argument("--case")
     parser.add_argument("--kernels", type=int, default=15, help="kernels listed per phase (level 4)")
@@ -123,6 +145,10 @@ def main():
                         help="weights read per decode run (E4B: 2.198 GB)")
     args = parser.parse_args()
 
+    if args.graph:
+        graphs(args.graph, args.kernels)
+        if not args.files:
+            return
     rows = load(args.files)
     if not rows:
         print("No records with telemetry (run our build with --telemetry 2).")
@@ -139,9 +165,12 @@ def main():
         decoded = sum(r["decode"] for r in records)
         prefilled = sum(r["prefill"] for r in records)
         level = records[0]["telemetry"]["level"]
-        print(f"\n== {label} / {case}: {n} run(s), {prefilled // n} prompt tokens, {decoded // n} "
-              f"generated; prefill {records[0]['prefillTPS']:.0f} tok/s, decode "
-              f"{records[0]['decodeTPS']:.1f} tok/s (telemetry level {level})")
+        if label == "snapshot":
+            print(f"\n== {case} (telemetry level {level})")
+        else:
+            print(f"\n== {label} / {case}: {n} run(s), {prefilled // n} prompt tokens, {decoded // n} "
+                  f"generated; prefill {records[0]['prefillTPS']:.0f} tok/s, decode "
+                  f"{records[0]['decodeTPS']:.1f} tok/s (telemetry level {level})")
         if level < 2:
             print("  (level 1: counters only; use --telemetry 2 for timings)")
         if decoded and spans:
@@ -192,6 +221,28 @@ def main():
             for name, v in kernels[:args.kernels]:
                 print(f"    {name:<46} {v['total_ms'] / runs:8.3f} ms  {100 * v['total_ms'] / total:5.1f}%  "
                       f"({v['count'] / runs:.0f} per run)")
+        copied = counters.get("host_lock_copy_bytes", 0) + counters.get("host_unlock_copy_bytes", 0)
+        if copied and decoded:
+            print(f"  host copies (GPU tensors ↔ host memory, prefill included): {copied / decoded / 1024:.1f} KB "
+                  f"per generated token; {counters.get('host_lock_copies', 0) // n} reads and "
+                  f"{counters.get('host_unlock_copies', 0) // n} writes per run")
+        by_size = sorted(((k, v) for k, v in spans.items() if k.startswith(("host.read ", "host.write "))),
+                         key=lambda kv: -kv[1]["count"] * int(kv[0].split(" ")[1]))
+        if by_size:
+            print("  host copies by buffer size (per run):")
+            for k, v in by_size[:args.kernels]:
+                size = int(k.split(" ")[1])
+                print(f"    {k:<46} ×{v['count'] / n:<6.0f} {v['count'] * size / n / 2**20:8.1f} MB  "
+                      f"{v['total_ms'] / n:7.2f} ms")
+        if counters.get("compiled_models"):
+            total = counters.get("graph_nodes", 0)
+            print(f"  delegation: {counters['compiled_models'] // n} compiled models, {total // n} nodes: "
+                  f"GPU {counters.get('graph_nodes_gpu', 0) // n} in {counters.get('gpu_partitions', 0) // n} "
+                  f"partitions, CPU delegate {counters.get('graph_nodes_cpu_delegate', 0) // n}, "
+                  f"undelegated {counters.get('graph_nodes_undelegated', 0) // n}")
+        caches = {k: counters[k] // n for k in LOAD_COUNTERS[6:] if counters.get(k)}
+        if caches:
+            print("  caches: " + ", ".join(f"{k} {v}" for k, v in caches.items()))
         drafted, accepted = counters.get("mtp_drafted", 0), counters.get("mtp_accepted", 0)
         if drafted:
             print(f"  MTP: {counters.get('mtp_rounds', 0) // n} rounds per run, acceptance "
@@ -209,12 +260,42 @@ def main():
             for (code, message), count in sorted(anomalies.items(), key=lambda x: -x[1]):
                 print(f"    {code} ×{count}: {message}")
         dynamic = sorted(((k, v) for k, v in spans.items()
-                          if (" " in k or "::" in k) and not k.startswith("gpu.k.")),
+                          if (" " in k or "::" in k) and not k.startswith(("gpu.k.", "host."))),
                          key=lambda kv: -kv[1]["total_ms"])
         if dynamic:
             print("  LiteRT trace sites, ms per run:")
             for k, v in dynamic[:8]:
                 print(f"    {k:<46} {v['total_ms'] / n:9.2f}  ({v['count'] // n} per run)")
+
+
+def graphs(directory, top):
+    """GPU graphs from ML Drift (AGELLO_TELEMETRY_GRAPH_DIR): one JSON file per initialized graph."""
+    paths = sorted(glob.glob(os.path.join(directory, "gpu-graph-*.json")),
+                   key=lambda p: int(os.path.basename(p).split("-")[2]))
+    if not paths:
+        print(f"No gpu-graph-*.json in {directory}.")
+        return
+    for path in paths:
+        with open(path) as f:
+            graph = json.load(f)
+        kernels = graph["kernels"]
+        flops = sum(k["flops"] for k in kernels)
+        print(f"\n== {os.path.basename(path)}: {len(kernels)} kernels ({graph['origin']}), "
+              f"{flops / 1e9:.2f} GFLOP per run (shapes {graph['shape_order']})")
+        families = Counter()
+        family_flops = Counter()
+        for k in kernels:
+            family = k["name"].split(" -> ")[0]
+            families[family] += 1
+            family_flops[family] += k["flops"]
+        print("  kernel families by count: " + ", ".join(f"{name} {count}" for name, count in families.most_common(top)))
+        if flops:
+            print("  by FLOPs:")
+            for name, value in family_flops.most_common(top):
+                print(f"    {name:<46} {value / 1e9:9.3f} GFLOP  {100 * value / flops:5.1f}%")
+        fused = sum(1 for k in kernels if " -> " in k["name"])
+        print(f"  kernels that fuse several ops: {fused} of {len(kernels)}; families are named by "
+              f"their first op")
 
 
 if __name__ == "__main__":

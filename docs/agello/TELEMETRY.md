@@ -56,7 +56,8 @@ Every probe is an inline check of one atomic level before any work.
   waits past 1 s and 5 s with the waiting session and task states, sessions destroyed with
   pending tasks, streams dropped without cancel, invalid sampled tokens, sampler or mask-runner
   CPU fallbacks, GPU family not recognized (ML Drift falls back to Apple1), weight-cache load
-  failures, KV context switches, constraint creation skipped.
+  failures and weights prepared on every load, stale program-cache entries, GPU models split
+  across partitions or left on the CPU, KV context switches, constraint creation skipped.
 - **Memory** on every snapshot: `phys_footprint`, its peak, `ledger_tag_graphics_footprint`,
   `MTLDevice.currentAllocatedSize`, `os_proc_available_memory` (iOS), thermal state, low power.
 - **Numerical probes** (level 4): on the CPU sampler path, per step logits NaN/Inf count, max,
@@ -87,7 +88,8 @@ Every probe is an inline check of one atomic level before any work.
 | Trace | level 3, then `litert_lm_telemetry_write_trace` / agello-bench `--trace FILE`; open in Perfetto or `chrome://tracing` |
 | Instruments | level 2+: subsystem `com.patricedery.agello.litertlm`, category DynamicTracing (os_signpost intervals) |
 | Per case | agello-bench resets before each case and stores the snapshot in the record's `telemetry`; the engine load's goes to `<out>.load-telemetry.json` |
-| Report | `python3 tools/agello-bench/telemetry.py results/run.jsonl` |
+| Report | `python3 tools/agello-bench/telemetry.py results/run.jsonl` (also a load snapshot, `results/run.jsonl.load-telemetry.json`, or an Agello `harness-report.json`) |
+| GPU graphs | `AGELLO_TELEMETRY_GRAPH_DIR=<dir>` (any level): ML Drift writes each initialized graph there, built or restored from the program cache, as `gpu-graph-<n>-<kernels>-nodes.json` (kernel names, work groups, FLOPs, input and output shapes); `telemetry.py --graph <dir>` summarizes them |
 
 Build notes: LiteRT-LM's probes come with `@agello_telemetry` in the tree. LiteRT's trace sites and
 the Metal command-buffer timing live in our LiteRT and ML Drift forks (branch `agello-next`); until
@@ -122,6 +124,21 @@ the filled length (T4, first step) should bring 32K prefill close to its 8K spee
 add about 8% to decode at 32K. The int4 weights are converted to int8 on every prefill run (T9:
 native int4 for the Neural Accelerator path).
 
+### Load, delegation and host copies (2K prompt, 64 generated, MTP)
+
+| | Reading |
+| --- | --- |
+| Delegation | 6 compiled models, 20,392 nodes: 20,335 on the GPU in 5 partitions (one per GPU subgraph: no CPU round trips inside a model), 3 in XNNPack, 54 on TFLite's own CPU kernels (the CPU embedders) |
+| Caches | Cold load: 5 program-cache misses, weight cache missed, built, flushed and reloaded (5 misses, 5 hits), 8.3 s. Warm: 5 program-cache hits, 1.1 s, of which delegate graph conversion 0.5 s |
+| GPU graphs | Decode 1,766 kernels (15.9 GFLOP), verify 1,817 (63.5), prefill-1024 1,678 (6,318), prefill-128 1,632 (790), drafter 164. In decode, 302 RMS-norm kernels, 321 multiplies, 247 reshapes, 132 strided slices and 85 selects; 1,010 kernels fuse several ops, many of them a cast → quantize-dequantize → cast chain, sometimes twice in a row |
+| Host copies | 113 GPU → host reads and 274 host → GPU writes per case (4.9 MB per generated token, prefill included). Writes are cheap (126 MB of per-layer embeddings per prefill at about 40 GB/s). Reads are not: the logits buffers aren't packed, so each read converts ML Drift's layout on the CPU: 1.7 ms per 2 MB verify readback, 0.47 ms per 512 KB drafter readback, about 50 ms of a 494 ms decode turn (10%) |
+| Async | The executor asks for asynchronous runs; the Metal backend has no post-dispatch event, so every run completes synchronously (fact `gpu_async`) |
+
+A packed logits output (a plain shared `MTLBuffer` read by `memcpy`, or no copy at all) would
+recover most of the 10%; it belongs to T5, and T7 (sampling on the GPU) removes the readback.
+The decode graph's 1,766 dispatches per token point at T6 (encoding) and at fusing the
+elementwise chains around the norms.
+
 ### Metal waits
 
 The Metal delegate busy-spins a CPU core for every GPU wait by default; benchmark mode isn't the
@@ -138,7 +155,7 @@ locks), T7 (an open GPU sampler, which also closes most of the MTP gap to Google
 1. Done (2026-10-14): core library, C and Swift APIs, LiteRT-LM probes (turns, executor, MTP,
    sampler, execution manager watchdogs), LiteRT's trace macros mapped to spans, command-buffer
    GPU time, agello-bench integration and `telemetry.py`; overhead within noise.
-2. In progress: pipeline labels, GPU family probe and per-kernel timing (done); final-graph dump
-   (works on program-cache hits too); LiteRT buffer lock and copy counters, cache events,
-   delegation metrics, async fallback event.
+2. Done (2026-10-14): pipeline labels, GPU family probe and per-kernel timing; the GPU graph
+   dump (built or restored); LiteRT buffer lock and copy counters with per-size spans, program
+   and weight cache events, delegation coverage per compiled model, the async fallback fact.
 3. Numerical probes and invariant checks; Agello harness integration.
