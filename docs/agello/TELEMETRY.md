@@ -97,10 +97,12 @@ Every probe is an inline check of one atomic level before any work.
 | Report | `python3 tools/agello-bench/telemetry.py results/run.jsonl` (also a load snapshot, `results/run.jsonl.load-telemetry.json`, or an Agello `harness-report.json`) |
 | GPU graphs | `AGELLO_TELEMETRY_GRAPH_DIR=<dir>` (any level): ML Drift writes each initialized graph there, built or restored from the program cache, as `gpu-graph-<n>-<kernels>-nodes.json` (kernel names, work groups, FLOPs, input and output shapes); `telemetry.py --graph <dir>` summarizes them |
 
-Build notes: LiteRT-LM's probes come with `@agello_telemetry` in the tree. LiteRT's trace sites and
-the Metal command-buffer timing live in our LiteRT and ML Drift forks (branch `agello-next`); until
-those are pushed and pinned in the WORKSPACE, build them from the local checkouts with
-`--override_repository=litert=…` and `--override_repository=ml_drift=…` in `.bazelrc.user`.
+Build notes: LiteRT-LM's probes come with `@agello_telemetry` in the tree. LiteRT's probes (trace
+sites, command-buffer timing, host copies, caches, delegation) and ML Drift's (kernel names and
+timing, the graph dump) live in our LiteRT and ML Drift forks (branch `agello-next`), pinned in the
+WORKSPACE by commit and sha256. To change them, build from local checkouts with
+`--override_repository=litert=…` and `--override_repository=ml_drift=…` in `.bazelrc.user`, then
+push and re-pin.
 
 Overhead on the M6 (speed sweep, ABAB, same build): levels 1 and 2 within ±0.3% of level 0 for
 prefill and decode, replies identical.
