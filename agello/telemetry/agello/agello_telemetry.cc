@@ -298,6 +298,17 @@ void RecordGpuSeconds(int span, double start_seconds, double end_seconds) {
              static_cast<uint64_t>(end_seconds * ticks_per_second), 0);
 }
 
+void RecordNs(int span, int64_t ns) {
+  if (GetLevel() < kSpans || span < 0 || span >= kMaxSpans || ns < 0) return;
+  SpanStats& stats = span_stats[span];
+  stats.count.fetch_add(1, std::memory_order_relaxed);
+  stats.total_ns.fetch_add(ns, std::memory_order_relaxed);
+  stats.histogram[Bucket(static_cast<uint64_t>(ns))].fetch_add(1, std::memory_order_relaxed);
+  int64_t max = stats.max_ns.load(std::memory_order_relaxed);
+  while (ns > max && !stats.max_ns.compare_exchange_weak(max, ns, std::memory_order_relaxed)) {
+  }
+}
+
 int InternSpan(const char* name) {
   if (name == nullptr) return -1;
   const int known = dynamic_count.load(std::memory_order_acquire);

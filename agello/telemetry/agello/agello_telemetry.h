@@ -136,8 +136,9 @@ enum Span : int {
 #undef AGELLO_TELEMETRY_ENUM
       kStaticSpanCount
 };
-// Spans named at run time (LiteRT's existing trace sites) get ids from kStaticSpanCount up.
-inline constexpr int kMaxSpans = kStaticSpanCount + 96;
+// Spans named at run time (LiteRT's trace sites, per-kernel GPU times) get ids from
+// kStaticSpanCount up.
+inline constexpr int kMaxSpans = kStaticSpanCount + 512;
 
 // X(identifier, "name"): anomaly codes.
 #define AGELLO_TELEMETRY_ANOMALIES(X)                             \
@@ -193,6 +194,9 @@ inline void RecordDuration(int span, uint64_t begin, uint64_t end, int64_t arg =
 
 // GPU times arrive in seconds on the mach timebase (MTLCommandBuffer GPUStartTime/GPUEndTime).
 void RecordGpuSeconds(int span, double start_seconds, double end_seconds);
+
+// Adds a duration in nanoseconds to a span's aggregates (no trace event): per-kernel GPU times.
+void RecordNs(int span, int64_t ns);
 
 // Scoped span: aggregates at level 2+, ring buffer at 3+, DynamicTracing signposts at 2+.
 class ScopedSpan {
