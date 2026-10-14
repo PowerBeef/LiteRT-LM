@@ -228,6 +228,10 @@ request it, so a source build needs a patch that keeps llguidance working withou
 - Composites: `odml.rms_norm`, `odml.runtime_bmm` {`is_global`, `is_src`, `scale`} for QKᵀ and PV
   (no window attribute; SOFTMAX over the full row), `odml.cache_update` (QUANTIZE +
   DYNAMIC_UPDATE_SLICE; supports `is_ring_buffer`).
+- Masks: local layers build their 512-token window in the graph from `input_pos` and ignore the
+  `mask` input, which only the 7 global layers read, so results are exact; the cost is that
+  QKᵀ, the select and the softmax still cover every filled key. Details, the per-layer cache map
+  and the drafter: `E4B-GRAPH.md`.
 - Prefill runs layers 0–23 (the KV producers) and skips the shared layers and the LM head; the
   first token comes from `decode`.
 
