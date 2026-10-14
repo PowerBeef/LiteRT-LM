@@ -11,6 +11,10 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+//
+// Modified by Patrice Déry for Agello (PowerBeef/LiteRT-LM, branch agello):
+// a tool call that fails is answered with an error response the model can
+// read, instead of throwing and ending the turn (see handleToolCalls).
 
 import Foundation
 import OSLog
@@ -383,30 +387,69 @@ public final class Conversation: Sendable {
     }
   }
 
+  /// Runs the model's tool calls. A call that fails (a tool name the model
+  /// invented, arguments that don't decode into the tool's parameters, or a
+  /// tool that throws) is answered with an `error` response, so the model
+  /// can correct the call or answer without it instead of the turn ending.
   fileprivate func handleToolCalls(_ toolCalls: [[String: Any]]) async throws -> [String: Any] {
     var toolResponses: [[String: Any]] = []
 
     for toolCall in toolCalls {
       guard let function = toolCall["function"] as? [String: Any],
-        let name = function["name"] as? String,
-        let argsObject = function["arguments"] as? [String: Any]
+        let name = function["name"] as? String
       else {
         continue
       }
-      do {
-        let result = try await toolManager.execute(name: name, arguments: argsObject)
-
-        toolResponses.append([
-          "type": "tool_response",
-          "name": name,
-          "response": result,
-        ])
-      } catch {
-        throw LiteRTLMError.conversation(.toolExecutionError(name: name, error: "\(error)"))
+      let response: Any
+      if let argsObject = Conversation.toolArguments(function["arguments"]) {
+        do {
+          response = try await toolManager.execute(name: name, arguments: argsObject)
+        } catch {
+          logger.warning("Tool call \(name, privacy: .public) failed: \(String(describing: error), privacy: .public)")
+          response = ["error": Conversation.toolErrorMessage(name: name, error: error)]
+        }
+      } else {
+        response = ["error": "The arguments for '\(name)' must be a JSON object."]
       }
+      toolResponses.append([
+        "type": "tool_response",
+        "name": name,
+        "response": response,
+      ])
     }
 
     return ["role": "tool", "content": toolResponses]
+  }
+
+  /// A tool call's arguments as an object: missing means none, and a JSON
+  /// string holding an object is decoded. Anything else is invalid (nil).
+  fileprivate static func toolArguments(_ value: Any?) -> [String: Any]? {
+    switch value {
+    case nil, is NSNull:
+      return [:]
+    case let object as [String: Any]:
+      return object
+    case let text as String:
+      guard let data = text.data(using: .utf8),
+        let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+      else {
+        return nil
+      }
+      return object
+    default:
+      return nil
+    }
+  }
+
+  /// What the model reads when a tool call fails.
+  fileprivate static func toolErrorMessage(name: String, error: Error) -> String {
+    if case LiteRTLMError.tool(.notFound) = error {
+      return "There is no tool named '\(name)'. Use only the tools you were given, or answer without one."
+    }
+    if error is DecodingError {
+      return "The arguments for '\(name)' don't match its parameters. Check their names and types, then try again."
+    }
+    return "'\(name)' failed: \(error.localizedDescription)"
   }
 
   /// Throws an error if the conversation is not alive.
