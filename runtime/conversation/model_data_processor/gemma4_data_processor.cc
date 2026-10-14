@@ -60,10 +60,9 @@ Gemma4DataProcessor::Create(Gemma4DataProcessorConfig config,
           litert::support::AudioPreprocessorConfig::CreateDefaultGemma4Config(
               config.skip_mel_spectrogram_extraction)));
 #if defined(LITERT_LM_FST_CONSTRAINTS_DISABLED)
-  if (enable_constrained_decoding) {
-    return absl::FailedPreconditionError(
-        "Constrained decoding was disabled at build time.");
-  }
+  // Agello: without the FST provider only tool-call constraints are missing
+  // (CreateConstraint returns Unimplemented, which conversations skip);
+  // response formats still work through the llguidance provider.
   return absl::WrapUnique(
       new Gemma4DataProcessor(config, preface, ImagePreprocessor::Create(),
                               std::move(audio_preprocessor)));
@@ -159,9 +158,9 @@ absl::StatusOr<std::unique_ptr<Constraint>>
 Gemma4DataProcessor::CreateConstraint(
     const nlohmann::ordered_json& tools) const {
 #if defined(LITERT_LM_FST_CONSTRAINTS_DISABLED)
-  return absl::FailedPreconditionError(
-      "Constrained decoding is disabled at build time, but it was requested "
-      "for inference.");
+  return absl::UnimplementedError(
+      "Tool-call constraints need the FST constraint provider, which this "
+      "build doesn't include.");
 #else
   if (constraint_provider_c_ == nullptr) {
     return nullptr;
