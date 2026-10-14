@@ -149,6 +149,35 @@ http_archive(
 )
 
 # TensorFlow
+# Agello: FP16 as LiteRT declares it, with the lowercase alias ML Drift uses (`@fp16//:fp16`).
+# Declared before TensorFlow's workspace macros, which skip repositories that already exist; same
+# commit and sha256 as theirs.
+http_archive(
+    name = "FP16",
+    build_file_content = """
+package(default_visibility = ["//visibility:public"])
+
+licenses(["notice"])
+
+exports_files(["LICENSE"])
+
+cc_library(
+    name = "FP16",
+    hdrs = glob(["include/**/*.h"]),
+    includes = ["include"],
+    strip_include_prefix = "include",
+)
+
+alias(
+    name = "fp16",
+    actual = ":FP16",
+)
+""",
+    sha256 = "d973501a40c55126b31accc2d9f08d931ec3cc190c0430309a5e341d3c0ce32a",
+    strip_prefix = "FP16-4dfe081cf6bcd15db339cf2680b9281b8451eeb3",
+    url = "https://github.com/Maratyszcza/FP16/archive/4dfe081cf6bcd15db339cf2680b9281b8451eeb3.zip",
+)
+
 http_archive(
     name = "org_tensorflow",
     patches = ["@//third_party/tensorflow:tensorflow.patch"],
@@ -452,10 +481,43 @@ http_archive(
         # third_party/py/numpy. Uses a shell loop rather than `find`, which may resolve
         # to find.exe on Windows.
         "for f in third_party/*/*; do if [ -f \"$f\" ]; then sed -i -e 's|\"@//third_party/|\"@litert//third_party/|g' \"$f\" || exit 1; fi; done",
+        # Agello: the Metal delegate's aspect hint points at an internal package; alias it to
+        # rules_swift's.
+        "mkdir -p tools/build_defs/swift && echo 'alias(name = \"no_module\", actual = \"@build_bazel_rules_swift//swift:no_module\", visibility = [\"//visibility:public\"])' > tools/build_defs/swift/BUILD",
+        # Agello: an internal include path the export didn't rewrite.
+        "sed -i -e 's|\"third_party/odml/litert/ml_drift/delegate/|\"ml_drift_delegate/delegate/|g' ml_drift_delegate/delegate/gpu_backend_metal_litert.mm",
     ],
     sha256 = LITERT_SHA256,
     strip_prefix = "LiteRT-" + LITERT_REF,
     url = "https://github.com/google-ai-edge/LiteRT/archive/" + LITERT_REF + ".tar.gz",
+)
+
+# Agello: ML Drift, the GPU engine behind LiteRT's Metal accelerator, so the
+# accelerator can be linked statically (//runtime/executor:default_static_gpu_accelerator).
+# Bazel doesn't read @litert's WORKSPACE, so this repeats its declaration;
+# keep the commit and sha256 in step with the LiteRT pinned above.
+ML_DRIFT_COMMIT = "1b18771f44c0be3d972847b31a80f6dc3d6964b5"
+
+ML_DRIFT_SHA256 = "0a7384901754a4ee84220561bcf5447fde4363cbc8a42c94743f183d178feb30"
+
+http_archive(
+    name = "ml_drift",
+    patch_cmds = [
+        # Add external/ml_drift to flatc include paths for gl_inference_context_cc_fbs.
+        "sed -i -e 's|\"-I .\",|\"-I .\", \"-I external/ml_drift\",|g' ml_drift/gl/BUILD",
+        # Agello: ML Drift names LiteRT's delegate packages as the main repository (`@//`), which
+        # LiteRT is in its own build but LiteRT-LM is not.
+        "grep -rl '\"@//ml_drift_delegate/' --include=BUILD ml_drift | while read f; do sed -i -e 's|\"@//ml_drift_delegate/|\"@litert//ml_drift_delegate/|g' \"$f\" || exit 1; done",
+    ],
+    repo_mapping = {
+        "@fp16": "@FP16",
+        "@com_github_google_re2": "@com_googlesource_code_re2",
+    },
+    sha256 = ML_DRIFT_SHA256,
+    strip_prefix = "ml-drift-" + ML_DRIFT_COMMIT,
+    urls = [
+        "https://github.com/google-ai-edge/ml-drift/archive/" + ML_DRIFT_COMMIT + ".tar.gz",
+    ],
 )
 
 http_archive(

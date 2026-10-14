@@ -255,7 +255,26 @@ cc_library(
         # If CAPI is linked dynamically, need to link the accelerator dynamically as well.
         "@litert//litert:litert_runtime_link_mode_dynamic": [],
         "//conditions:default": [
+            ":apple_static_gpu_accelerator",
         ],
+    }),
+)
+
+# Agello: LiteRT's Metal accelerator (ML Drift), linked statically on Apple
+# platforms. It registers itself at startup ("Statically linked GPU
+# accelerator registered").
+cc_library(
+    name = "apple_static_gpu_accelerator",
+    # The open-source BUILD files leave the Apple framework dependencies as placeholders.
+    linkopts = select({
+        "@platforms//os:ios": ["-framework Metal", "-framework Foundation"],
+        "@platforms//os:macos": ["-framework Metal", "-framework Foundation"],
+        "//conditions:default": [],
+    }),
+    deps = select({
+        "@platforms//os:ios": ["@litert//litert/runtime/accelerators/gpu:ml_drift_metal_accelerator"],
+        "@platforms//os:macos": ["@litert//litert/runtime/accelerators/gpu:ml_drift_metal_accelerator"],
+        "//conditions:default": [],
     }),
 )
 

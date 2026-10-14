@@ -549,3 +549,14 @@ build:hermetic_linux --cxxopt=-std=c++17
 build:hermetic_linux --host_cxxopt=-std=c++17
 build:hermetic_linux --repo_env=SYSROOT_DIST=linux_glibc_2_31
 
+
+# Agello (PowerBeef/agello-litert-lm): Apple builds with LiteRT's Metal accelerator linked
+# statically (//runtime/executor:default_static_gpu_accelerator).
+# Without Google's closed constraint provider.
+build:agello --define=LITERT_LM_FST_CONSTRAINTS_DISABLED=1
+# Objective-C++ gets the same C++ standard as C++ (-std=c++20 above): absl's status API differs
+# between C++17 and C++20.
+build:agello --objccopt=-std=gnu++20
+# A missing symbol is a link error, not a null pointer at run time (build:macos links with
+# -undefined dynamic_lookup).
+build:agello --linkopt=-Wl,-undefined,error
