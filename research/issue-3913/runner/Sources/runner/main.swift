@@ -1,9 +1,7 @@
 // LiteRT-LM #3913 copy-fidelity runner (same prompts as iRTChat's probe 10).
-// Usage: runner <model.litertlm> <gpu|cpu> <fp16|fp32> <cases.json>
-//   fp16 = the default activation type (no override); fp32 = .float32.
+// Usage: runner <model.litertlm> <gpu|cpu> <default|fp32> <cases.json>
 //   cases.json: [{"id": "...", "sentences": 120, "late": false, "seed": 1}, ...]
-// Prints one JSON object per case: prompt (prefill) tokens, the reply, and the
-// first wrong digit with its position (prefill - 1 + index; one token per digit).
+// Prints one JSON object per case.
 import Foundation
 import LiteRTLM
 
@@ -45,22 +43,23 @@ func filler(sentences: Int) -> String {
 }
 
 let args = CommandLine.arguments
-guard args.count == 5 else {
-  FileHandle.standardError.write("usage: runner <model> <gpu|cpu> <fp16|fp32> <cases.json>\n".data(using: .utf8)!)
+guard args.count == 5 || args.count == 6 else {
+  FileHandle.standardError.write("usage: runner <model> <gpu|cpu> <fp16|fp32> <cases.json> [maxNumTokens]\n".data(using: .utf8)!)
   exit(2)
 }
 let cases = try JSONDecoder().decode([Case].self, from: Data(contentsOf: URL(fileURLWithPath: args[4])))
 
 ExperimentalFlags.optIntoExperimentalAPIs()
 ExperimentalFlags.enableBenchmark = true
-ExperimentalFlags.enableSpeculativeDecoding = false
+let mtp = ProcessInfo.processInfo.environment["MTP"] == "1"
+ExperimentalFlags.enableSpeculativeDecoding = mtp
 
 let cacheDir = URL(fileURLWithPath: args[1]).deletingLastPathComponent().appendingPathComponent("cache").path
 try FileManager.default.createDirectory(atPath: cacheDir, withIntermediateDirectories: true)
 let loadStarted = Date()
 let engine = Engine(
   engineConfig: try EngineConfig(
-    modelPath: args[1], backend: args[2] == "gpu" ? .gpu : .cpu(), maxNumTokens: 8_192,
+    modelPath: args[1], backend: args[2] == "gpu" ? .gpu : .cpu(), maxNumTokens: args.count == 6 ? Int(args[5])! : 8_192,
     cacheDir: cacheDir, activationDataType: args[3] == "fp32" ? .float32 : nil))
 try await engine.initialize()
 FileHandle.standardError.write("engine loaded in \(String(format: "%.1f", Date().timeIntervalSince(loadStarted))) s\n".data(using: .utf8)!)
@@ -89,7 +88,9 @@ for item in cases {
     "sentences": item.sentences, "late": item.late, "seed": item.seed,
     "prefill": info.lastPrefillTokenCount, "decode": info.lastDecodeTokenCount,
     "exact": mismatch == nil, "expected": digits, "output": reply,
-    "seconds": (Date().timeIntervalSince(started) * 100).rounded() / 100,
+    "seconds": (Date().timeIntervalSince(started) * 100).rounded() / 100, "mtp": mtp,
+    "prefillTPS": (info.lastPrefillTokensPerSecond * 10).rounded() / 10,
+    "decodeTPS": (info.lastDecodeTokensPerSecond * 10).rounded() / 10,
   ]
   if let mismatch {
     result["firstMismatch"] = mismatch

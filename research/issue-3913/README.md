@@ -30,6 +30,50 @@ With FP32 activations, every patched model's text is identical to the
 original's (65/65), so the patch itself is neutral. `python3 summarize.py`
 prints every number from the raw results.
 
+## A float16-exact rotary path at every length (`--split`)
+
+A constant shift only helps up to 4,096 positions: one float16 tensor can't
+hold more than ~4,097 evenly spaced integers. `patch_rope.py --split` makes the
+rotary phases exact for positions 0–32,767 with float16 activations, in both
+`tf_lite_prefill_decode` and `tf_lite_mtp_drafter`. It splits the position as
+`2048·h + l`:
+
+- **l (0–2047, exact in float16)** goes through the existing MUL / SIN / COS.
+- **The phase of `2048·h`** comes from a precomputed 16 × F table, selected
+  with `onehot(h)`.
+- **Angle addition** combines the two, using only values in [−1, 1].
+
+Results on the Mac (WebGPU delegate):
+
+| Check | Result |
+| --- | --- |
+| FP32: patched text vs original text | identical, 40/40 |
+| FP16, prompts of 237–4,449 tokens (`short`, `long`, `cross4096`) | 70/70 exact (original: 15/70) |
+| FP16, prompts of 6K–30K tokens (`xl`, `maxNumTokens` 32768) | 18/18 exact, **identical to original FP32** in 18/18 (original FP16: 0/18) |
+| CPU, long prompts | 3/3 exact |
+| Speed (no MTP) | prefill and decode within ~1% of the original FP16. Original FP32 prefill is ~35% slower. |
+| With speculative decoding (`MTP=1`) | 12/12 exact, identical to original FP32 + MTP. 87–120 tok/s against 37–89 for original FP32 + MTP (2.35× faster at 16K). |
+
+The first MTP group (703 tokens) includes each engine's warm-up run. Repeated
+after warm-up, the split model with the drafter decodes at 123.7 tok/s, and
+with only the main section patched at 124.4.
+
+Two findings on the WebGPU delegate shaped the design:
+- **FULLY_CONNECTED with float32 weights** computed wrong results, even with FP32 activations.
+- **REDUCE_MAX over an inner axis**, or over a 3-D tensor, effectively returned
+  the first element along the reduced axis.
+
+So every new tensor is 4-D and every reduction runs over the last axis, like the
+model's own REDUCE_MAX ops; tables are selected with MUL + REDUCE_MAX
+(`onehot · (table + 2)`, then −2).
+
+```sh
+python patch_rope.py models/gemma-4-E4B-it.litertlm --split models/split.litertlm
+./run_arm.sh split gpu fp16 long split
+./run_arm.sh split gpu fp16 xl   split 32768
+MTP=1 ./run_arm.sh split gpu fp16 mtp mtp-split 32768
+```
+
 ## Environment
 
 - LiteRT-LM v0.18.0: this branch is based on the `v0.18.0` tag, and the
@@ -65,6 +109,7 @@ pip install -r requirements.txt
 python patch_rope.py models/gemma-4-E4B-it.litertlm  2048 models/float-plus2048.litertlm
 python patch_rope.py models/gemma-4-E4B-it.litertlm -2048 models/float-minus2048.litertlm
 python patch_rope.py models/gemma-4-E4B-it.litertlm -2048 models/int-minus2048.litertlm --int
+python patch_rope.py models/gemma-4-E4B-it.litertlm --split models/split.litertlm
 
 # 3. Runner
 (cd runner && swift build -c release)
@@ -84,9 +129,9 @@ python3 summarize.py
 
 | Path | Contents |
 | --- | --- |
-| `patch_rope.py` | Shifts the rotary position in every signature of the `tf_lite_prefill_decode` section |
+| `patch_rope.py` | Shifts the rotary position (`<shift>`, `--int`) or makes it float16-exact (`--split`) in `tf_lite_prefill_decode` and `tf_lite_mtp_drafter` |
 | `runner/` | macOS copy-fidelity runner (Swift, this repository's package) |
-| `cases/` | Prompt cases: `baseline` (the iPhone probe's cases), `short`, `long`, `cross4096` |
+| `cases/` | Prompt cases: `baseline` (the iPhone probe's cases), `short`, `long`, `long3`, `cross4096`, `xl` (6K–30K tokens), `speed`, `mtp` |
 | `results/mac/` | One JSON line per reply: `<cases>__<model>__<backend>-<precision>.jsonl` |
 | `results/iphone/` | iRTChat probe results: probe 10 (position boundary), probe 11 (INT32 shift) |
 | `summarize.py` | Prints the tables from the results (no dependencies) |

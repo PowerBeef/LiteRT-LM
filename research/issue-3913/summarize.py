@@ -34,6 +34,53 @@ if cross:
         print(f"  digits at positions {prefill - 1}-{prefill + 46}: {sum(r['exact'] for r in rows)}/{len(rows)} exact"
               + (f"; first errors at {firsts[0]}-{firsts[-1]} (rotary {firsts[0] - 2048}-{firsts[-1] - 2048})" if firsts else ""))
 
+xl_split, xl_ref = arms.get(("xl", "split", "gpu-fp16")), arms.get(("xl", "original", "gpu-fp32"))
+if xl_split and xl_ref:
+    print("\n== Split patch at 6K-30K tokens (Mac, maxNumTokens 32768)")
+    by_len = {}
+    for k, r in xl_split.items():
+        by_len.setdefault(r["prefill"], []).append(k)
+    xl_o16 = arms.get(("xl", "original", "gpu-fp16"), {})
+    for prefill, keys in sorted(by_len.items()):
+        print(f"  {prefill:>6} tokens: split FP16 {sum(xl_split[k]['exact'] for k in keys)}/{len(keys)},"
+              f" original FP32 {sum(xl_ref[k]['exact'] for k in keys)}/{len(keys)},"
+              f" original FP16 {sum(xl_o16[k]['exact'] for k in keys) if xl_o16 else '-'}/{len(keys)};"
+              f" split FP16 text = original FP32 text: {sum(xl_split[k]['output'] == xl_ref[k]['output'] for k in keys)}/{len(keys)}")
+
+def medians(rows_by_id, key):
+    groups = {}
+    for r in rows_by_id.values():
+        groups.setdefault(r["prefill"], []).append(r[key])
+    return {p: sorted(v)[len(v) // 2] for p, v in groups.items()}
+
+speed = {name: {} for name in ("split FP16", "original FP16", "original FP32")}
+for (cases, model, config), rows in arms.items():
+    if cases not in ("speed", "xl") or "prefillTPS" not in next(iter(rows.values())):
+        continue
+    name = {("split", "gpu-fp16"): "split FP16", ("original", "gpu-fp16"): "original FP16",
+            ("original", "gpu-fp32"): "original FP32"}.get((model, config))
+    if name:
+        for key in ("prefillTPS", "decodeTPS"):
+            speed[name].setdefault(key, {}).update(medians(rows, key))
+if all(speed.values()):
+    print("\n== Speed (Mac, tokens/s, medians; no speculative decoding)")
+    print("  prompt   prefill: split16 orig16 orig32   decode: split16 orig16 orig32")
+    for p in sorted(speed["split FP16"]["prefillTPS"]):
+        pre = [speed[n]["prefillTPS"].get(p) for n in speed]
+        dec = [speed[n]["decodeTPS"].get(p) for n in speed]
+        if None in pre + dec:
+            continue
+        print(f"  {p:>6}            {pre[0]:>6.0f} {pre[1]:>6.0f} {pre[2]:>6.0f}           {dec[0]:>6.1f} {dec[1]:>6.1f} {dec[2]:>6.1f}")
+
+mtp = {(m, c): arms.get(("mtp", m, c)) for m, c in (("split", "gpu-fp16"), ("split-main-only", "gpu-fp16"), ("original", "gpu-fp16"), ("original", "gpu-fp32"))}
+if all(mtp.values()):
+    print("\n== With speculative decoding (MTP=1, Mac): decode tokens/s, medians (exact copies)")
+    print("  prompt   split+drafter   split main-only   original FP16   original FP32")
+    dec = {m: medians(rows, "decodeTPS") for m, rows in mtp.items()}
+    for p in sorted(dec[("split", "gpu-fp16")]):
+        ex = {m: sum(r["exact"] for r in rows.values() if r["prefill"] == p) for m, rows in mtp.items()}
+        print(f"  {p:>6}   " + "   ".join(f"{dec[m][p]:>7.1f} ({ex[m]}/3)" for m in mtp))
+
 print("\n== iPhone (Metal accelerator)")
 p10 = json.load(open(os.path.join(here, "results/iphone/probe10_position_boundary.json")))
 early = {}
