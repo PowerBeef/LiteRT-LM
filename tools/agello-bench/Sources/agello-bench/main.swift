@@ -18,6 +18,8 @@ let usage = """
     --label NAME        the arm's name in the records (arm)
     --out FILE          append JSONL records to FILE (default: stdout)
     --hash-model        record the model file's SHA-256 (reads the whole file)
+    --no-benchmark-mode run without LiteRT-LM's benchmark mode (no busy-waiting on Metal); speeds
+                        come from the engine's telemetry (our builds)
     --telemetry N       engine telemetry level (our builds): 0 off, 1 counters (default),
                         2 spans and GPU time, 3 plus a trace, 4 diagnostic modes
     --trace FILE        write the span trace (Chrome/Perfetto JSON) at the end; implies level 3
@@ -89,6 +91,7 @@ while !args.isEmpty {
   case "--label": label = value(flag)
   case "--out": out = value(flag)
   case "--hash-model": hashModel = true
+  case "--no-benchmark-mode": settings.benchmarkMode = false
   case "--telemetry": telemetryLevel = Int32(number(flag))
   case "--trace": tracePath = value(flag)
   case "--suite":

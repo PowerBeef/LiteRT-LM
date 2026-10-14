@@ -13,10 +13,14 @@ public struct EngineSettings: Sendable {
   public var mtp: Bool
   /// The serialization cache (compiled programs, weights); nil turns it off.
   public var cacheDir: URL?
+  /// LiteRT-LM's benchmark mode, which BenchmarkInfo needs. It also changes the run: Metal waits
+  /// busy-spin instead of sleeping, and prefill waits for completion. Off, timings come from the
+  /// engine's telemetry (our builds), as an app without benchmark mode would run.
+  public var benchmarkMode: Bool
 
   public init(
     model: URL, backend: String = "gpu", fp32: Bool = false, maxNumTokens: Int = 8_192,
-    mtp: Bool = false, cacheDir: URL? = nil
+    mtp: Bool = false, cacheDir: URL? = nil, benchmarkMode: Bool = true
   ) {
     self.model = model
     self.backend = backend
@@ -24,6 +28,7 @@ public struct EngineSettings: Sendable {
     self.maxNumTokens = maxNumTokens
     self.mtp = mtp
     self.cacheDir = cacheDir
+    self.benchmarkMode = benchmarkMode
   }
 }
 
@@ -48,7 +53,8 @@ public struct Bench: Sendable {
     _ settings: EngineSettings, label: String, hashModel: Bool = false, loadEngine: Bool = true
   ) async throws -> Bench {
     ExperimentalFlags.optIntoExperimentalAPIs()
-    ExperimentalFlags.enableBenchmark = true
+    ExperimentalFlags.enableBenchmark = settings.benchmarkMode
+    if !settings.benchmarkMode, EngineTelemetry.level < 2 { EngineTelemetry.level = 2 }
     ExperimentalFlags.enableSpeculativeDecoding = settings.mtp
 
     var cache = "off"
@@ -111,7 +117,7 @@ public struct Bench: Sendable {
       Message(prompt), maxOutputTokens: maxOutputTokens
     ).toString
     let seconds = (ContinuousClock.now - started).seconds
-    let info = try conversation.getBenchmarkInfo()
+    let info = try Timing(conversation, benchmarkMode: settings.benchmarkMode)
     let mismatch = digits.flatMap { Prompts.firstMismatch(reply: reply, digits: $0) }
     let footprint = Footprint.current()
     return CaseRecord(
@@ -161,6 +167,37 @@ public enum BenchError: Error, CustomStringConvertible {
     switch self {
     case .noEngine: "No engine loaded for this case (the run only expected engine benchmarks)."
     }
+  }
+}
+
+/// Prefill and decode figures for one turn: from BenchmarkInfo in benchmark mode, otherwise from
+/// the engine's telemetry (turn spans and token counters since the case started).
+struct Timing {
+  var lastPrefillTokenCount = 0
+  var lastDecodeTokenCount = 0
+  var lastPrefillTokensPerSecond = 0.0
+  var lastDecodeTokensPerSecond = 0.0
+  var timeToFirstTokenInSecond = 0.0
+
+  init(_ conversation: Conversation, benchmarkMode: Bool) throws {
+    if benchmarkMode {
+      let info = try conversation.getBenchmarkInfo()
+      lastPrefillTokenCount = info.lastPrefillTokenCount
+      lastDecodeTokenCount = info.lastDecodeTokenCount
+      lastPrefillTokensPerSecond = info.lastPrefillTokensPerSecond
+      lastDecodeTokensPerSecond = info.lastDecodeTokensPerSecond
+      timeToFirstTokenInSecond = info.timeToFirstTokenInSecond
+      return
+    }
+    guard let snapshot = EngineTelemetry.snapshot() else { return }
+    lastPrefillTokenCount = Int(snapshot.counters["tokens_prefilled"] ?? 0)
+    lastDecodeTokenCount = Int(snapshot.counters["tokens_decoded"] ?? 0)
+    let prefillMs = snapshot.spans["turn.prefill"]?.totalMs ?? 0
+    let decodeMs = snapshot.spans["turn.decode"]?.totalMs ?? 0
+    if prefillMs > 0 { lastPrefillTokensPerSecond = Double(lastPrefillTokenCount) / prefillMs * 1000 }
+    if decodeMs > 0 { lastDecodeTokensPerSecond = Double(lastDecodeTokenCount) / decodeMs * 1000 }
+    let firstStepMs = lastDecodeTokenCount > 0 ? decodeMs / Double(lastDecodeTokenCount) : 0
+    timeToFirstTokenInSecond = (prefillMs + firstStepMs) / 1000
   }
 }
 

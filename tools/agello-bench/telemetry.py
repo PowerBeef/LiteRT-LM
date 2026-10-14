@@ -3,6 +3,7 @@
 
 Usage: python3 telemetry.py results/run.jsonl [more.jsonl ...] [--label ARM] [--case ID]
                             [--weights-gb 2.198]
+       python3 telemetry.py <Agello build/…/harness-report.json>   (each scenario is a case)
 
 Needs records from our LiteRT-LM builds (they carry a `telemetry` snapshot per case); run them
 with `--telemetry 2` or higher for span timings and GPU time. For each arm and case (warm-ups
@@ -44,6 +45,9 @@ PREFILL_SPANS = [
     ("template", "  template render"),
     ("tokenize", "  tokenize"),
     ("prefill.chunk", "  chunks"),
+    ("prefill.embedding_lookup", "    embedding lookups (CPU models)"),
+    ("prefill.mask_fill", "    attention mask fill"),
+    ("prefill.param_fill", "    KV parameter fill"),
     ("run.prefill", "  model runs (host)"),
     ("gpu.wait.prefill", "  explicit GPU waits"),
     ("gpu.prefill", "  GPU"),
@@ -61,8 +65,31 @@ def load(paths):
     rows = []
     for path in paths:
         with open(path) as f:
-            rows += [json.loads(line) for line in f if line.strip()]
+            text = f.read()
+        if path.endswith(".json"):
+            report = json.loads(text)
+            if isinstance(report, dict) and "scenarios" in report:
+                rows += agello_rows(report, path)
+                continue
+        rows += [json.loads(line) for line in text.splitlines() if line.strip()]
     return [r for r in rows if not r.get("warmup") and r.get("telemetry")]
+
+
+def agello_rows(report, path):
+    """Agello's harness report: one pseudo-record per scenario that carries telemetry."""
+    rows = []
+    for name, entry in sorted(report["scenarios"].items()):
+        t = entry.get("telemetry")
+        if not t:
+            continue
+        c = t.get("counters", {})
+        rows.append({
+            "label": "agello", "id": name, "telemetry": t, "warmup": False,
+            "prefill": c.get("tokens_prefilled", 0), "decode": c.get("tokens_decoded", 0),
+            "prefillTPS": entry.get("prefillTokPerSec", 0) or 0,
+            "decodeTPS": entry.get("decodeTokPerSec", 0) or 0,
+        })
+    return rows
 
 
 def combine(records):
@@ -72,6 +99,8 @@ def combine(records):
     anomalies = defaultdict(int)
     for r in records:
         t = r["telemetry"]
+        for k, v in (t.get("cpu") or {}).items():
+            counters["cpu." + k] += v
         for k, v in t["counters"].items():
             counters[k] += v
         for k, v in t["spans"].items():
@@ -125,6 +154,11 @@ def main():
                 share = f"{100 * per_token / step:5.1f}%" if step and key != "decode.step" else "      "
                 print(f"    {title:<42} {per_token:8.3f}  {share}  "
                       f"({s['count']} calls, max {s['max_us'] / 1000:.2f} ms)")
+            cpu = counters.get("cpu.user_ms", 0) + counters.get("cpu.system_ms", 0)
+            if cpu:
+                print(f"    process CPU per generated token: {cpu / decoded:.2f} ms "
+                      f"(user {counters.get('cpu.user_ms', 0) / decoded:.2f}, system "
+                      f"{counters.get('cpu.system_ms', 0) / decoded:.2f}; includes prefill)")
             gpu = sum(spans.get(k, {}).get("total_ms", 0) for k in ("gpu.decode", "gpu.verify", "gpu.drafter"))
             turn = spans.get("turn.decode", {}).get("total_ms", 0)
             if gpu and turn:

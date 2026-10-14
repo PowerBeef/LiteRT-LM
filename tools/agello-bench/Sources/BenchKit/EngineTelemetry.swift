@@ -93,9 +93,11 @@ public struct TelemetrySnapshot: Codable, Sendable {
   public var memory: [String: Double]?
   /// Facts that outlive resets: the sampler path, the GPU family, and so on.
   public var facts: [String: String]?
+  /// Process CPU time since the reset: `user_ms`, `system_ms`.
+  public var cpu: [String: Double]?
 
   enum CodingKeys: String, CodingKey {
-    case level, counters, spans, anomalies, memory, facts
+    case level, counters, spans, anomalies, memory, facts, cpu
     case anomaliesTotal = "anomalies_total"
   }
 }
