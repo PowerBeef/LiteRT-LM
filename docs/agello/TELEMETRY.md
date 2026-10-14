@@ -108,6 +108,27 @@ prefill and decode, replies identical.
 | Other | 2 CPU model runs per prompt token (embedder, per-layer embedder): 4,483 inferences per case; one tensor buffer allocated per decode step; token history copied for every mask fill | |
 | Load (warm cache) | delegate graph conversion ~950 ms of a 1.1 s load | |
 
+### GPU kernels (level 4, 2K prompt, 64 generated)
+
+Shares of summed kernel time (each kernel in its own encoder, so absolute times run high):
+
+| | T = 8,192 | T = 32,768 |
+| --- | --- | --- |
+| Decode | int4 matmuls 68%, int8 matmuls 11%, LM head (int2) 6%, RMS norms 4%, softmax 3.6% | int4 matmuls 61%, **softmax 12.7%** (3.1 ms per token, 0.8 ms at 8K) |
+| Prefill | Neural Accelerator int8 convolutions 39%, mask select 11.5%, softmax 16.4%, int4→int8 weight conversion 8.4%, activation quantization 3.7% | **mask select 23%, softmax 37%**, convolutions 20.5% (same work as at 8K), weight conversion 4.4% |
+
+The matmul work doesn't depend on T; the select and the softmax scale with it. Bounding them to
+the filled length (T4, first step) should bring 32K prefill close to its 8K speed (about 2×) and
+add about 8% to decode at 32K. The int4 weights are converted to int8 on every prefill run (T9:
+native int4 for the Neural Accelerator path).
+
+### Metal waits
+
+The Metal delegate busy-spins a CPU core for every GPU wait by default; benchmark mode isn't the
+cause. Asking for passive waits, with command buffers still committed as they're encoded (LiteRT
+fork 77ed9cab), measured −0.3% decode and +0.4% prefill against busy-waiting (within noise), and
+2.0 ms of process CPU per generated token instead of 29.3.
+
 These point at T2 (parameter fill, per-step allocation, history copies), T5 (async and buffer
 locks), T7 (an open GPU sampler, which also closes most of the MTP gap to Google's build), T11
 (load), and T12 (MTP drafting on the GPU).
@@ -117,7 +138,7 @@ locks), T7 (an open GPU sampler, which also closes most of the MTP gap to Google
 1. Done (2026-10-14): core library, C and Swift APIs, LiteRT-LM probes (turns, executor, MTP,
    sampler, execution manager watchdogs), LiteRT's trace macros mapped to spans, command-buffer
    GPU time, agello-bench integration and `telemetry.py`; overhead within noise.
-2. ML Drift: pipeline labels, GPU family probe, per-kernel timing mode, final-graph dump (works on
-   program-cache hits too); LiteRT: buffer lock and copy counters, cache events, delegation
-   metrics, async fallback event.
+2. In progress: pipeline labels, GPU family probe and per-kernel timing (done); final-graph dump
+   (works on program-cache hits too); LiteRT buffer lock and copy counters, cache events,
+   delegation metrics, async fallback event.
 3. Numerical probes and invariant checks; Agello harness integration.

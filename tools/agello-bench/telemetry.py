@@ -118,6 +118,7 @@ def main():
     parser.add_argument("files", nargs="+")
     parser.add_argument("--label")
     parser.add_argument("--case")
+    parser.add_argument("--kernels", type=int, default=15, help="kernels listed per phase (level 4)")
     parser.add_argument("--weights-gb", type=float, default=2.198,
                         help="weights read per decode run (E4B: 2.198 GB)")
     args = parser.parse_args()
@@ -178,6 +179,19 @@ def main():
                 s = spans.get(key)
                 if s and s["count"]:
                     print(f"    {title:<42} {s['total_ms'] / n:9.2f}  ({s['count'] // n} per run)")
+        for phase, runs_key in (("decode", "runs_decode"), ("verify", "runs_verify"), ("prefill", "runs_prefill")):
+            prefix = f"gpu.k.{phase}:"
+            kernels = sorted(((k[len(prefix):], v) for k, v in spans.items() if k.startswith(prefix)),
+                             key=lambda kv: -kv[1]["total_ms"])
+            if not kernels:
+                continue
+            total = sum(v["total_ms"] for _, v in kernels)
+            runs = counters.get(runs_key, 0) or 1
+            print(f"  GPU kernels per {phase} run, {total / runs:.2f} ms summed (level 4 times each kernel "
+                  f"in its own encoder, which runs slower than normal; read the shares):")
+            for name, v in kernels[:args.kernels]:
+                print(f"    {name:<46} {v['total_ms'] / runs:8.3f} ms  {100 * v['total_ms'] / total:5.1f}%  "
+                      f"({v['count'] / runs:.0f} per run)")
         drafted, accepted = counters.get("mtp_drafted", 0), counters.get("mtp_accepted", 0)
         if drafted:
             print(f"  MTP: {counters.get('mtp_rounds', 0) // n} rounds per run, acceptance "
@@ -194,7 +208,8 @@ def main():
             print("  anomalies:")
             for (code, message), count in sorted(anomalies.items(), key=lambda x: -x[1]):
                 print(f"    {code} ×{count}: {message}")
-        dynamic = sorted(((k, v) for k, v in spans.items() if " " in k or "::" in k),
+        dynamic = sorted(((k, v) for k, v in spans.items()
+                          if (" " in k or "::" in k) and not k.startswith("gpu.k.")),
                          key=lambda kv: -kv[1]["total_ms"])
         if dynamic:
             print("  LiteRT trace sites, ms per run:")
