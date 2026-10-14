@@ -474,10 +474,11 @@ http_archive(
 )
 
 # Agello: our LiteRT fork (PowerBeef/LiteRT, branch agello-next): LITERT_REF above plus the commits
-# that build it as an external repository and feed Agello telemetry (formerly patch_cmds here).
-AGELLO_LITERT_COMMIT = "b66a46e6d870eab04bff5377fa6fdf4e3cca4942"
+# that build it as an external repository, feed Agello telemetry (formerly patch_cmds here), and
+# commit Metal command buffers as they're encoded under passive waits.
+AGELLO_LITERT_COMMIT = "5083cfaedaca90c748c7ffec19cf53902e6a9ba5"
 
-AGELLO_LITERT_SHA256 = "100b280abe5c3fb89d152d44fed555c2a8670c9ab2338196f6d53bde36329b85"
+AGELLO_LITERT_SHA256 = "b09a317bf50b5eaff2a61a2d202ea9f14fa0c7e830b96c5441594d8660ebada1"
 
 http_archive(
     name = "litert",
@@ -498,9 +499,9 @@ local_repository(
 # Bazel doesn't read @litert's WORKSPACE, so this repeats its declaration. Our fork
 # (PowerBeef/ml-drift, branch agello-next): the commit LiteRT pins (1b18771f) plus the commits that
 # build it as an external repository of LiteRT-LM and feed Agello telemetry (formerly patch_cmds).
-ML_DRIFT_COMMIT = "04fe7b712c777a10d4d43388a6dca65d38597f66"
+ML_DRIFT_COMMIT = "55196d78cfd17dfa9b6e19ffc75d8d1b54156850"
 
-ML_DRIFT_SHA256 = "9fb8810907458767f1921e14501ac8d04cb0e099c95cf22e001ed2076ac38e1c"
+ML_DRIFT_SHA256 = "8126326c90f1a0d847dc5b31d6c5e7d86120c64d194b32f693f2d65bf700f720"
 
 http_archive(
     name = "ml_drift",
