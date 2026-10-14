@@ -1,0 +1,20 @@
+[
+ {
+  "id": "t700",
+  "kind": "speed",
+  "sentences": 40,
+  "decode": 128
+ },
+ {
+  "id": "t2k",
+  "kind": "speed",
+  "sentences": 129,
+  "decode": 128
+ },
+ {
+  "id": "t4k",
+  "kind": "speed",
+  "sentences": 250,
+  "decode": 128
+ }
+]

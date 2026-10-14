@@ -1,0 +1,38 @@
+[
+ {
+  "id": "t700",
+  "kind": "speed",
+  "sentences": 40,
+  "decode": 128
+ },
+ {
+  "id": "t2k",
+  "kind": "speed",
+  "sentences": 129,
+  "decode": 128
+ },
+ {
+  "id": "t4k",
+  "kind": "speed",
+  "sentences": 250,
+  "decode": 128
+ },
+ {
+  "id": "t8k",
+  "kind": "speed",
+  "sentences": 507,
+  "decode": 128
+ },
+ {
+  "id": "t16k",
+  "kind": "speed",
+  "sentences": 1019,
+  "decode": 128
+ },
+ {
+  "id": "t30k",
+  "kind": "speed",
+  "sentences": 1914,
+  "decode": 128
+ }
+]
