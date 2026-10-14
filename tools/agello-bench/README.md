@@ -59,6 +59,7 @@ of the research cases:
 | --- | --- | --- |
 | `digit-copy` (default) | `id`, `sentences`, `late`, `seed` | Copy a 48-digit number placed before the filler (after it with `late`); `exact`, and the position of the first wrong digit (#3913) |
 | `speed` | `id`, `sentences`, `decode` | Prefill the filler, then generate `decode` tokens (default 256) |
+| `engine-benchmark` | `id`, `prefill`, `decode` | The engine's own benchmark, `LiteRTLM.benchmark` (what Agello's in-app benchmark runs): a fresh uncached engine of prefill + decode + 32 tokens, `prefill` synthetic prompt tokens (default 1,024), then `decode` tokens (default 256). A run of only these loads no chat engine |
 
 Filler sentences average about 15.8 tokens. Every case runs in a fresh
 conversation with greedy sampling, so an arm's replies should be identical

@@ -37,12 +37,15 @@ public struct Bench: Sendable {
   /// "cold" (empty cache folder), "warm", or "off".
   public let cache: String
   public let modelSHA256: String?
-  private let engine: Engine
+  /// The engine's telemetry while it loaded (our builds only).
+  public let loadTelemetry: TelemetrySnapshot?
+  /// Nil when the run only has engine benchmarks, which make their own engine.
+  private let engine: Engine?
 
   /// Load the engine. Engine-level flags are process-wide, so set them here
   /// before anything else creates an engine.
   public static func load(
-    _ settings: EngineSettings, label: String, hashModel: Bool = false
+    _ settings: EngineSettings, label: String, hashModel: Bool = false, loadEngine: Bool = true
   ) async throws -> Bench {
     ExperimentalFlags.optIntoExperimentalAPIs()
     ExperimentalFlags.enableBenchmark = true
@@ -54,22 +57,40 @@ public struct Bench: Sendable {
       let contents = try FileManager.default.contentsOfDirectory(atPath: dir.path)
       cache = contents.isEmpty ? "cold" : "warm"
     }
-    let engine = Engine(
-      engineConfig: try EngineConfig(
-        modelPath: settings.model.path, backend: settings.backend == "cpu" ? .cpu() : .gpu,
-        maxNumTokens: settings.maxNumTokens, cacheDir: settings.cacheDir?.path,
-        activationDataType: settings.fp32 ? .float32 : nil))
-    let started = ContinuousClock.now
-    try await engine.initialize()
-    let loadSeconds = (ContinuousClock.now - started).seconds
+    var engine: Engine?
+    var loadSeconds = 0.0
+    EngineTelemetry.reset()
+    if loadEngine {
+      let loaded = Engine(
+        engineConfig: try EngineConfig(
+          modelPath: settings.model.path, backend: settings.backend == "cpu" ? .cpu() : .gpu,
+          maxNumTokens: settings.maxNumTokens, cacheDir: settings.cacheDir?.path,
+          activationDataType: settings.fp32 ? .float32 : nil))
+      let started = ContinuousClock.now
+      try await loaded.initialize()
+      loadSeconds = (ContinuousClock.now - started).seconds
+      engine = loaded
+    }
     return Bench(
       settings: settings, label: label,
       run: "\(label)-\(Int(Date().timeIntervalSince1970))-\(UUID().uuidString.prefix(4))",
       machine: .capture(), loadSeconds: loadSeconds, cache: cache,
-      modelSHA256: hashModel ? try Machine.sha256(of: settings.model) : nil, engine: engine)
+      modelSHA256: hashModel ? try Machine.sha256(of: settings.model) : nil,
+      loadTelemetry: EngineTelemetry.snapshot(), engine: engine)
   }
 
   public func run(_ item: BenchCase, rep: Int = 0, warmup: Bool = false) async throws -> CaseRecord {
+    EngineTelemetry.reset()
+    var record = try await measure(item, rep: rep, warmup: warmup)
+    record.telemetry = EngineTelemetry.snapshot()
+    return record
+  }
+
+  func measure(_ item: BenchCase, rep: Int, warmup: Bool) async throws -> CaseRecord {
+    if item.kind == .engineBenchmark {
+      return try await engineBenchmark(item, rep: rep, warmup: warmup)
+    }
+    guard let engine else { throw BenchError.noEngine }
     let prompt: String
     let digits: String?
     let maxOutputTokens: Int
@@ -80,6 +101,8 @@ public struct Bench: Sendable {
     case .speed:
       (prompt, digits) = (Prompts.speed(item), nil)
       maxOutputTokens = item.decode ?? 256
+    case .engineBenchmark:
+      preconditionFailure("handled above")
     }
     let conversation = try await engine.createConversation(
       with: ConversationConfig(samplerConfig: try SamplerConfig(topK: 1, topP: 1, temperature: 0)))
@@ -105,6 +128,39 @@ public struct Bench: Sendable {
       thermal: ProcessInfo.processInfo.thermalState.label,
       footprintMB: Double(footprint.bytes) / 1e6, peakFootprintMB: Double(footprint.peakBytes) / 1e6,
       loadSeconds: loadSeconds, cache: cache, modelSHA256: modelSHA256, machine: machine)
+  }
+
+  /// `LiteRTLM.benchmark`, uncached, as Agello's in-app benchmark calls it.
+  func engineBenchmark(_ item: BenchCase, rep: Int, warmup: Bool) async throws -> CaseRecord {
+    let prefill = item.prefill ?? 1_024
+    let decode = item.decode ?? 256
+    let started = ContinuousClock.now
+    let info = try await LiteRTLM.benchmark(
+      modelPath: settings.model.path, backend: settings.backend == "cpu" ? .cpu() : .gpu,
+      prefillTokens: prefill, decodeTokens: decode, cacheDir: ":nocache")
+    let seconds = (ContinuousClock.now - started).seconds
+    let footprint = Footprint.current()
+    return CaseRecord(
+      id: item.id, backend: settings.backend, activation: "default",
+      model: settings.model.lastPathComponent, sentences: 0, late: false, seed: 0,
+      prefill: info.lastPrefillTokenCount, decode: info.lastDecodeTokenCount, exact: nil,
+      expected: nil, output: "", seconds: seconds, mtp: settings.mtp,
+      prefillTPS: info.lastPrefillTokensPerSecond, decodeTPS: info.lastDecodeTokensPerSecond,
+      firstMismatch: nil, firstMismatchPosition: nil, kind: item.kind.rawValue, label: label,
+      run: run, rep: rep, warmup: warmup, kv: prefill + decode + 32,
+      ttft: info.timeToFirstTokenInSecond, thermal: ProcessInfo.processInfo.thermalState.label,
+      footprintMB: Double(footprint.bytes) / 1e6, peakFootprintMB: Double(footprint.peakBytes) / 1e6,
+      loadSeconds: info.initTimeInSecond, cache: "off", modelSHA256: modelSHA256, machine: machine)
+  }
+}
+
+public enum BenchError: Error, CustomStringConvertible {
+  case noEngine
+
+  public var description: String {
+    switch self {
+    case .noEngine: "No engine loaded for this case (the run only expected engine benchmarks)."
+    }
   }
 }
 

@@ -48,6 +48,9 @@ public struct CaseRecord: Codable, Sendable {
   public var cache: String
   public var modelSHA256: String?
   public var machine: Machine
+  /// The engine's telemetry for this case (our builds only): counters, span timings, GPU time,
+  /// anomalies and memory, reset when the case starts.
+  public var telemetry: TelemetrySnapshot? = nil
 
   /// One line of JSON, keys sorted.
   public func jsonLine() throws -> String {

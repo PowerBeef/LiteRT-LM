@@ -18,6 +18,9 @@ let usage = """
     --label NAME        the arm's name in the records (arm)
     --out FILE          append JSONL records to FILE (default: stdout)
     --hash-model        record the model file's SHA-256 (reads the whole file)
+    --telemetry N       engine telemetry level (our builds): 0 off, 1 counters (default),
+                        2 spans and GPU time, 3 plus a trace, 4 diagnostic modes
+    --trace FILE        write the span trace (Chrome/Perfetto JSON) at the end; implies level 3
 
   env prints the machine record (hardware, OS, GPU, runtime binary and its SHA-256).
   """
@@ -56,6 +59,8 @@ var label = "arm"
 var out: String?
 var cold = false
 var hashModel = false
+var telemetryLevel: Int32?
+var tracePath: String?
 
 @MainActor func value(_ flag: String) -> String {
   guard !args.isEmpty else { fail("\(flag) needs a value") }
@@ -84,6 +89,8 @@ while !args.isEmpty {
   case "--label": label = value(flag)
   case "--out": out = value(flag)
   case "--hash-model": hashModel = true
+  case "--telemetry": telemetryLevel = Int32(number(flag))
+  case "--trace": tracePath = value(flag)
   case "--suite":
     let path = value(flag)
     do {
@@ -121,7 +128,12 @@ if let out {
   output = FileHandle.standardOutput
 }
 
-let bench = try await Bench.load(settings, label: label, hashModel: hashModel)
+if tracePath != nil { telemetryLevel = max(telemetryLevel ?? 3, 3) }
+if let telemetryLevel { EngineTelemetry.level = telemetryLevel }
+
+// Engine benchmarks make their own engine: skip the chat engine when they're all there is.
+let needsEngine = cases.contains { $0.kind != .engineBenchmark }
+let bench = try await Bench.load(settings, label: label, hashModel: hashModel, loadEngine: needsEngine)
 note(
   "\(label): loaded \(settings.model.lastPathComponent) in \(String(format: "%.1f", bench.loadSeconds)) s"
     + " (cache \(bench.cache), \(settings.backend), kv \(settings.maxNumTokens), mtp \(settings.mtp))"
@@ -145,4 +157,11 @@ for rep in 0..<repeats {
   for item in cases {
     try await record(item, rep: rep, warmup: false)
   }
+}
+if let out, let load = bench.loadTelemetry, let data = try? JSONEncoder().encode(load) {
+  try? data.write(to: URL(fileURLWithPath: out + ".load-telemetry.json"))
+}
+if let tracePath {
+  let ok = EngineTelemetry.writeTrace(to: URL(fileURLWithPath: tracePath))
+  note(ok ? "trace: \(tracePath)" : "trace: not written (this runtime has no telemetry)")
 }

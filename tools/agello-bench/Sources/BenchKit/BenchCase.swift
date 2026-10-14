@@ -11,6 +11,10 @@ public struct BenchCase: Codable, Sendable, Equatable {
     /// Prefill the filler text, then generate `decode` tokens: prefill and
     /// decode speed at that context length.
     case speed
+    /// The engine's own benchmark (`LiteRTLM.benchmark`): a fresh engine
+    /// sized prefill + decode + 32 tokens, `prefill` synthetic prompt tokens,
+    /// then `decode` tokens. Agello's in-app benchmark is this call.
+    case engineBenchmark = "engine-benchmark"
   }
 
   public var id: String
@@ -21,10 +25,12 @@ public struct BenchCase: Codable, Sendable, Equatable {
   public var seed: Int
   /// Tokens to generate in a speed case (digit copies stop by themselves).
   public var decode: Int?
+  /// Prompt tokens for an engine benchmark.
+  public var prefill: Int?
 
   public init(
-    id: String, kind: Kind = .digitCopy, sentences: Int, late: Bool = false, seed: Int = 1,
-    decode: Int? = nil
+    id: String, kind: Kind = .digitCopy, sentences: Int = 0, late: Bool = false, seed: Int = 1,
+    decode: Int? = nil, prefill: Int? = nil
   ) {
     self.id = id
     self.kind = kind
@@ -32,16 +38,18 @@ public struct BenchCase: Codable, Sendable, Equatable {
     self.late = late
     self.seed = seed
     self.decode = decode
+    self.prefill = prefill
   }
 
   public init(from decoder: any Decoder) throws {
     let c = try decoder.container(keyedBy: CodingKeys.self)
     id = try c.decode(String.self, forKey: .id)
     kind = try c.decodeIfPresent(Kind.self, forKey: .kind) ?? .digitCopy
-    sentences = try c.decode(Int.self, forKey: .sentences)
+    sentences = try c.decodeIfPresent(Int.self, forKey: .sentences) ?? 0
     late = try c.decodeIfPresent(Bool.self, forKey: .late) ?? false
     seed = try c.decodeIfPresent(Int.self, forKey: .seed) ?? 1
     decode = try c.decodeIfPresent(Int.self, forKey: .decode)
+    prefill = try c.decodeIfPresent(Int.self, forKey: .prefill)
   }
 
   /// Load a suite: a JSON array of cases.
