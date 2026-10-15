@@ -272,6 +272,22 @@ maven_install(
     ],
 )
 
+# Agello: XNNPACK at TensorFlow's pin (@xla//third_party/xnnpack:workspace.bzl), declared first so
+# tf_workspace2 skips its own, with convert(qint8 -> qcint8) sizing its per-channel scales for the
+# batch-matrix-multiply that reads them (batch dims x n). Without it, the dequant-BMM rewrite costs
+# Gemma 4 E4B 5.5 GB on CPU for its INT8 KV caches (docs/agello/VALIDATION.md, 2026-10-15).
+http_archive(
+    name = "XNNPACK",
+    patch_args = ["-p1"],
+    patches = ["//agello/patches:xnnpack_qs8_qc8_scales.patch"],
+    sha256 = "aab0ed2b3972125ca057b8e2b16127fbf68f8128ea07dd7efe56cdb92f2c1917",
+    strip_prefix = "XNNPACK-d89ef6669a14db203b3b7935b1b3862cb63fb6df",
+    urls = [
+        "https://storage.googleapis.com/mirror.tensorflow.org/github.com/google/XNNPACK/archive/d89ef6669a14db203b3b7935b1b3862cb63fb6df.zip",
+        "https://github.com/google/XNNPACK/archive/d89ef6669a14db203b3b7935b1b3862cb63fb6df.zip",
+    ],
+)
+
 load("@org_tensorflow//tensorflow:workspace2.bzl", "tf_workspace2")
 
 tf_workspace2()
