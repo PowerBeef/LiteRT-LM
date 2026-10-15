@@ -4,7 +4,8 @@ Our build (`agello-next`: the 0.19.0-nightly.20261013 source, the tool-call patc
 accelerator linked statically, response formats without the closed constraint provider) against
 Google's prebuilt binaries of the same nightly. Mac mini M6 (GPU family Apple11), macOS 27.0.1;
 Agello runs as an iPhone app on the Mac (`PLATFORM=mac`), so both use the iOS slice and Metal.
-Raw results: Agello's `build/mac-harness-next/` (ours) and `build/mac-harness-nightly/` (Google's).
+Raw results: Agello's `build/mac-harness-next/` (ours) and `build/mac-harness-nightly/` (Google's)
+on the development Mac; the calibration reports are copied to `results/mac/2026-10-14/agello/`.
 
 ## Agello's suites
 

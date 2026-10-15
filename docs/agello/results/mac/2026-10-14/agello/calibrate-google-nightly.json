@@ -1,0 +1,110 @@
+{
+  "device" : {
+    "gpu" : "Apple M6",
+    "gpuAppleFamily" : 11,
+    "gpuWorkingSetGB" : 12.713115648,
+    "hwMachine" : "iPad8,6",
+    "hwModel" : "Mac18,5",
+    "isiOSAppOnMac" : true,
+    "memoryGB" : 17.179869184000001,
+    "model" : "iPad",
+    "profile" : "17 GB RAM · app limit 17.2 GB",
+    "system" : "iPadOS 27.0"
+  },
+  "runID" : "run-1792016993",
+  "scenarios" : {
+    "calibration_e4b_4096" : {
+      "accepted" : true,
+      "appLimitGB" : 17.179869184000001,
+      "availableGB" : 14.684690856,
+      "decodeTokPerSec" : 73.553519914193586,
+      "effectiveWindow" : 4096,
+      "footprintAfterLoadGB" : 2.3100385999999999,
+      "footprintPeakGB" : 2.4951783280000002,
+      "inputTokens" : 1285,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=4096 thinking=off in 7.3s (footprint 2.31 GB, available 14.87 GB)"
+      ],
+      "memory.availableGB" : 14.684690856,
+      "memory.footprintGB" : 2.4951783280000002,
+      "model" : "e4b",
+      "prefillTokPerSec" : 2047.3499456606435,
+      "recordedAt" : "2026-10-14T22:30:08Z",
+      "replyPrefix" : "The text is a repetitive list of 48 sentences describing the daily life, maintenance, and historical changes at a lighth",
+      "ttftSeconds" : 0.62764062525000008,
+      "window" : 4096
+    },
+    "calibration_e4b_8192" : {
+      "accepted" : true,
+      "appLimitGB" : 17.179869184000001,
+      "availableGB" : 14.389975416,
+      "decodeTokPerSec" : 69.003866643610351,
+      "effectiveWindow" : 8192,
+      "footprintAfterLoadGB" : 2.2014779519999998,
+      "footprintPeakGB" : 2.7898937680000002,
+      "inputTokens" : 2302,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 0.9s (footprint 2.20 GB, available 14.98 GB)"
+      ],
+      "memory.availableGB" : 14.389975416,
+      "memory.footprintGB" : 2.7898937680000002,
+      "model" : "e4b",
+      "prefillTokPerSec" : 2161.926731605276,
+      "recordedAt" : "2026-10-14T22:30:13Z",
+      "replyPrefix" : "The text is a repetitive list of 95 numbered sentences describing various aspects of life at a lighthouse, including wea",
+      "ttftSeconds" : 1.0647909415000001,
+      "window" : 8192
+    },
+    "calibration_e4b_16384" : {
+      "accepted" : true,
+      "appLimitGB" : 17.179869184000001,
+      "availableGB" : 13.412718152,
+      "decodeTokPerSec" : 73.913000176344326,
+      "effectiveWindow" : 16384,
+      "footprintAfterLoadGB" : 3.0029507519999998,
+      "footprintPeakGB" : 3.7671510320000001,
+      "inputTokens" : 4398,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=16384 thinking=off in 5.1s (footprint 3.00 GB, available 14.18 GB)"
+      ],
+      "memory.availableGB" : 13.412718152,
+      "memory.footprintGB" : 3.7671510320000001,
+      "model" : "e4b",
+      "prefillTokPerSec" : 1619.4579685115702,
+      "recordedAt" : "2026-10-14T22:30:26Z",
+      "replyPrefix" : "The text is a repetitive list of 188 numbered sentences describing various aspects of a lighthouse keeper's life, includ",
+      "ttftSeconds" : 2.7157234615000001,
+      "window" : 16384
+    },
+    "calibration_e4b_32768" : {
+      "accepted" : true,
+      "appLimitGB" : 17.179869184000001,
+      "availableGB" : 11.571352320000001,
+      "decodeTokPerSec" : 61.921569619320309,
+      "effectiveWindow" : 32768,
+      "footprintAfterLoadGB" : 4.1556470719999998,
+      "footprintPeakGB" : 5.6085168640000003,
+      "inputTokens" : 8607,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=32768 thinking=off in 4.6s (footprint 4.16 GB, available 13.02 GB)"
+      ],
+      "memory.availableGB" : 11.571352320000001,
+      "memory.footprintGB" : 5.6085168640000003,
+      "model" : "e4b",
+      "prefillTokPerSec" : 1091.7532368711529,
+      "recordedAt" : "2026-10-14T22:30:45Z",
+      "replyPrefix" : "The text is a repetitive list of 374 numbered sentences describing various aspects of a lighthouse keeper's life, includ",
+      "ttftSeconds" : 7.8836496282500006,
+      "window" : 32768
+    }
+  },
+  "startedAt" : "2026-10-14T22:29:57Z"
+}

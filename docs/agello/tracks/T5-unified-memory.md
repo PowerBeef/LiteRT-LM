@@ -41,6 +41,8 @@ The second run was noisier without MTP; the parameter write alone saved 0.22 ms 
 of 83%, and process CPU per generated token went from 1.63 to 0.85 ms. Agello's Mac inference
 suite went from 139 to 119 s, mostly from the faster session snapshots.
 
+Raw records: `results/mac/2026-10-14/` (`bench/direct-ab*.jsonl`, `agello/inference-*.json`).
+
 Verification: `AGELLO_VERIFY_DIRECT_COPIES=1` runs ML Drift's own conversion after every direct
 copy and reports an error anomaly if a byte differs (a write compares the whole GPU buffer,
 padding included). Clean on agello-bench (MTP on and off) and on Agello's Mac inference suite:
