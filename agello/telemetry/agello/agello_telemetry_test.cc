@@ -151,6 +151,24 @@ TEST_F(TelemetryTest, GaugePercentilesAreExactThenSampled) {
   EXPECT_NEAR(p50, 500, 50) << json;
 }
 
+TEST_F(TelemetryTest, HalfLogitsProbeConvertsLikeFloats) {
+  SetLevel(kDeep);
+  // Halves: 0, 20 (0x4d00), 5 (0x4500), a subnormal (0x0001), -2 (0xc000), a NaN (0x7e00).
+  std::vector<uint16_t> logits(1000, 0);
+  logits[7] = 0x4d00;
+  logits[8] = 0x4500;
+  logits[9] = 0x0001;
+  logits[10] = 0xc000;
+  logits[11] = 0x7e00;
+  ProbeLogitsHalf(logits.data(), 1, 1000);
+  const std::string json = SnapshotJson();
+  EXPECT_NE(json.find("\"logits_rows_checked\":1"), std::string::npos) << json;
+  EXPECT_NE(json.find("\"logits_nonfinite\":1"), std::string::npos) << json;
+  EXPECT_NE(json.find("\"logits.max\":{\"count\":1,\"mean\":20"), std::string::npos) << json;
+  EXPECT_NE(json.find("\"logits.top1_margin\":{\"count\":1,\"mean\":15"), std::string::npos)
+      << json;
+}
+
 TEST_F(TelemetryTest, LogitsProbeSamplesBelowLevelFour) {
   SetLevel(kSpans);
   std::vector<float> logits(100, 0.0f);

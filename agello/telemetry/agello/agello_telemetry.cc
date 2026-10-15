@@ -421,15 +421,69 @@ void RecordValue(Gauge gauge, double value) {
   }
 }
 
+namespace {
+
+std::atomic<uint64_t> logits_probe_calls{0};
+
+// How many rows of this call to check: none, the first one (every 32nd call below level 4), or
+// all of them.
+int64_t LogitRowsToProbe(int level, int64_t rows) {
+  const uint64_t call = logits_probe_calls.fetch_add(1, std::memory_order_relaxed);
+  if (level >= kDeep) return rows;
+  return call % 32 == 0 ? 1 : 0;
+}
+
+float HalfToFloat(uint16_t h) {
+  const uint32_t sign = static_cast<uint32_t>(h & 0x8000u) << 16;
+  uint32_t exponent = (h >> 10) & 0x1fu;
+  uint32_t mantissa = h & 0x3ffu;
+  uint32_t bits;
+  if (exponent == 0) {
+    if (mantissa == 0) {
+      bits = sign;
+    } else {  // Subnormal: normalize.
+      exponent = 127 - 15 + 1;
+      while ((mantissa & 0x400u) == 0) {
+        mantissa <<= 1;
+        --exponent;
+      }
+      bits = sign | (exponent << 23) | ((mantissa & 0x3ffu) << 13);
+    }
+  } else if (exponent == 31) {
+    bits = sign | 0x7f800000u | (mantissa << 13);
+  } else {
+    bits = sign | ((exponent + 127 - 15) << 23) | (mantissa << 13);
+  }
+  float value;
+  std::memcpy(&value, &bits, sizeof(value));
+  return value;
+}
+
+void ProbeLogitRows(const float* logits, int64_t rows, int64_t vocab, int level);
+
+}  // namespace
+
 void ProbeLogits(const float* logits, int64_t rows, int64_t vocab) {
   const int level = GetLevel();
   if (level < kCounters || logits == nullptr || rows <= 0 || vocab <= 1) return;
-  static std::atomic<uint64_t> calls{0};
-  const uint64_t call = calls.fetch_add(1, std::memory_order_relaxed);
-  if (level < kDeep) {
-    if (call % 32 != 0) return;
-    rows = 1;  // Sampled: the first row (position) of the call.
-  }
+  rows = LogitRowsToProbe(level, rows);
+  if (rows > 0) ProbeLogitRows(logits, rows, vocab, level);
+}
+
+void ProbeLogitsHalf(const uint16_t* logits, int64_t rows, int64_t vocab) {
+  const int level = GetLevel();
+  if (level < kCounters || logits == nullptr || rows <= 0 || vocab <= 1) return;
+  rows = LogitRowsToProbe(level, rows);
+  if (rows == 0) return;
+  thread_local std::vector<float> converted;
+  converted.resize(static_cast<size_t>(rows * vocab));
+  for (int64_t i = 0; i < rows * vocab; ++i) converted[i] = HalfToFloat(logits[i]);
+  ProbeLogitRows(converted.data(), rows, vocab, level);
+}
+
+namespace {
+
+void ProbeLogitRows(const float* logits, int64_t rows, int64_t vocab, int level) {
   const int base = CurrentRun() == kGpuDrafter ? kDrafterLogitsMax : kLogitsMax;
   const auto gauge = [base](Gauge model_gauge) {
     return static_cast<Gauge>(base + (model_gauge - kLogitsMax));
@@ -509,6 +563,8 @@ void ProbeLogits(const float* logits, int64_t rows, int64_t vocab) {
     }
   }
 }
+
+}  // namespace
 
 void SetFact(const char* key, const std::string& value) {
   std::lock_guard<std::mutex> lock(facts_mutex);

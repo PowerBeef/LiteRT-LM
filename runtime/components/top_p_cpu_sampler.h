@@ -15,6 +15,7 @@
 #ifndef THIRD_PARTY_ODML_LITERT_LM_RUNTIME_COMPONENTS_TOP_P_CPU_SAMPLER_H_
 #define THIRD_PARTY_ODML_LITERT_LM_RUNTIME_COMPONENTS_TOP_P_CPU_SAMPLER_H_
 
+#include <cstdint>
 #include <memory>
 #include <random>
 #include <vector>
@@ -90,6 +91,8 @@ class TopPSampler : public Sampler {
   // The logits data to be used for sampling. Having it as a member to avoid
   // re-allocating the vector for each sampling call.
   std::vector<float> logits_data_;
+  // Agello (P6): FP16 logits as read, kept across calls like logits_data_.
+  std::vector<uint16_t> logits_f16_;
 };
 
 }  // namespace litert::lm

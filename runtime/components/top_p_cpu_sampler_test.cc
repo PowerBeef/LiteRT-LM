@@ -288,6 +288,54 @@ TEST(TopPSamplerTest, SampleToIdAndScoreBufferFp16_BatchSize2SequenceLength2) {
                                    std::log(1.0f), std::log(1.0f)));
 }
 
+// Agello (P6): greedy over FP16 logits compares the halves as read; it picks
+// the same ids as the float path (first maximum, negatives, signed zeros).
+TEST(TopPSamplerTest, GreedyFp16MatchesTheFloatPath) {
+  const int vocab = 1000;
+  std::vector<float> logits;
+  // Row 0: all negative, the maximum twice.
+  for (int i = 0; i < vocab; ++i) logits.push_back(-5.0f - (i % 7));
+  logits[300] = -1.5f;
+  logits[700] = -1.5f;
+  // Row 1: -0 before +0, both the maximum.
+  for (int i = 0; i < vocab; ++i) logits.push_back(-2.0f);
+  logits[vocab + 10] = -0.0f;
+  logits[vocab + 20] = 0.0f;
+  // Rows 2-3: pseudo-random values in [-20, 20) rounded to halves, with ties.
+  uint32_t state = 12345;
+  for (int i = 0; i < 2 * vocab; ++i) {
+    state = state * 1664525u + 1013904223u;
+    logits.push_back(static_cast<float>(
+        tflite::half(static_cast<float>(state >> 8) / (1u << 24) * 40.0f - 20.0f)));
+  }
+  const int rows = 4;
+  std::vector<int> ids_by_type[2];
+  for (int fp16 = 0; fp16 < 2; ++fp16) {
+    auto sampler = TopPSampler::Create(/*k=*/1, /*p=*/0.5, /*temperature=*/1.0,
+                                       /*batch_size=*/rows, /*sequence_size=*/1,
+                                       /*seed=*/1);
+    ASSERT_TRUE(sampler.ok());
+    auto logits_tensor =
+        fp16 ? CopyFp16ToTensorBuffer(logits, {rows, vocab})
+             : CopyToTensorBuffer<float>(absl::MakeConstSpan(logits), {rows, vocab});
+    ASSERT_TRUE(logits_tensor.HasValue());
+    std::vector<int> ids_vector(rows);
+    auto ids_tensor =
+        CopyToTensorBuffer<int>(absl::MakeConstSpan(ids_vector), {rows});
+    ASSERT_TRUE(ids_tensor.HasValue());
+    ASSERT_TRUE((*sampler)
+                    ->SampleToIdAndScoreBuffer(*logits_tensor, *ids_tensor,
+                                               /*scores_tensor=*/nullptr)
+                    .ok());
+    auto ids = CopyFromTensorBuffer<int>(*ids_tensor);
+    ASSERT_TRUE(ids.HasValue());
+    ids_by_type[fp16] = *ids;
+  }
+  EXPECT_EQ(ids_by_type[1][0], 300);
+  EXPECT_EQ(ids_by_type[1][1], 10);
+  EXPECT_EQ(ids_by_type[0], ids_by_type[1]);
+}
+
 TEST(TopPSamplerTest, UpdateConfig) {
   auto sampler_or = TopPSampler::Create(/*k=*/1, /*p=*/0.5, /*temperature=*/1.0,
                                         /*batch_size=*/1, /*sequence_size=*/1,

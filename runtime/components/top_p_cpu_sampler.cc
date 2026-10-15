@@ -141,6 +141,28 @@ void ConvertFp16ToFp32(absl::Span<const uint16_t> fp16_values,
   }
 }
 
+// Agello (P6): the first maximum of a row of FP16 logits (IEEE half bits), compared as integers:
+// flipping the bits of negatives and the sign bit of positives orders halves like their values.
+// Returns -1 when the maximum is a NaN, which the float path handles instead.
+int GreedyHalf(const uint16_t* row, int vocab) {
+  auto key = [](uint16_t h) -> uint16_t {
+    return (h & 0x8000u) ? static_cast<uint16_t>(~h) : static_cast<uint16_t>(h | 0x8000u);
+  };
+  uint16_t best = 0;
+  for (int i = 0; i < vocab; ++i) best = std::max(best, key(row[i]));
+  int index = 0;
+  while (key(row[index]) != best) ++index;
+  const uint16_t h = row[index];
+  if ((h & 0x7c00u) == 0x7c00u && (h & 0x3ffu) != 0) return -1;
+  // -0 and +0 compare equal as floats: the float path keeps the first of them.
+  if ((h & 0x7fffu) == 0) {
+    for (int i = 0; i < index; ++i) {
+      if ((row[i] & 0x7fffu) == 0) return i;
+    }
+  }
+  return index;
+}
+
 }  // namespace
 
 absl::StatusOr<std::unique_ptr<TopPSampler>> TopPSampler::Create(
@@ -194,12 +216,40 @@ absl::Status TopPSampler::SampleToIdAndScoreBuffer(
     }
   } else if (logits_tensor_type.ElementType() == ElementType::Float16) {
     LITERT_ASSIGN_OR_RETURN(auto logits_size, logits_tensor.PackedSize());
-    std::vector<uint16_t> logits_data_f16(logits_size / sizeof(uint16_t));
+    logits_f16_.resize(logits_size / sizeof(uint16_t));
     TensorBuffer& mutable_logits_tensor =
         const_cast<TensorBuffer&>(logits_tensor);
     LITERT_RETURN_IF_ERROR(
-        mutable_logits_tensor.Read(absl::MakeSpan(logits_data_f16)));
-    ConvertFp16ToFp32(logits_data_f16, logits_data_);
+        mutable_logits_tensor.Read(absl::MakeSpan(logits_f16_)));
+    // Agello (P6): greedy sampling (MTP's drafter and verifier, every step)
+    // picks the first maximum of the halves as read: no conversion to floats.
+    const int rows = batch_size_ * sequence_size_;
+    if (k_ == 1 && rows > 0 && logits_f16_.size() % rows == 0 &&
+        (scores_tensor == nullptr || !compute_exact_log_probs_)) {
+      const int vocab = static_cast<int>(logits_f16_.size() / rows);
+      std::vector<int> ids(rows);
+      bool greedy = vocab > 0;
+      for (int r = 0; r < rows && greedy; ++r) {
+        ids[r] = GreedyHalf(logits_f16_.data() + r * vocab, vocab);
+        greedy = ids[r] >= 0;
+      }
+      if (greedy) {
+        ::agello::telemetry::ProbeLogitsHalf(logits_f16_.data(), rows, vocab);
+        ids_tensor.Write(absl::MakeConstSpan(ids));
+        if (scores_tensor != nullptr) {
+          status = ValidateTensor(*scores_tensor, /*max_num_dims=*/2,
+                                  batch_size_, "output scores");
+          if (!status.ok()) {
+            return status;
+          }
+          // A greedy pick's probability is 1, as in TopKTopPSampling.
+          std::vector<float> scores(rows, 0.0f);
+          scores_tensor->Write(absl::MakeConstSpan(scores));
+        }
+        return absl::OkStatus();
+      }
+    }
+    ConvertFp16ToFp32(logits_f16_, logits_data_);
     logits_data_span = absl::MakeSpan(logits_data_);
   } else {
     return absl::InvalidArgumentError(

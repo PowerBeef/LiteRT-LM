@@ -284,6 +284,9 @@ void RecordValue(Gauge gauge, double value);
 // an MTP drafter run (CurrentRun) go to the drafter's gauges.
 void ProbeLogits(const float* logits, int64_t rows, int64_t vocab);
 
+// ProbeLogits for FP16 logits (IEEE half bits), converting only the calls it checks.
+void ProbeLogitsHalf(const uint16_t* logits, int64_t rows, int64_t vocab);
+
 // Facts about the engine that outlive Reset (sampler path, GPU family, async mode...), shown in
 // every snapshot. `key` must be a string literal.
 void SetFact(const char* key, const std::string& value);
