@@ -519,11 +519,12 @@ local_repository(
 # Bazel doesn't read @litert's WORKSPACE, so this repeats its declaration. Our fork
 # (PowerBeef/ml-drift, branch agello-next): the commit LiteRT pins (1b18771f) plus the commits that
 # build it as an external repository of LiteRT-LM, feed Agello telemetry (formerly patch_cmds), and
-# start attention reductions at a sliding window, and can simulate another Apple GPU's kernel
-# choices (AGELLO_SIMULATE_APPLE_GPU).
-ML_DRIFT_COMMIT = "ef08a6785834a9ea248c62c67f1c692aa1cf1c35"
+# start attention reductions at a sliding window (the Neural Accelerator and simdgroup-matrix
+# convolutions too), and can simulate another Apple GPU's kernel choices
+# (AGELLO_SIMULATE_APPLE_GPU).
+ML_DRIFT_COMMIT = "15fa9e2ba632145992299e3f04786dc1f575373c"
 
-ML_DRIFT_SHA256 = "40df226ca66c56f48bfa625775d0685d12ffe3a61348fa49727696823fa0fcdd"
+ML_DRIFT_SHA256 = "880e9cd60a0a6bd38048dfd68078c71597b1dd4852ed1a57e6f018fa3bb3eeeb"
 
 http_archive(
     name = "ml_drift",
