@@ -12,7 +12,7 @@ let usage = """
     --kv N              KV cache capacity, maxNumTokens (8192)
     --mtp               speculative decoding with the model's MTP drafter
     --cache DIR         serialization cache folder (default: no cache); builds that report a build
-                        id (ours) use DIR/<build id>
+                        id (ours) use DIR/<build id>, and other builds' folders there are deleted
     --cold              empty the cache folder before loading
     --repeat N          passes over the cases (1)
     --warmup N          warm-up runs of the first case, recorded with "warmup": true (0)
@@ -87,8 +87,19 @@ while !args.isEmpty {
   case "--mtp": settings.mtp = true
   case "--cache":
     // LiteRT-LM's cache keys ignore the runtime build: builds that report an id get a subfolder.
+    // Each holds a 2.2 GB weight copy for E4B, so other builds' subfolders are deleted.
     var dir = URL(fileURLWithPath: value(flag), isDirectory: true)
-    if let build = Machine.runtimeBuildInfo()?["build_id"] { dir.appendPathComponent(build, isDirectory: true) }
+    if let build = Machine.runtimeBuildInfo()?["build_id"] {
+      let root = dir
+      dir.appendPathComponent(build, isDirectory: true)
+      let others = (try? FileManager.default.contentsOfDirectory(atPath: root.path)) ?? []
+      for name in others where name != build && name.count == 12
+        && name.allSatisfy({ $0.isHexDigit && !$0.isUppercase })
+      {
+        try? FileManager.default.removeItem(at: root.appendingPathComponent(name))
+        note("cache: removed another build's folder \(name)")
+      }
+    }
     settings.cacheDir = dir
   case "--cold": cold = true
   case "--repeat": repeats = max(1, number(flag))
@@ -172,4 +183,9 @@ if let out, let load = bench.loadTelemetry, let data = try? JSONEncoder().encode
 if let tracePath {
   let ok = EngineTelemetry.writeTrace(to: URL(fileURLWithPath: tracePath))
   note(ok ? "trace: \(tracePath)" : "trace: not written (this runtime has no telemetry)")
+}
+// AGELLO_BENCH_HOLD=<seconds>: stay alive after the last case, for footprint/vmmap/malloc_history.
+if let hold = ProcessInfo.processInfo.environment["AGELLO_BENCH_HOLD"], let seconds = Double(hold) {
+  note("holding \(seconds) s (pid \(ProcessInfo.processInfo.processIdentifier))")
+  try await Task.sleep(for: .seconds(seconds))
 }

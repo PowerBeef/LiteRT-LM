@@ -205,6 +205,26 @@ public struct Bench: Sendable {
       prefillTokens: prefill, decodeTokens: decode, cacheDir: ":nocache")
     let seconds = (ContinuousClock.now - started).seconds
     let footprint = Footprint.current()
+    // AGELLO_BENCH_RELEASE_TRACE=<seconds>: the engine is gone; sample the footprint every 10 ms
+    // and print each change of 8 MB or more, to see when its memory comes back.
+    if let trace = ProcessInfo.processInfo.environment["AGELLO_BENCH_RELEASE_TRACE"],
+      let limit = Double(trace)
+    {
+      let freed = ContinuousClock.now
+      var last = footprint.bytes
+      var line = String(format: "release: %.0f MB", Double(last) / 1e6)
+      while (ContinuousClock.now - freed).seconds < limit {
+        try await Task.sleep(for: .milliseconds(10))
+        let now = Footprint.current().bytes
+        if now > last + 8_000_000 || now + 8_000_000 < last {
+          line += String(
+            format: ", %.0f ms %.0f MB", (ContinuousClock.now - freed).seconds * 1000,
+            Double(now) / 1e6)
+          last = now
+        }
+      }
+      FileHandle.standardError.write(Data((line + "\n").utf8))
+    }
     return CaseRecord(
       id: item.id, backend: settings.backend, activation: "default",
       model: settings.model.lastPathComponent, sentences: 0, late: false, seed: 0,

@@ -33,6 +33,13 @@ swift test                      # BenchKit's unit tests (no model needed)
 `--warmup N`, `--label NAME`, `--out FILE` (appends), `--hash-model`, and
 `--case '<json>'` for a single case. Progress goes to stderr.
 
+With our builds, `--cache DIR` uses `DIR/<build id>` and deletes other builds'
+folders there (each holds a 2.2 GB weight copy for E4B). Two environment
+variables help with memory work: `AGELLO_BENCH_HOLD=<s>` keeps the process
+alive after the last case (for `footprint`, `vmmap` or `malloc_history`), and
+`AGELLO_BENCH_RELEASE_TRACE=<s>` follows the footprint for that long after each
+`engine-benchmark` frees its engine, printing every change of 8 MB or more.
+
 ## Arms
 
 An arm is a LiteRT-LM checkout: its Swift wrapper and the `CLiteRTLM` binary
