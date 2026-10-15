@@ -72,6 +72,23 @@ tracks/T4-attention.md). Same calibration (`results/mac/2026-10-14/agello/calibr
 
 Single runs per window, recorded about five hours apart.
 
+## After P2–P7 (2026-10-15)
+
+The local window (T4 step 2), kept conversations (T3), host costs (T2), one weight copy (T11) and
+the FP16 greedy path, build `c5460a024e71`; same calibration
+(`results/mac/2026-10-15/agello/calibrate-final.json`), single runs:
+
+| Window | Decode tok/s, Google / ours | Prefill tok/s, Google / ours | TTFT s, Google / ours | Peak footprint GB, Google / ours | Load s |
+| --- | --- | --- | --- | --- | --- |
+| 4,096 | 73.6 / 87.6 (+19%) | 2,047 / 2,467 (+21%) | 0.63 / 0.52 | 2.50 / 2.46 | 1.8 |
+| 8,192 | 69.0 / 79.0 (+14%) | 2,162 / 3,030 (+40%) | 1.06 / 0.76 | 2.79 / 2.84 | 0.8 |
+| 16,384 | 73.9 / 80.9 (+9%) | 1,619 / 2,843 (+76%) | 2.72 / 1.55 | 3.77 / 3.66 | 1.0 |
+| 32,768 | 61.9 / 82.1 (+33%) | 1,092 / 2,581 (+136%) | 7.88 / 3.34 | 5.61 / 5.47 | 1.5 |
+
+All four sizes loaded from one cache folder (T11), so the whole calibration took 20 s. Agello's
+Mac suites on the same build: unit 227 (1 skipped), inference 21/21, probes 11/11, thinking 2/2,
+files 3/3.
+
 ## Verdict
 
 - Correctness: parity. Same suites pass, digit copies exact, replies identical to Google's on the

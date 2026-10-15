@@ -10,6 +10,19 @@ where the code allows, agello-bench ABAB with `compare.py` for speed, the digit-
 fidelity, Agello's Mac suites for behavior); a track note with the numbers; raw records in
 `results/mac/<date>/`.
 
+## Status (2026-10-15, Mac only; nothing pushed or validated on the iPhone yet)
+
+| Phase | Status | Where |
+| --- | --- | --- |
+| P1 Ship readiness | Done: build info, caches per build, release tooling (dry run), licenses, privacy check | BUILD.md |
+| P2 T4 local window | Done: decode +30% and prefill +21% at 30K filled, fidelity exact | tracks/T4-attention.md |
+| P3 T3 helpers | Done, plus P3.4 (no orphan snapshot, mapped snapshots): first reply after a helper 0.13–0.15 s, one KV cache while it runs | tracks/T3-helpers.md |
+| P4 T2 host costs | Done: thinking mask skip, no per-step history copy or allocation, `GetVocabSize`; within noise on the M6 | tracks/T2-host-costs.md |
+| P5 T11 caches | Done: one weight copy for every size, a new size loads in 1.2–1.4 s; Agello uses one folder | tracks/T11-caches.md |
+| P6 T7 sampler | FP16 greedy path landed (within noise); open Metal sampler parked: sampling is 0.2% of a step | tracks/T7-sampler.md |
+| P7 T6 dispatch | Measured: 1.2% run overhead without MTP, GPU 98.5% busy; parked | tracks/T6-dispatch.md |
+| P8 Upstream | Drafts for 3 LiteRT-LM issues and 3 LiteRT/ML Drift PRs; none posted | upstream/ |
+
 ## P1. Ship readiness (make the iPhone run the last step)
 
 | Step | Change | Done when |

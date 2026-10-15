@@ -28,3 +28,4 @@ replaced by `~`.
 | `inference-t4c.json` | the prefill window too | 21/21 |
 | `inference-p4.json`, `probes-p4.json` | `c2a5c0a3df2a` (T3 and T2 changes) | 21/21; 11/11 |
 | `probes-t11.json` | `d1c570842441` (one weight cache for every size) | 11/11, probe 14 included |
+| `calibrate-final.json`, `inference-final.json`, `probes-final.json` | `c5460a024e71` (everything above, FP16 greedy path) | calibration at 4K–32K; 21/21; 11/11 |

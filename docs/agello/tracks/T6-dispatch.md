@@ -20,10 +20,17 @@ and the decode step's; `results/mac/2026-10-15/bench/t6-{plain,mtp}.jsonl`:
 Command buffers are committed as they're encoded (LiteRT `77ed9cab`), so encoding overlaps the
 GPU's work; what remains is the tail after the last commit and the wait's wake-up.
 
+What this level doesn't see: gaps between dispatches inside a command buffer count as GPU time.
+That doesn't change the decision for pre-encoding or indirect command buffers, which cut CPU
+encode time: the GPU only waits on encoding between command buffers, the 0.24 ms above. Gaps
+between dispatches would be kernel fusion's to recover (the elementwise chains around the norms),
+and measuring them needs the shader timeline (Metal System Trace with GPU counters) or
+telemetry level 4, whose one-encoder-per-kernel timing changes what it measures.
+
 ## Decision
 
 Not worth acting on now: pre-encoding or indirect command buffers could recover at most the
 1.2% without MTP. With MTP, the 5.6% outside GPU time is split between the drafter's host steps
 (input concatenation, embedding lookup, greedy pick) and run overheads; drafting on the GPU (T12)
-is the change that would address it, not encoding. Revisit with an iPhone Metal System Trace,
-where encode and wake-up costs are larger relative to the GPU.
+is the change that would address it, not encoding. Revisit with an iPhone Metal System Trace
+(shader timeline on), where encode and wake-up costs are larger relative to the GPU.
