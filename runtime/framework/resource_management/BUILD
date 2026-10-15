@@ -260,6 +260,9 @@ cc_test(
     name = "resource_manager_test",
     srcs = ["resource_manager_test.cc"],
     deps = [
+        "//runtime/executor:llm_executor_io_types",
+        "//runtime/framework/resource_management/context_handler",
+        "//runtime/engine:engine_settings",
         ":resource_manager",
         "@com_google_googletest//:gtest_main",
         "@com_google_absl//absl/time",

@@ -794,7 +794,13 @@ ResourceManager::AcquireExecutorWithContextHandler(
           ::agello::telemetry::kKvContextSwitch, ::agello::telemetry::kInfo, 0,
           0, "executor switched sessions: KV snapshot and restore");
     }
-    if (current_handler_ != nullptr) {
+    // Agello (T3): a deleted session's handler, held only here and sharing its processed context
+    // with no other handler, is never restored: skip its snapshot (a full KV copy, and twice the
+    // KV in memory while the next session's snapshot is restored).
+    const bool current_is_orphan =
+        current_handler_ != nullptr && current_handler_.use_count() == 1 &&
+        current_handler_->shared_processed_context()->HandlerCount() <= 1;
+    if (current_handler_ != nullptr && !current_is_orphan) {
       ABSL_ASSIGN_OR_RETURN(auto current_llm_context,
                             llm_executor_->CloneContext());
       ABSL_ASSIGN_OR_RETURN(auto current_runtime_config,

@@ -21,9 +21,12 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include "absl/time/time.h"  // from @com_google_absl
+#include "runtime/engine/engine_settings.h"
 #include "runtime/executor/executor_stats.h"
 #include "runtime/executor/fake_llm_executor.h"
 #include "runtime/executor/llm_executor.h"
+#include "runtime/executor/llm_executor_io_types.h"
+#include "runtime/framework/resource_management/context_handler/context_handler.h"
 #include "runtime/util/test_utils.h"  // IWYU pragma: keep
 
 namespace litert::lm {
@@ -70,6 +73,61 @@ TEST(ResourceManagerTest, AcquiredExecutorForwardsExecutorStats) {
 
   executor->ResetExecutorStats();
   EXPECT_EQ(num_resets, 1);
+}
+
+// Agello (T3): a fake executor that counts context snapshots (CloneContext).
+class CloneCountingFakeLlmExecutor : public FakeLlmExecutor {
+ public:
+  explicit CloneCountingFakeLlmExecutor(int* num_clones)
+      : FakeLlmExecutor(/*vocab_size=*/16, /*prefill_tokens_set=*/{},
+                        /*decode_tokens_set=*/{}),
+        num_clones_(num_clones) {}
+
+  absl::StatusOr<std::unique_ptr<LlmContext>> CloneContext() const override {
+    ++*num_clones_;
+    return CreateNewContext(std::nullopt, RuntimeConfig());
+  }
+
+ private:
+  int* num_clones_;
+};
+
+// Agello (T3): switching away from a deleted session (a helper conversation)
+// doesn't snapshot it; switching away from a live one does.
+TEST(ResourceManagerTest, SwitchSkipsTheSnapshotOfADeletedSession) {
+  int num_clones = 0;
+  ASSERT_OK_AND_ASSIGN(
+      auto resource_manager,
+      ResourceManager::Create(
+          /*model_resources=*/nullptr,
+          std::make_unique<CloneCountingFakeLlmExecutor>(&num_clones),
+          /*vision_executor_settings=*/nullptr,
+          /*audio_executor_settings=*/nullptr, /*litert_env=*/nullptr));
+  const SessionConfig config = SessionConfig::CreateDefault();
+  ASSERT_OK_AND_ASSIGN(std::shared_ptr<ContextHandler> main,
+                       resource_manager->CreateContextHandler(config));
+  ASSERT_OK_AND_ASSIGN(std::shared_ptr<ContextHandler> helper,
+                       resource_manager->CreateContextHandler(config));
+  auto use = [&](std::shared_ptr<ContextHandler> handler) {
+    return resource_manager->AcquireExecutorWithContextHandler(std::move(handler))
+        .status();
+  };
+
+  ASSERT_OK(use(main));
+  EXPECT_EQ(num_clones, 0);
+  // The main session is alive: it's snapshotted.
+  ASSERT_OK(use(helper));
+  EXPECT_EQ(num_clones, 1);
+  // The helper was deleted: nothing will restore it, so no snapshot.
+  helper.reset();
+  ASSERT_OK(use(main));
+  EXPECT_EQ(num_clones, 1);
+
+  // A live session is snapshotted again.
+  ASSERT_OK_AND_ASSIGN(std::shared_ptr<ContextHandler> other,
+                       resource_manager->CreateContextHandler(config));
+  ASSERT_OK(use(other));
+  EXPECT_EQ(num_clones, 2);
 }
 
 }  // namespace

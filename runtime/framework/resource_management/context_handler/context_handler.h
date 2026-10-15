@@ -169,6 +169,12 @@ class ContextHandler::SharedProcessedContext {
                     handlers_.end());
   }
 
+  // Agello (T3): the number of handlers sharing this processed context.
+  int HandlerCount() const {
+    absl::MutexLock lock(&handlers_mutex_);
+    return static_cast<int>(handlers_.size());
+  }
+
   // Returns the number of tokens in the longest handler.
   absl::StatusOr<int> LongestHandlerTimeStep(LlmExecutor& llm_executor) const;
 
