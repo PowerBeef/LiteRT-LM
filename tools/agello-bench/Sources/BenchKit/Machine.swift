@@ -22,6 +22,9 @@ public struct Machine: Codable, Sendable {
   /// The loaded LiteRT-LM C library (CLiteRTLM): the build being measured.
   public var runtime: String
   public var runtimeSHA256: String
+  /// How the runtime was built (`litert_lm_get_build_info`: commits, flags, build id); nil for
+  /// builds without it, such as Google's.
+  public var runtimeBuild: [String: String]?
 
   public static func capture() -> Machine {
     let gpu = MTLCreateSystemDefaultDevice()
@@ -44,7 +47,17 @@ public struct Machine: Codable, Sendable {
       gpuAppleFamily: gpu.map(appleFamily) ?? 0,
       gpuWorkingSetGB: Double(gpu?.recommendedMaxWorkingSetSize ?? 0) / 1e9,
       runtime: runtime,
-      runtimeSHA256: runtime.isEmpty ? "" : (try? sha256(of: URL(fileURLWithPath: runtime))) ?? "")
+      runtimeSHA256: runtime.isEmpty ? "" : (try? sha256(of: URL(fileURLWithPath: runtime))) ?? "",
+      runtimeBuild: runtimeBuildInfo())
+  }
+
+  /// `litert_lm_get_build_info`, looked up at run time so Google's builds still load.
+  static func runtimeBuildInfo() -> [String: String]? {
+    typealias GetBuildInfo = @convention(c) () -> UnsafePointer<CChar>?
+    guard let handle = dlopen(nil, RTLD_NOW), let address = dlsym(handle, "litert_lm_get_build_info"),
+      let text = unsafeBitCast(address, to: GetBuildInfo.self)()
+    else { return nil }
+    return (try? JSONSerialization.jsonObject(with: Data(String(cString: text).utf8))) as? [String: String]
   }
 
   static func sysctl(_ name: String) -> String {
