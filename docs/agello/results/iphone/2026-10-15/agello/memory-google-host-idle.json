@@ -1,0 +1,263 @@
+{
+  "device" : {
+    "gpu" : "Apple A19 Pro GPU",
+    "gpuAppleFamily" : 10,
+    "gpuWorkingSetGB" : 8.5899509760000008,
+    "hwMachine" : "iPhone18,1",
+    "hwModel" : "V53AP",
+    "isiOSAppOnMac" : false,
+    "memoryGB" : 12.291735552,
+    "model" : "iPhone",
+    "profile" : "12 GB RAM · app limit 8.6 GB",
+    "runtimeBuild" : {
+
+    },
+    "system" : "iOS 27.0.1"
+  },
+  "runID" : "run-1792087833",
+  "scenarios" : {
+    "memory_e4b_3.5GB" : {
+      "ballastGB" : 5.0899345919999996,
+      "leftoverGB" : {
+        "compressed" : 0.025411584000000001,
+        "footprint" : 0.12104817599999999,
+        "graphics" : 0.001425408,
+        "mallocHeld" : 0.74883070399999996,
+        "mallocInUse" : 0.0075096959999999997,
+        "media" : 0,
+        "neural" : 0,
+        "purgeableNonvolatile" : 0.00026214400000000002
+      },
+      "memory.availableGB" : 1.314216488,
+      "memory.footprintGB" : 7.2757181040000001,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T18:13:51Z",
+      "simulatedLimitGB" : 3.5,
+      "steps" : [
+        {
+          "availableGB" : 3.3765062640000001,
+          "footprintGB" : 5.213428328,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 2.2638824,
+          "footprintGB" : 6.3260521919999997,
+          "loaded" : true,
+          "loadLog" : [
+            "unload: footprint 6.78 -> 4.71 GB, engine object freed",
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 4.2s (footprint 6.33 GB, available 2.26 GB)"
+          ],
+          "memoryWarnings" : 0,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 2.2546581360000002,
+          "decodeTokPerSec" : 28.236257470984953,
+          "footprintGB" : 6.3352764559999999,
+          "memoryWarnings" : 0,
+          "ok" : true,
+          "step" : "text"
+        },
+        {
+          "availableGB" : 1.0966688,
+          "footprintGB" : 7.4932657919999999,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "reply" : "Red",
+          "step" : "image"
+        },
+        {
+          "availableGB" : 1.0479100160000001,
+          "footprintGB" : 7.5420245760000002,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "reply" : "The quick brown fox jumps over the lazy dog.",
+          "step" : "audio"
+        },
+        {
+          "availableGB" : 1.047959168,
+          "footprintGB" : 7.5419754240000003,
+          "inputTokens" : 2300,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "step" : "long 8K",
+          "ttftSeconds" : 4.0289926942500003
+        },
+        {
+          "availableGB" : 1.314216488,
+          "footprintGB" : 7.2757181040000001,
+          "inputTokens" : 4396,
+          "loaded" : true,
+          "memoryWarnings" : 3,
+          "ok" : true,
+          "step" : "long 16K",
+          "ttftSeconds" : 8.8142275290000001
+        }
+      ]
+    },
+    "memory_e4b_4.0GB" : {
+      "ballastGB" : 4.5899345919999996,
+      "leftoverGB" : {
+        "compressed" : 0.025706495999999999,
+        "footprint" : 0.20983307200000001,
+        "graphics" : 0.001425408,
+        "mallocHeld" : 0.74883070399999996,
+        "mallocInUse" : 0.0069990720000000003,
+        "media" : 0,
+        "neural" : 0,
+        "purgeableNonvolatile" : 0.00022937599999999999
+      },
+      "memory.availableGB" : 1.592629896,
+      "memory.footprintGB" : 6.9973046959999996,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T18:12:49Z",
+      "simulatedLimitGB" : 4,
+      "steps" : [
+        {
+          "availableGB" : 3.7879252000000001,
+          "footprintGB" : 4.8020093920000004,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 2.7728353120000002,
+          "footprintGB" : 5.8170992799999999,
+          "loaded" : true,
+          "loadLog" : [
+            "unload: footprint 6.14 -> 3.80 GB, engine object freed",
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 4.0s (footprint 5.82 GB, available 2.77 GB)"
+          ],
+          "memoryWarnings" : 0,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 2.5021058799999998,
+          "decodeTokPerSec" : 28.084929549864878,
+          "footprintGB" : 6.0878287120000003,
+          "memoryWarnings" : 1,
+          "ok" : true,
+          "step" : "text"
+        },
+        {
+          "availableGB" : 1.3820619359999999,
+          "footprintGB" : 7.2078726560000002,
+          "memoryWarnings" : 4,
+          "ok" : true,
+          "reply" : "Red",
+          "step" : "image"
+        },
+        {
+          "availableGB" : 1.546164152,
+          "footprintGB" : 7.0437704400000003,
+          "memoryWarnings" : 4,
+          "ok" : true,
+          "reply" : "The quick brown fox jumps over the lazy dog.",
+          "step" : "audio"
+        },
+        {
+          "availableGB" : 1.5454760240000001,
+          "footprintGB" : 7.0444585679999996,
+          "inputTokens" : 2300,
+          "memoryWarnings" : 4,
+          "ok" : true,
+          "step" : "long 8K",
+          "ttftSeconds" : 3.9757488372500003
+        },
+        {
+          "availableGB" : 1.592629896,
+          "footprintGB" : 6.9973046959999996,
+          "inputTokens" : 4396,
+          "loaded" : true,
+          "memoryWarnings" : 9,
+          "ok" : true,
+          "step" : "long 16K",
+          "ttftSeconds" : 8.6623035097500001
+        }
+      ]
+    },
+    "memory_e4b_5.0GB" : {
+      "ballastGB" : 3.5899345920000001,
+      "leftoverGB" : {
+        "compressed" : 0,
+        "footprint" : 0.01514068,
+        "graphics" : 1.6384000000000001e-05,
+        "mallocHeld" : 0.025165824,
+        "mallocInUse" : 0.004340544,
+        "media" : 0,
+        "neural" : 0,
+        "purgeableNonvolatile" : 0.00018022399999999999
+      },
+      "memory.availableGB" : 2.449087784,
+      "memory.footprintGB" : 6.140846808,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T18:11:48Z",
+      "simulatedLimitGB" : 5,
+      "steps" : [
+        {
+          "availableGB" : 4.9830908640000002,
+          "footprintGB" : 3.6068437279999999,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 3.6438097599999999,
+          "footprintGB" : 4.9461248319999997,
+          "loaded" : true,
+          "loadLog" : [
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 11.2s (footprint 4.95 GB, available 3.64 GB)"
+          ],
+          "memoryWarnings" : 0,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 3.5981472399999999,
+          "decodeTokPerSec" : 39.206633839447463,
+          "footprintGB" : 4.9917873520000002,
+          "memoryWarnings" : 1,
+          "ok" : true,
+          "step" : "text"
+        },
+        {
+          "availableGB" : 2.2345388480000001,
+          "footprintGB" : 6.355395744,
+          "memoryWarnings" : 1,
+          "ok" : true,
+          "reply" : "Red",
+          "step" : "image"
+        },
+        {
+          "availableGB" : 2.2507753199999998,
+          "footprintGB" : 6.3391428879999996,
+          "memoryWarnings" : 1,
+          "ok" : true,
+          "reply" : "The quick brown fox jumps over the lazy dog.",
+          "step" : "audio"
+        },
+        {
+          "availableGB" : 2.3454912239999999,
+          "footprintGB" : 6.2444433679999998,
+          "inputTokens" : 2300,
+          "memoryWarnings" : 1,
+          "ok" : true,
+          "step" : "long 8K",
+          "ttftSeconds" : 2.203385946
+        },
+        {
+          "availableGB" : 2.449087784,
+          "footprintGB" : 6.140846808,
+          "inputTokens" : 4396,
+          "loaded" : true,
+          "memoryWarnings" : 1,
+          "ok" : true,
+          "step" : "long 16K",
+          "ttftSeconds" : 6.6327189102500004
+        }
+      ]
+    }
+  },
+  "startedAt" : "2026-10-15T18:10:49Z"
+}

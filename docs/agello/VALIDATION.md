@@ -140,6 +140,47 @@ iterations in workgroups whose keys all lie below the window, where the fused ma
 On the phone the gain grows with the prompt (+12% for 8,607 tokens), as on the Mac, but the earlier
 run was hotter at 16K and 32K (thermal state 2 against 1): the Mac's A/B is the measurement.
 
+### Memory left between engines: the test host's own engine (open issue 4)
+
+The memory suite carried 1.4–2.0 GB from one test to the next, with Google's binary as with ours,
+even after the engine was freed. Agello now records what the app holds with no engine
+(`MemoryProbe.breakdown()`: graphics, media and Neural Engine ledgers, malloc in use and held) and,
+in each load's log, the footprint before and after the previous unload and whether the `Engine`
+object was released. Probe 16 (`test16_MemoryAfterUnload`) frees the engine after each kind of work.
+
+- **Not the runtime.** The iPhone returns an engine's memory at once (2.0 GB within 50 ms of freeing
+  a 16K engine), and the Swift `Engine` was released every time.
+- **A second engine.** With malloc stack logging on the Mac, the memory left with "no engine" was a
+  complete E4B engine created by `LiteRTChatEngine.makeEngine`: weight-cache mappings, ~1 GB of
+  Metal buffers, compiled graphs, the tokenizer. `leaks` found 0 bytes leaked. Device tests build
+  their own `AppState`; the app hosting them ran its normal UI, whose chat screen warms the model up
+  at launch. Every device run had that engine loaded next to the tests' once its load finished.
+- **Fix** (Agello `8bae20b`): while hosting tests, the app shows nothing. Mac, probe 16: 1.34 GB
+  left after each unload before, 0.05 GB now; `unit` 227 passed.
+
+iPhone 17 Pro, footprint minus ballast, the idle host (`memory-host-idle.json`,
+`memory-google-host-idle.json`; before: `memory-host-engine-breakdown.json`):
+
+| | Ours before | Ours now (`fc71d704a349`) | Google's v0.18.0 now |
+| --- | --- | --- | --- |
+| No engine, before tests 2 and 3 | 1.84 / 1.41 GB (0.76 GB Metal) | 0.43 / 0.13 GB (no Metal) | 0.21 / 0.12 GB |
+| E4B loaded at 8K | 2.38–2.58 GB | 1.19–1.29 GB | 1.23–1.36 GB |
+| Image, audio, 8K prompt | 3.6–3.9 GB | 2.44–2.65 GB | 2.40–2.77 GB |
+| 5.0 / 4.0 / 3.5 GB envelopes | pass / a step stopped at 400 MB / killed | all pass | all pass |
+
+Calibration, the idle host, MTP on (`calibrate-host-idle.json`, `calibrate-google-host-idle.json`):
+
+| Window | Peak GB, ours / Google | Prefill tok/s, ours / Google | TTFT s, ours / Google |
+| --- | --- | --- | --- |
+| 4K (1,285 tokens) | 1.31 / 1.33 | 1,088 / 942 | 1.18 / 1.36 |
+| 8K (2,302) | 1.26 / 1.25 | 986 / 670 | 2.33 / 3.44 |
+| 16K (4,398) | 1.99 / 1.98 | 936 / 521 | 4.70 / 8.44 |
+| 32K (8,607) | 3.85 / 3.86 | 791 / 375 | 10.88 / 22.94 |
+
+Our run was at thermal state 0, Google's at 1; the prefill gap matches the cooled comparison above.
+Every device memory figure earlier in this file includes the host's engine (about 1.2 GB once
+loaded); differences between builds measured in the same way still hold.
+
 ## Open issues
 
 1. **CPU backend: 5.5 GB of XNNPACK buffers. Fixed the same day** (`agello-next` `b8f807ec`,
@@ -167,6 +208,5 @@ run was hotter at 16K and 32K (thermal state 2 against 1): the Mac's A/B is the 
 3. **The plan's A17/A18-class run:** the Apple9 code paths pass in simulation (above). A real
    device would still show speed, thermals, and the hardware arithmetic behind #3913 below 2,048
    (our model fix is exact by construction there). A cloud device farm can provide one.
-4. **The 3.5 GB envelope** (the harshest 8 GB-phone case) fails with every build, Google's included.
-   Memory isn't fully returned after an engine unloads, and the base before loading varies from
-   0.5 to 1.5 GB.
+4. **The 3.5 GB envelope failed with every build. Resolved:** the memory left between engines was
+   the test host's own engine (above). Without it, all three envelopes pass on both runtimes.
