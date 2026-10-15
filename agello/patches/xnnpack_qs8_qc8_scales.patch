@@ -1,32 +1,31 @@
---- a/src/subgraph/unary.c	2026-10-15 10:00:53
-+++ b/src/subgraph/unary.c	2026-10-15 10:00:53
-@@ -198,8 +198,17 @@
-       if (num_channels > 0 && ((num_nonbatch_dims == 0 && batch_size > 0) ||
-                                (num_nonbatch_dims > 0 && dq_batch_size > 0))) {
+--- a/src/subgraph/unary.c
++++ b/src/subgraph/unary.c
+@@ -194,12 +194,13 @@ static enum xnn_status reshape_convert_operator(
+       const size_t num_channels =
+           input_value->shape.num_dims > channel_dimension
+               ? input_value->shape.dim[channel_dimension] : 0;
++      const size_t qc8_batch_size = 
++          xnn_shape_multiply_batch_dims(&input_value->shape, 2);
+ 
+-      if (num_channels > 0 && ((num_nonbatch_dims == 0 && batch_size > 0) ||
+-                               (num_nonbatch_dims > 0 && dq_batch_size > 0))) {
++      if (num_channels > 0 && qc8_batch_size > 0) {
          xnn_operator_t op = opdata->operator_objects[0];
 -        const size_t bytes_needed = num_channels * sizeof(float) *
 -            (num_nonbatch_dims > 0 ? dq_batch_size : batch_size);
-+        // Agello: the only producer of this convert is the dequant-BMM rewrite
-+        // (`rewrite_dequant_bmm_at`), whose batch-matrix-multiply reads one
-+        // scale per batch of B and per channel (scale_b_batch_stride = n). The
-+        // batch of B is its dims except the last two; `batch_size` (every dim
-+        // but the last) also counts a matrix dim: n * n * batches floats for a
-+        // transposed B, about 0.5 GB for one 8K-token INT8 KV cache.
-+        const size_t num_scale_batches =
-+            num_nonbatch_dims > 0 ? dq_batch_size
-+            : num_input_dims > 2  ? xnn_shape_multiply_batch_dims(&input_value->shape, 2)
-+                                  : 1;
-+        const size_t bytes_needed = num_channels * sizeof(float) * num_scale_batches;
++        const size_t bytes_needed =
++            num_channels * sizeof(float) * qc8_batch_size;
          if (op->channelwise_quantization_buffer_capacity < bytes_needed) {
            xnn_release_memory(op->channelwise_quantization_buffer);
            op->channelwise_quantization_buffer = xnn_allocate_memory(bytes_needed);
-@@ -210,8 +219,7 @@
+@@ -210,8 +211,7 @@ static enum xnn_status reshape_convert_operator(
            op->channelwise_quantization_buffer_capacity = bytes_needed;
          }
          float* channelwise_scale = (float*)op->channelwise_quantization_buffer;
 -        for (size_t b = 0; b < (num_nonbatch_dims > 0 ? dq_batch_size
 -                                                      : batch_size); b++) {
-+        for (size_t b = 0; b < num_scale_batches; b++) {
++        for (size_t b = 0; b < qc8_batch_size; b++) {
            for (size_t c = 0; c < num_channels; c++) {
              channelwise_scale[b * num_channels + c] = input_value->quantization.scale;
            }
+
