@@ -686,7 +686,9 @@ absl::StatusOr<Responses> Decode(
   };
 
   std::unique_ptr<Constraint> thinking_budget_constraint;
-  int vocab_size = tokenizer.GetTokens().size();
+  // Agello (T2): the same count without building every token's string (262,144
+  // strings for Gemma) on every decode.
+  int vocab_size = tokenizer.GetVocabSize();
 
   // Apply the thinking budget constraint whenever thinking is enabled (budget
   // != 0). Even if the budget is -1 (unlimited), the constraint is required to
