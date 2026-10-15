@@ -21,9 +21,14 @@ Shared by both builds, so not ours to fix in parity:
 
 - `test02_ReasoningStaysOutOfCache` fails on margin (the first reasoning is too short on the M6
   for the test's floor to separate kept from dropped; see BASELINE.md).
-- Probe 9 (voice turn latency) stalls 605 s in both: its reseed step abandons a stream and opens
-  a new conversation on the same engine; LiteRT-LM waits on the old session's work up to its
-  10-minute timeout. Telemetry now flags such waits; the cause is under investigation.
+- Probe 9 (voice turn latency) stalled 605 s in both: its reseed step abandons a stream, so the
+  stream's final callback released the last reference to its conversation, on LiteRT-LM's
+  callback thread; the native delete then waited for the task running that callback until the
+  10-minute timeout (a thread sample shows the chain; telemetry flagged it as "session destroyed
+  while its tasks ran"). Fixed in the Swift wrapper on `agello` and `agello-next`: a stream holds
+  its conversation weakly, so the conversation is deleted where the caller drops it, never inside
+  the callback. (Releasing the context on another queue instead fixed this case but let a
+  deletion overlap the next conversation, which stalled Google's v0.18.0 the same way.)
 
 ## Calibration (Agello defaults: MTP on, a prompt filling a third of the window)
 
