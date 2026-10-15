@@ -198,11 +198,20 @@ gives the same file they tested, sha256 `6353a233…f655c`; `--block 2048` repro
 | iPhone 17 Pro, probe 12 (0.7K–30K tokens, FP16) | 3/3 | 14/14, plus 6/6 with MTP; replies identical where both ran |
 | Mac M6, prefill at 0.7K–30K (ABAB, 4 runs each) | | −0.1% to −1.4%; same-file spread 0.7–1.9% |
 | Mac M6, decode without / with MTP | | −0.2% to −0.9% / −2.6% to +4.0% |
+| Google's v0.18.0, iOS runtime (Metal) on the Mac M6, probe 12 | 3/3 | 14/14, plus 6/6 with MTP; replies identical (3/3) |
+| Google's v0.18.0, macOS (WebGPU), `short`, `long`, `cross4096`, `xl` | 88/88 | 88/88, replies identical (83/83) |
 
 No measurable cost here, and nothing changes on the GPUs that were already exact. An M1 Mac is the
 only place to confirm the gain itself (the GPU-family simulation can't reproduce the hardware's
 arithmetic). Reports: `results/mac/2026-10-15/bench/rope512-*.jsonl`,
-`results/iphone/2026-10-15/agello/probe12-rope512.json`.
+`results/iphone/2026-10-15/agello/probe12-rope512.json`,
+`results/mac/2026-10-15/agello/probe12-rope512-google-v0.18.0.json`.
+
+**Shipped the same day.** Hugging Face `PowerBeef02/gemma-4-E4B-it-litert-lm-fp16-rope` revision
+`a1693e22` (model card updated in `b58c33c6`); Agello `93122b6` points the catalog at it. With our
+runtime pinned to ML Drift `15fa9e2` (`agello-next` `7b872544`, build `7023fa1a61d4`; `short` at 8K
+identical to the reference, 15/15), Agello on the Mac: `unit` 227 passed, `inference` 21/21. The
+iPhone 17 Pro runs that Release build.
 
 ## Open issues
 
