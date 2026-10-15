@@ -142,8 +142,9 @@ native int4 for the Neural Accelerator path).
 | Host copies | 113 GPU → host reads and 274 host → GPU writes per case (4.9 MB per generated token, prefill included). Writes are cheap (126 MB of per-layer embeddings per prefill at about 40 GB/s). Reads are not: the logits buffers aren't packed, so each read converts ML Drift's layout on the CPU: 1.7 ms per 2 MB verify readback, 0.47 ms per 512 KB drafter readback, about 50 ms of a 494 ms decode turn (10%) |
 | Async | The executor asks for asynchronous runs; the Metal backend has no post-dispatch event, so every run completes synchronously (fact `gpu_async`) |
 
-A packed logits output (a plain shared `MTLBuffer` read by `memcpy`, or no copy at all) would
-recover most of the 10%; it belongs to T5, and T7 (sampling on the GPU) removes the readback.
+Fixed by T5's first step (tracks/T5-unified-memory.md): non-packed buffers are now read and
+written directly, decode +13.6% with MTP, and session snapshots (`kv_clone`, the same slow path
+for the KV caches) 7x faster. T7 (sampling on the GPU) would remove the readback altogether.
 The decode graph's 1,766 dispatches per token point at T6 (encoding) and at fusing the
 elementwise chains around the norms.
 
