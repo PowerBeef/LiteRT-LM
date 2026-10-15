@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-// Modified by Patrice Déry for Agello (PowerBeef/LiteRT-LM, branch agello):
+// Modified by Patrice Déry for Agello (PowerBeef/agello-litert-lm, branch agello):
 // a tool call that fails is answered with an error response the model can
-// read, instead of throwing and ending the turn (see handleToolCalls).
+// read, instead of throwing and ending the turn (see handleToolCalls); and a
+// stream holds its conversation weakly, so the last reference is never
+// released inside LiteRT-LM's callback, where deleting the conversation
+// deadlocked (see StreamContext).
 
 import Foundation
 import OSLog
@@ -821,9 +824,17 @@ public final class Conversation: Sendable {
   }
 
   /// Context object to bridge the C callback to the Swift AsyncThrowingStream.
+  ///
+  /// It holds its conversation weakly. With a strong reference, a caller that dropped the
+  /// conversation before the stream's final chunk (by abandoning the stream, or by replacing a
+  /// conversation whose cancelled stream was still finishing) left the context holding the last
+  /// reference; releasing it in the final callback ran `deinit` on LiteRT-LM's callback thread,
+  /// and deleting the native conversation there waited for the very task running the callback,
+  /// stalling the engine until LiteRT-LM's 10-minute timeout. Now the conversation is deleted
+  /// where the caller drops it, and the deletion waits for the stream's work to finish.
   class StreamContext {
     let continuation: AsyncThrowingStream<Message, Error>.Continuation
-    let conversation: Conversation
+    weak var conversation: Conversation?
     var toolCallCount: Int = 0
     var pendingToolCalls: [[String: Any]] = []
     let repetitionPenaltyConfig: RepetitionPenaltyConfig?
@@ -932,9 +943,12 @@ private func streamCallback(
 
       Task {
         do {
-          let toolResponseJson = try await context.conversation.handleToolCalls(toolCalls)
-          try context.conversation.sendToStream(
-            handle: context.conversation.checkIsAlive(),
+          guard let conversation = context.conversation else {
+            throw LiteRTLMError.conversation(.notAlive)
+          }
+          let toolResponseJson = try await conversation.handleToolCalls(toolCalls)
+          try conversation.sendToStream(
+            handle: conversation.checkIsAlive(),
             messageJson: toolResponseJson,
             repetitionPenaltyConfig: context.repetitionPenaltyConfig,
             noRepeatNgramConfig: context.noRepeatNgramConfig,
