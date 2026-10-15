@@ -11,7 +11,8 @@ let usage = """
     --fp32              FP32 activations (the GPU default is FP16)
     --kv N              KV cache capacity, maxNumTokens (8192)
     --mtp               speculative decoding with the model's MTP drafter
-    --cache DIR         serialization cache folder (default: no cache)
+    --cache DIR         serialization cache folder (default: no cache); builds that report a build
+                        id (ours) use DIR/<build id>
     --cold              empty the cache folder before loading
     --repeat N          passes over the cases (1)
     --warmup N          warm-up runs of the first case, recorded with "warmup": true (0)
@@ -84,7 +85,11 @@ while !args.isEmpty {
   case "--fp32": settings.fp32 = true
   case "--kv": settings.maxNumTokens = number(flag)
   case "--mtp": settings.mtp = true
-  case "--cache": settings.cacheDir = URL(fileURLWithPath: value(flag), isDirectory: true)
+  case "--cache":
+    // LiteRT-LM's cache keys ignore the runtime build: builds that report an id get a subfolder.
+    var dir = URL(fileURLWithPath: value(flag), isDirectory: true)
+    if let build = Machine.runtimeBuildInfo()?["build_id"] { dir.appendPathComponent(build, isDirectory: true) }
+    settings.cacheDir = dir
   case "--cold": cold = true
   case "--repeat": repeats = max(1, number(flag))
   case "--warmup": warmups = number(flag)

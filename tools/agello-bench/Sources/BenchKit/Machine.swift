@@ -52,7 +52,7 @@ public struct Machine: Codable, Sendable {
   }
 
   /// `litert_lm_get_build_info`, looked up at run time so Google's builds still load.
-  static func runtimeBuildInfo() -> [String: String]? {
+  public static func runtimeBuildInfo() -> [String: String]? {
     typealias GetBuildInfo = @convention(c) () -> UnsafePointer<CChar>?
     guard let handle = dlopen(nil, RTLD_NOW), let address = dlsym(handle, "litert_lm_get_build_info"),
       let text = unsafeBitCast(address, to: GetBuildInfo.self)()
