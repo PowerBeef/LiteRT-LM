@@ -18,9 +18,9 @@ How each project takes contributions (checked 2026-10-15):
 | [litert-lm-swift-tool-call-errors.md](litert-lm-swift-tool-call-errors.md) | LiteRT-LM issue | — | `agello` a3c0d0ef |
 | [litert-lm-session-snapshots.md](litert-lm-session-snapshots.md) | LiteRT-LM issue | T3 | `agello-next` aec81cb7, ed998d80, 585203d3 |
 | [litert-lm-decode-host-costs.md](litert-lm-decode-host-costs.md) | LiteRT-LM issue | T2, P6 | `agello-next` ef197a04, e43f9a8d, 5e946049, fdd5bac7 |
-| [litert-bounded-attention.md](litert-bounded-attention.md) | LiteRT PR + ML Drift PR | T4 | LiteRT 31386317 and earlier; ML Drift 6ae7c68, 2184a7f |
-| [litert-weight-cache-key.md](litert-weight-cache-key.md) | LiteRT PR | T11 | LiteRT 97e06d36 |
-| [litert-metal-direct-copies.md](litert-metal-direct-copies.md) | LiteRT PR | T5 | LiteRT `agello-next` (T5 step 1) |
+| [litert-bounded-attention.md](litert-bounded-attention.md) | LiteRT PR + ML Drift PR | T4 | LiteRT ede28c641, aa05bd2d1, 313863175; ML Drift 6ae7c68, 2184a7f |
+| [litert-weight-cache-key.md](litert-weight-cache-key.md) | LiteRT PR | T11 | LiteRT 97e06d36d |
+| [litert-metal-direct-copies.md](litert-metal-direct-copies.md) | LiteRT PR | T5 | LiteRT e17213ead, 584f34610 |
 
 Every draft states its measurements on the M6 Mac. An iPhone run should back them before
 anything is posted.
