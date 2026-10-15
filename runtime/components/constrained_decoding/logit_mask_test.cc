@@ -68,6 +68,11 @@ TEST(BitmapLogitMaskTest, CreateAllAllowed) {
   EXPECT_FALSE(mask->IsAllowed(-1));
   EXPECT_FALSE(mask->IsAllowed(kVocabSize));
   EXPECT_FALSE(mask->IsAllowed(kVocabSize + 10));
+  // Agello (T2): mask runners skip it.
+  EXPECT_TRUE(mask->all_allowed());
+  EXPECT_FALSE(BitmapLogitMask::CreateAllDisallowed(kVocabSize)->all_allowed());
+  EXPECT_FALSE(
+      BitmapLogitMask::CreateSingleAllowedToken(kVocabSize, 3)->all_allowed());
 }
 
 TEST(BitmapLogitMaskTest, CreateAllDisallowed) {

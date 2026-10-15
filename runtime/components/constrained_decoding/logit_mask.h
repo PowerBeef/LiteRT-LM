@@ -79,6 +79,10 @@ class BitmapLogitMask : public LogitMask {
   // Returns true if token_id is within vocab_size and allowed by the mask.
   bool IsAllowed(int token_id) const;
 
+  // Agello (T2): true for masks made by CreateAllAllowed, which change no
+  // logit; mask runners skip them.
+  bool all_allowed() const { return all_allowed_; }
+
   absl::Status Apply(absl::Span<float> logits) const override;
   absl::Status Apply(absl::Span<tflite::half> logits) const override;
 
@@ -95,6 +99,7 @@ class BitmapLogitMask : public LogitMask {
  private:
   int vocab_size_;
   std::vector<uint64_t> words_;
+  bool all_allowed_ = false;
 };
 
 // Immutable soft constraint mask representing sparse token adjustments:

@@ -906,9 +906,9 @@ absl::Status LiteRtLogitMaskRunner::RunMaskGraph(TensorBuffer& logits,
 }
 
 absl::Status LiteRtLogitMaskRunner::ApplySlices(
-    TensorBuffer& logits, absl::Span<const LogitMask* const> masks) {
+    TensorBuffer& logits, absl::Span<const LogitMask* const> masks_in) {
   bool all_null = true;
-  for (const LogitMask* mask : masks) {
+  for (const LogitMask* mask : masks_in) {
     if (mask != nullptr) {
       all_null = false;
       break;
@@ -926,6 +926,28 @@ absl::Status LiteRtLogitMaskRunner::ApplySlices(
   const int actual_batch = static_cast<int>(dims[0]);
   const int actual_seq = static_cast<int>(dims[1]);
   const int vocab_size = static_cast<int>(dims[2]);
+
+  // Agello (T2): a mask that allows every token of the logits' vocabulary
+  // changes nothing (a thinking budget while the model thinks within it): skip
+  // it like a null one. One for a smaller vocabulary still disallows the rest.
+  std::vector<const LogitMask*> kept(masks_in.begin(), masks_in.end());
+  all_null = true;
+  for (const LogitMask*& mask : kept) {
+    if (mask != nullptr && mask->GetType() == MaskType::kBitmap) {
+      const auto* bitmap = static_cast<const BitmapLogitMask*>(mask);
+      if (bitmap->all_allowed() && bitmap->vocab_size() >= vocab_size) {
+        mask = nullptr;
+      }
+    }
+    if (mask != nullptr) {
+      all_null = false;
+    }
+  }
+  if (all_null) {
+    return absl::OkStatus();
+  }
+  absl::Span<const LogitMask* const> masks = kept;
+
   const ElementType element_type = logits_type.ElementType();
   RET_CHECK(element_type == ElementType::Float32 ||
             element_type == ElementType::Float16)

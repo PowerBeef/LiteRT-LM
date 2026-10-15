@@ -110,6 +110,30 @@ TEST(LiteRtLogitMaskRunnerTest, BitmapMaskFP32) {
   }
 }
 
+// Agello (T2): a mask that allows every token (a thinking budget while the
+// model thinks within it) is skipped: no graph compiles or runs.
+TEST(LiteRtLogitMaskRunnerTest, AllAllowedMaskIsSkipped) {
+  LITERT_ASSERT_OK_AND_ASSIGN(auto env, Environment::Create({}));
+
+  const int vocab_size = 8;
+  LITERT_ASSERT_OK_AND_ASSIGN(auto runner, CreateGraphRunner(env));
+
+  RankedTensorType tensor_type(ElementType::Float32,
+                               Layout(Dimensions{1, 1, vocab_size}));
+  std::vector<float> initial_logits = {1.0f, 2.0f, 3.0f, 4.0f,
+                                       5.0f, 6.0f, 7.0f, 8.0f};
+  TensorBuffer logits_tb =
+      CreateHostTensorBuffer(env, tensor_type, initial_logits);
+
+  auto mask = BitmapLogitMask::CreateAllAllowed(vocab_size);
+  EXPECT_OK(runner->Apply(logits_tb, mask.get()));
+  EXPECT_EQ(runner->NumCompiledGraphsForTesting(), 0);
+
+  LITERT_ASSERT_OK_AND_ASSIGN(auto result,
+                              CopyFromTensorBuffer<float>(logits_tb));
+  EXPECT_EQ(result, initial_logits);
+}
+
 TEST(LiteRtLogitMaskRunnerTest, SparseMaskFP32) {
   LITERT_ASSERT_OK_AND_ASSIGN(auto env, Environment::Create({}));
 

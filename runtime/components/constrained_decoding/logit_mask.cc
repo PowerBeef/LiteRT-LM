@@ -313,7 +313,9 @@ std::unique_ptr<BitmapLogitMask> BitmapLogitMask::CreateAllAllowed(
     size_t valid_bits = vocab_size % 64;
     words.back() = (uint64_t{1} << valid_bits) - 1;
   }
-  return std::make_unique<BitmapLogitMask>(vocab_size, std::move(words));
+  auto mask = std::make_unique<BitmapLogitMask>(vocab_size, std::move(words));
+  mask->all_allowed_ = true;
+  return mask;
 }
 
 std::unique_ptr<BitmapLogitMask> BitmapLogitMask::CreateAllDisallowed(
