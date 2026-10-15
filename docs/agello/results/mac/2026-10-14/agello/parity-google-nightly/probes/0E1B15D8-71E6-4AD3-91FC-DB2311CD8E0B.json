@@ -1,0 +1,34 @@
+{
+  "memory.availableGB" : 14.522899888,
+  "memory.footprintGB" : 2.6569692960000002,
+  "recordedAt" : "2026-10-14T22:15:33Z",
+  "results" : [
+    {
+      "firstSentence" : "0.44",
+      "language" : "en-US",
+      "mode" : "A_direct",
+      "reference" : "What's a good name for a golden retriever puppy?",
+      "reply" : "How about Sunny, Goldie, or Buddy? They are all cheerful names that suit a golden retriever.",
+      "total" : "0.66",
+      "ttft" : "0.33"
+    },
+    {
+      "firstSentence" : "0.40",
+      "language" : "en-US",
+      "mode" : "A_direct",
+      "reference" : "How long should I boil an egg for a soft yolk?",
+      "reply" : "Boil the egg for about six to seven minutes for a soft yolk.",
+      "total" : "0.40",
+      "ttft" : "0.25"
+    },
+    {
+      "firstSentence" : "0.29",
+      "language" : "fr-CA",
+      "mode" : "A_direct",
+      "reference" : "Quelle est la capitale de l'Australie?",
+      "reply" : "La capitale de l'Australie est Canberra. C'est la capitale administrative du pays.",
+      "total" : "0.40",
+      "ttft" : "0.24"
+    }
+  ]
+}

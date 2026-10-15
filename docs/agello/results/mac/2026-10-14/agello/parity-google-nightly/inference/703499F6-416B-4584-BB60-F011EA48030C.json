@@ -1,0 +1,28 @@
+{
+  "memory.availableGB" : 14.644173536,
+  "memory.footprintGB" : 2.5356956479999999,
+  "recordedAt" : "2026-10-14T22:10:50Z",
+  "results" : [
+    {
+      "language" : "en-US",
+      "reference" : "Please book a table for four people at seven thirty tomorrow evening, near the train station.",
+      "seconds" : 0.5451500415802002,
+      "transcript" : "Please book a table for four people at 7:30 tomorrow evening, near the train station.",
+      "wer" : 0.125
+    },
+    {
+      "language" : "en-US",
+      "reference" : "Remind me to call the dentist on Monday and to buy milk, eggs, and coffee on the way home.",
+      "seconds" : 0.45291590690612793,
+      "transcript" : "Remind me to call the dentist on Monday and to buy milk, eggs, and coffee on the way home.",
+      "wer" : 0
+    },
+    {
+      "language" : "fr-CA",
+      "reference" : "Peux-tu m'aider à planifier une fin de semaine à Québec avec deux enfants en octobre?",
+      "seconds" : 0.45668399333953857,
+      "transcript" : "Peux-tu m'aider à planifier une fin de semaine à Québec avec deux enfants en octobre ?",
+      "wer" : 0
+    }
+  ]
+}

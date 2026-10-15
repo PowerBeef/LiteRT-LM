@@ -1,0 +1,35 @@
+{
+  "memory.availableGB" : 14.645140192,
+  "memory.footprintGB" : 2.534712608,
+  "recordedAt" : "2026-10-14T22:11:00Z",
+  "results" : [
+    {
+      "answer" : "A great name for a golden retriever puppy could be Sunny, Goldie, or Buddy. These names fit their friendly and golden nature perfectly.",
+      "firstSentenceSeconds" : 0.91954100131988525,
+      "heard" : "What's a good name for a golden retriever puppy",
+      "language" : "en-US",
+      "said" : "What's a good name for a golden retriever puppy?",
+      "totalSeconds" : 3.5757020711898804,
+      "wer" : 0
+    },
+    {
+      "answer" : ". How about Max, Milo, or Murphy? Those are all fun and fitting names for a golden retriever.",
+      "firstSentenceSeconds" : 0.79884600639343262,
+      "heard" : "And one that starts with the letter M",
+      "language" : "en-US",
+      "said" : "And one that starts with the letter M?",
+      "totalSeconds" : 0.82650506496429443,
+      "wer" : 0
+    },
+    {
+      "answer" : ". La capitale du Canada est Ottawa. C'est une ville très intéressante.",
+      "firstSentenceSeconds" : 0.46024799346923828,
+      "heard" : "Merci, et quelle est la capitale du Canada",
+      "language" : "fr-CA",
+      "said" : "Merci! Et quelle est la capitale du Canada?",
+      "totalSeconds" : 0.49271988868713379,
+      "wer" : 0
+    }
+  ],
+  "title" : "Golden Retriever Puppy Name Ideas"
+}

@@ -1,0 +1,16 @@
+{
+  "memory.availableGB" : 14.570413488,
+  "memory.footprintGB" : 2.6094556959999999,
+  "recordedAt" : "2026-10-14T22:15:32Z",
+  "results" : [
+    {
+      "firstSentence" : "0.44",
+      "language" : "en-US",
+      "mode" : "A_direct",
+      "reference" : "What's a good name for a golden retriever puppy?",
+      "reply" : "How about Sunny, Goldie, or Buddy? They are all cheerful names that suit a golden retriever.",
+      "total" : "0.66",
+      "ttft" : "0.33"
+    }
+  ]
+}

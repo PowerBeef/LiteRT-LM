@@ -1,0 +1,49 @@
+{
+  "indexSecondsWhileStreaming" : 0.060703039169311523,
+  "matrix" : [
+    {
+      "expected" : "Weeknight carbonara",
+      "query" : "Italian pasta dinner",
+      "scores" : [
+        "Weeknight carbonara: 0.743",
+        "Filing my tax return: 0.608",
+        "Kyoto itinerary: 0.574",
+        "Car making a grinding noise: 0.561"
+      ]
+    },
+    {
+      "expected" : "Car making a grinding noise",
+      "query" : "vehicle stopping problem",
+      "scores" : [
+        "Car making a grinding noise: 0.777",
+        "Filing my tax return: 0.581",
+        "Weeknight carbonara: 0.573",
+        "Kyoto itinerary: 0.571"
+      ]
+    },
+    {
+      "expected" : "Kyoto itinerary",
+      "query" : "Japan vacation plans",
+      "scores" : [
+        "Kyoto itinerary: 0.749",
+        "Filing my tax return: 0.593",
+        "Weeknight carbonara: 0.526",
+        "Car making a grinding noise: 0.522"
+      ]
+    },
+    {
+      "expected" : "Filing my tax return",
+      "query" : "money owed to the government",
+      "scores" : [
+        "Filing my tax return: 0.666",
+        "Car making a grinding noise: 0.597",
+        "Weeknight carbonara: 0.554",
+        "Kyoto itinerary: 0.544"
+      ]
+    }
+  ],
+  "memory.availableGB" : 13.870930248000001,
+  "memory.footprintGB" : 3.3089389360000001,
+  "recordedAt" : "2026-10-14T22:05:56Z",
+  "tidesChars" : 1313
+}

@@ -1,0 +1,28 @@
+{
+  "memory.availableGB" : 14.199118464,
+  "memory.footprintGB" : 2.9807507200000001,
+  "recordedAt" : "2026-10-14T22:29:48Z",
+  "results" : [
+    {
+      "error" : "",
+      "inputTokens" : 23,
+      "prompt" : "What is 17 * 23? Think it through, then give the number.",
+      "reply" : "The result of 17 * 23 is 391.",
+      "thoughtLength" : 204
+    },
+    {
+      "error" : "",
+      "inputTokens" : 23,
+      "prompt" : "Add 9 to that result. Reply with the number.",
+      "reply" : "400",
+      "thoughtLength" : 284
+    },
+    {
+      "error" : "",
+      "inputTokens" : 23,
+      "prompt" : "Now divide it by 4. Reply with the number.",
+      "reply" : "100",
+      "thoughtLength" : 150
+    }
+  ]
+}

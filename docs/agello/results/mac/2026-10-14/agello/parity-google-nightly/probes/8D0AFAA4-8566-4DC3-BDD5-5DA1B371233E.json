@@ -1,0 +1,33 @@
+{
+  "memory.availableGB" : 12.84214384,
+  "memory.footprintGB" : 4.3377253439999999,
+  "recordedAt" : "2026-10-14T22:25:40Z",
+  "results" : [
+    {
+      "arm" : "fp16-calibration",
+      "decode" : 49,
+      "decodeTPS" : 41.299999999999997,
+      "exact" : true,
+      "expected" : "476514549322502581349783311127604934944697712774",
+      "late" : false,
+      "output" : "476514549322502581349783311127604934944697712774",
+      "prefill" : 703,
+      "prefillTPS" : 1397.5999999999999,
+      "seed" : 0,
+      "sentences" : 40
+    },
+    {
+      "arm" : "fp16-calibration",
+      "decode" : 49,
+      "decodeTPS" : 41.299999999999997,
+      "exact" : true,
+      "expected" : "476514549322502581349783311127604934944697712774",
+      "late" : false,
+      "output" : "476514549322502581349783311127604934944697712774",
+      "prefill" : 2266,
+      "prefillTPS" : 2071.3000000000002,
+      "seed" : 0,
+      "sentences" : 140
+    }
+  ]
+}

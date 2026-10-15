@@ -1,0 +1,12 @@
+{
+  "backend" : "GPU",
+  "decodeTokPerSec" : 63.921946904999054,
+  "inputTokens" : 318,
+  "memory.availableGB" : 13.134944151999999,
+  "memory.footprintGB" : 4.0449414160000003,
+  "outputTokens" : 10,
+  "recordedAt" : "2026-10-14T22:09:51Z",
+  "reply" : "The quick brown fox jumps over the lazy dog.",
+  "totalSeconds" : 0.67589497566223145,
+  "ttftSeconds" : 0.27657570399999998
+}

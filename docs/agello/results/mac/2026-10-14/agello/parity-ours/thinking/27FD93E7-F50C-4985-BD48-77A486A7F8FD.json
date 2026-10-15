@@ -1,0 +1,21 @@
+{
+  "memory.availableGB" : 14.376049567999999,
+  "memory.footprintGB" : 2.8038196160000002,
+  "recordedAt" : "2026-10-14T22:06:08Z",
+  "results" : [
+    {
+      "availableGB" : 14.376049567999999,
+      "budget" : 512,
+      "case" : "math",
+      "decodeTokPerSec" : 102.73749660140916,
+      "error" : "",
+      "footprintGB" : 2.8038196160000002,
+      "outputTokens" : 246,
+      "replyLength" : 204,
+      "replyPrefix" : "To calculate 17 * 23, you can break it down:\n\n1.  **Multiply 17 by 20:** $17 \\times 20 = 340$\n2.  **Multiply 17 by 3:** $17 \\times 3 = 51$\n3.  **Add the results",
+      "seconds" : 5.6541430950164795,
+      "thinkingEnabled" : true,
+      "thoughtLength" : 797
+    }
+  ]
+}

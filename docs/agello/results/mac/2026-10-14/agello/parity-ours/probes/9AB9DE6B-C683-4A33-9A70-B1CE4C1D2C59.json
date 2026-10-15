@@ -1,0 +1,17 @@
+{
+  "bestIndex" : 0,
+  "dimensions" : 256,
+  "footprintGB" : 1.400182136,
+  "loadSeconds" : 0.69593799114227295,
+  "memory.availableGB" : 15.754881768000001,
+  "memory.footprintGB" : 1.424987416,
+  "recordedAt" : "2026-10-14T21:48:53Z",
+  "scores" : [
+    0.81125038862228394,
+    0.63876885175704956,
+    0.58351767063140869,
+    0.61997568607330322
+  ],
+  "secondsPer400TokenChunk" : 0.023718953132629395,
+  "secondsPerShortPassage" : 0.010984987020492554
+}

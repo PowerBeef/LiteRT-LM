@@ -1,0 +1,15 @@
+{
+  "generationError" : "Older messages were dropped from the model's memory to fit its context window.",
+  "kvTokens" : 1024,
+  "memory.availableGB" : 15.173737544,
+  "memory.footprintGB" : 2.00613164,
+  "recordedAt" : "2026-10-14T22:10:21Z",
+  "replies" : [
+    "Volcanoes are powerful geological features where molten rock, known as magma, ga",
+    "Glaciers are massive, slow-moving rivers of ice that form in areas where snowfal",
+    "Coral reefs are vibrant underwater ecosystems, often called the \"rainforests of ",
+    "Deserts are vast, arid or semi-arid regions characterized by extremely low preci",
+    "Rainforests are dense, tropical ecosystems characterized by high rainfall and co",
+    "The tundra is a vast, treeless biome characterized by extremely low temperatures"
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "backend" : "GPU",
+  "decodeTokPerSec" : 48.187152500455582,
+  "googleReferenceE4B" : "1189 prefill \/ 25 decode tok\/s (iPhone 17 Pro GPU, no MTP)",
+  "memory.availableGB" : 14.822451392,
+  "memory.footprintGB" : 2.3574177920000001,
+  "prefillTokPerSec" : 3249.5896623495137,
+  "recordedAt" : "2026-10-14T21:47:46Z",
+  "ttftSeconds" : 0.33586912824999998
+}

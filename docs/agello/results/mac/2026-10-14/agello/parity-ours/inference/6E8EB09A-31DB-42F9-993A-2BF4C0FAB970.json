@@ -1,0 +1,12 @@
+{
+  "backend" : "GPU",
+  "decodeTokPerSec" : 15.923387360537401,
+  "inputTokens" : 518,
+  "memory.availableGB" : 13.168547856,
+  "memory.footprintGB" : 4.0113213280000002,
+  "outputTokens" : 1,
+  "recordedAt" : "2026-10-14T21:46:10Z",
+  "reply" : "Red",
+  "totalSeconds" : 1.7363810539245605,
+  "ttftSeconds" : 0.52575400000000005
+}

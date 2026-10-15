@@ -1,0 +1,12 @@
+{
+  "helperDeltaGB" : 0.59650929600000002,
+  "helperError" : "",
+  "helperReply" : "**Guiding Light Keepers**",
+  "helperSeconds" : 1.3234659433364868,
+  "mainKeptContext" : true,
+  "mainRecallAfterHelper" : "ZORBLAX",
+  "memory.availableGB" : 14.570462903999999,
+  "memory.footprintGB" : 2.60940628,
+  "rebuiltRecall" : "ZORBLAX",
+  "recordedAt" : "2026-10-14T22:11:50Z"
+}

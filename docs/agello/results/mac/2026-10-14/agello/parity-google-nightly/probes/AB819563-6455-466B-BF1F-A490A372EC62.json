@@ -1,0 +1,72 @@
+{
+  "memory.availableGB" : 12.842192991999999,
+  "memory.footprintGB" : 4.337676192,
+  "recordedAt" : "2026-10-14T22:25:46Z",
+  "results" : [
+    {
+      "arm" : "fp16-calibration",
+      "decode" : 49,
+      "decodeTPS" : 41.299999999999997,
+      "exact" : true,
+      "expected" : "476514549322502581349783311127604934944697712774",
+      "late" : false,
+      "output" : "476514549322502581349783311127604934944697712774",
+      "prefill" : 703,
+      "prefillTPS" : 1397.5999999999999,
+      "seed" : 0,
+      "sentences" : 40
+    },
+    {
+      "arm" : "fp16-calibration",
+      "decode" : 49,
+      "decodeTPS" : 41.299999999999997,
+      "exact" : true,
+      "expected" : "476514549322502581349783311127604934944697712774",
+      "late" : false,
+      "output" : "476514549322502581349783311127604934944697712774",
+      "prefill" : 2266,
+      "prefillTPS" : 2071.3000000000002,
+      "seed" : 0,
+      "sentences" : 140
+    },
+    {
+      "arm" : "fp16",
+      "decode" : 49,
+      "decodeTPS" : 41.299999999999997,
+      "exact" : true,
+      "expected" : "360450296322042052577609842187885426869520014813",
+      "late" : false,
+      "output" : "360450296322042052577609842187885426869520014813",
+      "prefill" : 1705,
+      "prefillTPS" : 1903,
+      "seed" : 1,
+      "sentences" : 104
+    },
+    {
+      "arm" : "fp16",
+      "decode" : 49,
+      "decodeTPS" : 41.799999999999997,
+      "exact" : true,
+      "expected" : "264598852324464436528445692378236997464565306650",
+      "late" : false,
+      "output" : "264598852324464436528445692378236997464565306650",
+      "prefill" : 1705,
+      "prefillTPS" : 1901,
+      "seed" : 2,
+      "sentences" : 104
+    },
+    {
+      "arm" : "fp16",
+      "decode" : 49,
+      "decodeTPS" : 41.700000000000003,
+      "exact" : true,
+      "expected" : "358435599326985997656161133549419581389590607599",
+      "late" : false,
+      "output" : "358435599326985997656161133549419581389590607599",
+      "prefill" : 1705,
+      "prefillTPS" : 1888.5,
+      "seed" : 3,
+      "sentences" : 104
+    }
+  ]
+}

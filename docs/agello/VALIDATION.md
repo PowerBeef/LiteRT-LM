@@ -81,10 +81,64 @@ telemetry reported "ML Drift family Apple9".
 
 The Apple9 paths are correct. Prefill is 4–5× slower there because these GPUs have no Neural
 Accelerators. Google's binary would use the same kernels on these devices, and our bounded
-attention still runs. The local-window start (T4 step 2) is only in the Neural Accelerator
-convolution: adding it to `ConvWaveMatrix` would speed up long prompts on A17/A18-class phones.
+attention still runs. The local-window start (T4 step 2) was only in the Neural Accelerator
+convolution then; `ConvWaveMatrix` has it since (below).
 Run in sequence, the memory suite carries 0.8–1.4 GB from one test to the next, which made the
 4.0 GB envelope fail its audio step at the 400 MB stop. Fresh launches are the fair simulation.
+
+## 2026-10-15, afternoon: follow-ups
+
+Agello `6d389e6` and `1220c74` on build `11beef01e805` (`agello-next` `12a0a818`, ML Drift
+`ef08a67`); the kernel window on build `fc71d704a349` (the same with ML Drift `15fa9e2`). Reports:
+`*-restore-after-helper*`, `calibrate-follow-up-*`, `*-sim-a17-window.json`.
+
+### The kept conversation comes back right after the helper (open issue 2)
+
+Agello's `endHelper` now restores the chat's conversation as soon as the helper ends (it asks the
+runtime for the token count, which swaps the snapshot back), and dictation runs inside a helper
+scope too. The copy lives only while the helper runs.
+
+| | Before (`2e54fbdb9ca9`) | Now | Google's v0.18.0 |
+| --- | --- | --- | --- |
+| Calibration peak, 4K / 8K | 2.56–2.58 / 2.72–2.89 GB | 2.55 / 2.73 GB | 2.55 / 2.58 GB |
+| Calibration peak, 16K / 32K | 4.02–4.13 / 5.88–5.93 GB | 3.59 / 4.93 GB | 3.33 / 5.06 GB |
+| 5.0 GB envelope, after the first text message | 2.80–2.99 GB | 2.66 GB | 2.56–2.65 GB |
+| `inference` | 21/21 | 21/21 | |
+
+### Calibration measures decode on a longer reply
+
+The calibration's replies (40–54 tokens) were too short to measure decode. Each window now gets a
+follow-up asking for ten lines (121–124 tokens), recorded as `longDecodeTokPerSec` with the
+footprint and thermal state after it, and since then Low Power Mode. Two runs back to back:
+
+| Window | Follow-up decode tok/s, run 1 / run 2 | Short-reply decode tok/s, run 1 / run 2 |
+| --- | --- | --- |
+| 4K | 79.8 / 48.1 | 38.9 / 22.2 |
+| 8K | 75.3 / 46.8 | 40.4 / 26.2 |
+| 16K | 71.5 / 47.0 | 44.3 / 32.4 |
+| 32K | 65.4 / 46.3 | 42.2 / 31.5 |
+
+Both runs reported thermal state 0 throughout, yet the second was 29–40% slower on the follow-up
+(25–43% on the short replies). The thermal state doesn't show the phone's performance state:
+compare builds only after the same cool-down, alternating them, three runs or more.
+
+### A17/A18-class paths: the local window in `ConvWaveMatrix` (ML Drift `15fa9e2`)
+
+The simdgroup-matrix convolution that runs attention products on Apple9 GPUs (no Neural
+Accelerators) now honors the local-window start, as the Neural Accelerator kernel has since T4
+step 2. A PV product starts its K loop at the window's first slice; a QK product runs no K
+iterations in workgroups whose keys all lie below the window, where the fused mask masks them.
+
+| Check | Result |
+| --- | --- |
+| Mac, A17 paths, 32K window, window off / on in one binary | prefill +2.4% for a 2K prompt, +20.0% at 16K, +35.8% at 30K (581 → 789 tok/s); replies identical |
+| Mac, digit copies (`short`, `long`, `cross4096`) | 70/70 exact, identical to the paths without the change |
+| iPhone 17 Pro, A17 paths: `inference` | 21/21 |
+| iPhone 17 Pro, A17 paths: probes 04, 05, 10 (digits with and without MTP, raw stream, position boundary) | 3/3 |
+| iPhone 17 Pro, A17 paths: `calibrate` | prefill 265 / 302 / 288 / 278 tok/s at 4K / 8K / 16K / 32K (before: 277 / 288 / 268 / 249); TTFT 31.0 s at 32K (before 34.6) |
+
+On the phone the gain grows with the prompt (+12% for 8,607 tokens), as on the Mac, but the earlier
+run was hotter at 16K and 32K (thermal state 2 against 1): the Mac's A/B is the measurement.
 
 ## Open issues
 
@@ -107,10 +161,9 @@ Run in sequence, the memory suite carries 0.8–1.4 GB from one test to the next
      copies exact and byte-identical to the unpatched build; decode 11.0 → 12.0 tok/s. iPhone:
      probe 6 passes, CPU reply correct, 3.67 GB with 4.92 GB still available
      (`probe06-ours-xnnpack-fix.json`); `inference` 21/21 (`inference-ours-xnnpack-fix.json`).
-2. **Kept conversations hold one KV copy until the next message**, not only while the helper
-   runs. The chat's snapshot waits in its session until it's restored: +0.23 GB at 8K, about
-   +0.9 GB at 32K, between messages. The policy budget is right (one copy); the T3 note and
-   Agello's docs said "nothing afterwards". Restoring right after the helper would release it.
+2. **Kept conversations held one KV copy until the next message. Fixed** (Agello `6d389e6`):
+   the chat's conversation is restored as soon as the helper ends, so the copy lives only while
+   the helper runs (above).
 3. **The plan's A17/A18-class run:** the Apple9 code paths pass in simulation (above). A real
    device would still show speed, thermals, and the hardware arithmetic behind #3913 below 2,048
    (our model fix is exact by construction there). A cloud device farm can provide one.

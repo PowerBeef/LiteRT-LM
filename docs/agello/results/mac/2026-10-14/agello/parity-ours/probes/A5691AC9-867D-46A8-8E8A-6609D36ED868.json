@@ -1,0 +1,20 @@
+{
+  "memory.availableGB" : 12.976934816,
+  "memory.footprintGB" : 4.2029343680000002,
+  "recordedAt" : "2026-10-14T22:01:57Z",
+  "results" : [
+    {
+      "arm" : "fp16-calibration",
+      "decode" : 49,
+      "decodeTPS" : 46.5,
+      "exact" : true,
+      "expected" : "476514549322502581349783311127604934944697712774",
+      "late" : false,
+      "output" : "476514549322502581349783311127604934944697712774",
+      "prefill" : 703,
+      "prefillTPS" : 1561.3,
+      "seed" : 0,
+      "sentences" : 40
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "firstSeconds" : 8.8997839689254761,
+  "laterMentionsMeat" : [
+
+  ],
+  "laterReply" : "To give you the best suggestion, could you tell me a little more about what you're in the mood for? For example:\n\n1.  **How much time do you have to cook?** (e.g., 15 minutes, an hour, all evening)\n2.  **What kind of cuisine are you craving?** (e.g., Italian, Mexican, Asian, comfort food)\n3.  **Are there any specific ingredients you want to use up?**\n\nSince I know you are vegetarian, I'll make sure the suggestions are meat-free! 😊",
+  "learned" : [
+    "Is vegetarian",
+    "Lives in Montreal"
+  ],
+  "memory.availableGB" : 14.659525392000001,
+  "memory.footprintGB" : 2.5203437919999998,
+  "memoryNote" : [
+    "Checked the date and time",
+    "Is vegetarian · Lives in Montreal"
+  ],
+  "recordedAt" : "2026-10-14T21:47:04Z"
+}

@@ -1,0 +1,21 @@
+{
+  "memory.availableGB" : 14.153734976000001,
+  "memory.footprintGB" : 3.0261342080000002,
+  "recordedAt" : "2026-10-14T22:06:48Z",
+  "results" : [
+    {
+      "error" : "",
+      "inputTokens" : 21,
+      "prompt" : "What is 17 * 23? Think it through, then give the number.",
+      "reply" : "The result of 17 * 23 is 391.",
+      "thoughtLength" : 406
+    },
+    {
+      "error" : "",
+      "inputTokens" : 23,
+      "prompt" : "Add 9 to that result. Reply with the number.",
+      "reply" : "The number is 400.",
+      "thoughtLength" : 284
+    }
+  ]
+}

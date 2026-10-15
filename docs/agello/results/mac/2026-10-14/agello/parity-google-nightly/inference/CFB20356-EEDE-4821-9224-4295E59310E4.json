@@ -1,0 +1,25 @@
+{
+  "accepted" : true,
+  "afterToggleLoadLog" : [
+    "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+    "ok GPU vision=true audio=true mtp=true kv=2048 thinking=off in 1.0s (footprint 2.05 GB, available 15.13 GB)"
+  ],
+  "generationError" : "",
+  "memory.availableGB" : 13.628037687999999,
+  "memory.footprintGB" : 3.5518642640000002,
+  "recordedAt" : "2026-10-14T22:10:03Z",
+  "reply" : "Red",
+  "resolved" : {
+    "audio" : true,
+    "backend" : "GPU",
+    "kvTokens" : 2048,
+    "mtp" : true,
+    "thinkingBudget" : 0,
+    "vision" : true,
+    "visualTokenBudget" : 280
+  },
+  "textOnlyLoadLog" : [
+    "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+    "ok GPU vision=false audio=true mtp=true kv=2048 thinking=off in 1.5s (footprint 1.99 GB, available 15.19 GB)"
+  ]
+}

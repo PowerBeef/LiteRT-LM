@@ -1,0 +1,61 @@
+{
+  "memory.availableGB" : 14.463720808,
+  "memory.footprintGB" : 2.716148376,
+  "recordedAt" : "2026-10-14T21:51:55Z",
+  "results" : [
+    {
+      "firstSentence" : "0.45",
+      "language" : "en-US",
+      "mode" : "A_direct",
+      "reference" : "What's a good name for a golden retriever puppy?",
+      "reply" : "How about Sunny, Goldie, or Buddy? These names fit a golden retriever's cheerful personality.",
+      "total" : "0.70",
+      "ttft" : "0.33"
+    },
+    {
+      "firstSentence" : "0.40",
+      "language" : "en-US",
+      "mode" : "A_direct",
+      "reference" : "How long should I boil an egg for a soft yolk?",
+      "reply" : "For a soft-boiled egg, boil it for about 6 to 7 minutes. This should give you a runny yolk and a set white.",
+      "total" : "0.57",
+      "ttft" : "0.24"
+    },
+    {
+      "firstSentence" : "0.30",
+      "language" : "fr-CA",
+      "mode" : "A_direct",
+      "reference" : "Quelle est la capitale de l'Australie?",
+      "reply" : "La capitale de l'Australie est Canberra. C'est la capitale politique du pays.",
+      "total" : "0.42",
+      "ttft" : "0.23"
+    },
+    {
+      "firstSentence" : "0.61",
+      "language" : "en-US",
+      "mode" : "C_transcriptFirst",
+      "reference" : "What's a good name for a golden retriever puppy?",
+      "reply" : "⟦What's a good name for a golden retriever puppy⟧ A great name for a golden retriever puppy could be Sunny, Goldie, or Buddy.",
+      "total" : "0.61",
+      "ttft" : "0.23"
+    },
+    {
+      "firstSentence" : "0.56",
+      "language" : "en-US",
+      "mode" : "C_transcriptFirst",
+      "reference" : "How long should I boil an egg for a soft yolk?",
+      "reply" : "⟦How long should I boil an egg for a soft yolk?⟧ Boil it for about 6 to 7 minutes for a soft yolk.",
+      "total" : "0.56",
+      "ttft" : "0.23"
+    },
+    {
+      "firstSentence" : "0.47",
+      "language" : "fr-CA",
+      "mode" : "C_transcriptFirst",
+      "reference" : "Quelle est la capitale de l'Australie?",
+      "reply" : "⟦Quelle est la capitale de l'Australie?⟧ Canberra est la capitale de l'Australie.",
+      "total" : "0.47",
+      "ttft" : "0.23"
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "accepted" : true,
+  "appLimitGB" : 17.179869184000001,
+  "availableGB" : 14.65241488,
+  "decodeTokPerSec" : 65.949482748973878,
+  "effectiveWindow" : 4096,
+  "footprintAfterLoadGB" : 2.3409383680000002,
+  "footprintPeakGB" : 2.5274543039999999,
+  "inputTokens" : 1285,
+  "loaded" : true,
+  "loadLog" : [
+    "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+    "ok GPU vision=true audio=true mtp=true kv=4096 thinking=off in 6.5s (footprint 2.34 GB, available 14.84 GB)"
+  ],
+  "memory.availableGB" : 14.65241488,
+  "memory.footprintGB" : 2.5274543039999999,
+  "model" : "e4b",
+  "prefillTokPerSec" : 1971.3314589289953,
+  "recordedAt" : "2026-10-14T22:07:06Z",
+  "replyPrefix" : "The text is a repetitive list of 48 sentences describing the daily life, maintenance, and historical changes at a lighth",
+  "ttftSeconds" : 0.65184370399999991,
+  "window" : 4096
+}

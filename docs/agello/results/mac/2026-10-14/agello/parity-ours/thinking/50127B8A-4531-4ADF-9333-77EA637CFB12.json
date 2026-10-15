@@ -1,0 +1,49 @@
+{
+  "memory.availableGB" : 14.162402112000001,
+  "memory.footprintGB" : 3.0174670720000001,
+  "recordedAt" : "2026-10-14T22:06:37Z",
+  "results" : [
+    {
+      "availableGB" : 14.376049567999999,
+      "budget" : 512,
+      "case" : "math",
+      "decodeTokPerSec" : 102.73749660140916,
+      "error" : "",
+      "footprintGB" : 2.8038196160000002,
+      "outputTokens" : 246,
+      "replyLength" : 204,
+      "replyPrefix" : "To calculate 17 * 23, you can break it down:\n\n1.  **Multiply 17 by 20:** $17 \\times 20 = 340$\n2.  **Multiply 17 by 3:** $17 \\times 3 = 51$\n3.  **Add the results",
+      "seconds" : 5.6541430950164795,
+      "thinkingEnabled" : true,
+      "thoughtLength" : 797
+    },
+    {
+      "availableGB" : 14.163942208,
+      "budget" : 1024,
+      "case" : "code_issue703",
+      "decodeTokPerSec" : 95.5320661748991,
+      "error" : "",
+      "footprintGB" : 3.0159269759999998,
+      "outputTokens" : 1581,
+      "replyLength" : 3320,
+      "replyPrefix" : "This is a common task in programming. Both PHP and Python offer highly optimized built-in functions to handle sorting, so you rarely need to implement a sorting",
+      "seconds" : 18.736758947372437,
+      "thinkingEnabled" : true,
+      "thoughtLength" : 2485
+    },
+    {
+      "availableGB" : 14.162402112000001,
+      "budget" : 2048,
+      "case" : "logic",
+      "decodeTokPerSec" : 109.74340752915315,
+      "error" : "",
+      "footprintGB" : 3.0174670720000001,
+      "outputTokens" : 977,
+      "replyLength" : 924,
+      "replyPrefix" : "This is a classic riddle that requires setting up a simple algebraic equation.\n\nHere is the careful reasoning:\n\n1.  **Define the variables:**\n    *   Let $B$ be",
+      "seconds" : 10.953336954116821,
+      "thinkingEnabled" : true,
+      "thoughtLength" : 1852
+    }
+  ]
+}

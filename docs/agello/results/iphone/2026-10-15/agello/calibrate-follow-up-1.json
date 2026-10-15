@@ -1,0 +1,4074 @@
+{
+  "device" : {
+    "gpu" : "Apple A19 Pro GPU",
+    "gpuAppleFamily" : 10,
+    "gpuWorkingSetGB" : 8.5899509760000008,
+    "hwMachine" : "iPhone18,1",
+    "hwModel" : "V53AP",
+    "isiOSAppOnMac" : false,
+    "memoryGB" : 12.291735552,
+    "model" : "iPhone",
+    "profile" : "12 GB RAM · app limit 8.6 GB",
+    "runtimeBuild" : {
+      "build_id" : "11beef01e805",
+      "flags" : "--config=agello -c opt",
+      "litert" : "362759838e34e1525f1cc27daddaf663a193c059",
+      "litert_lm" : "12a0a818ab6c60fdc0a2af5c5f092993ff0590c4",
+      "ml_drift" : "ef08a6785834a9ea248c62c67f1c692aa1cf1c35"
+    },
+    "system" : "iOS 27.0.1"
+  },
+  "runID" : "run-1792082247",
+  "scenarios" : {
+    "calibration_e4b_4096" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 6.2107553759999998,
+      "decodeTokPerSec" : 38.94171609990061,
+      "effectiveWindow" : 4096,
+      "footprintAfterFollowUpGB" : 2.3772295200000002,
+      "footprintAfterLoadGB" : 2.2114066960000001,
+      "footprintPeakGB" : 2.3791792159999998,
+      "inputTokens" : 1285,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=4096 thinking=off in 1.9s (footprint 2.21 GB, available 6.38 GB)"
+      ],
+      "longDecodeTokPerSec" : 79.787554097692606,
+      "longOutputTokens" : 121,
+      "longReplyAccepted" : true,
+      "memory.availableGB" : 6.2127050720000003,
+      "memory.footprintGB" : 2.3772295200000002,
+      "model" : "e4b",
+      "outputTokens" : 44,
+      "prefillTokPerSec" : 1346.5272842463112,
+      "recordedAt" : "2026-10-15T16:37:43Z",
+      "replyPrefix" : "The text describes various aspects of life and operations at a lighthouse over time, including weather logging, supply r",
+      "telemetry" : {
+        "anomalies" : [
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.11199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.45699999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.31200001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.63
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "async_unavailable",
+            "message" : "async run requested; the GPU backend has no post-dispatch event",
+            "severity" : 0,
+            "t_ms" : 148772694.51199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772695.088
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772699.22
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148775403.567
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148776247.59900001
+          }
+        ],
+        "anomalies_total" : 9,
+        "counters" : {
+          "anomalies" : 9,
+          "command_buffers" : 1455,
+          "compiled_models" : 22,
+          "context_switches" : 5,
+          "decode_allocations" : 2,
+          "embedding_lookups" : 3252,
+          "errors" : 0,
+          "gpu_partitions" : 12,
+          "gpu_waits" : 305,
+          "graph_nodes" : 54125,
+          "graph_nodes_cpu_delegate" : 12248,
+          "graph_nodes_gpu" : 40673,
+          "graph_nodes_undelegated" : 1204,
+          "host_lock_copies" : 447,
+          "host_lock_copy_bytes" : 237981696,
+          "host_locks" : 1596,
+          "host_shadow_allocs" : 56,
+          "host_unlock_copies" : 1149,
+          "host_unlock_copy_bytes" : 245204376,
+          "kv_copies" : 2,
+          "kv_copy_bytes" : 0,
+          "logit_masks" : 16,
+          "logits_near_ties" : 0,
+          "logits_nonfinite" : 0,
+          "logits_rows_checked" : 9,
+          "mask_fill_bytes" : 0,
+          "mask_fills" : 29,
+          "mtp_accepted" : 114,
+          "mtp_drafted" : 183,
+          "mtp_rounds" : 61,
+          "program_cache_hits" : 10,
+          "program_cache_misses" : 0,
+          "run_option_parses" : 0,
+          "runs_decode" : 20,
+          "runs_drafter" : 183,
+          "runs_other" : 0,
+          "runs_prefill" : 9,
+          "runs_verify" : 61,
+          "sampler_cpu" : 6,
+          "sampler_gpu" : 0,
+          "stop_cancelled" : 0,
+          "stop_eos" : 3,
+          "stop_kv_full" : 0,
+          "stop_max_tokens" : 2,
+          "stream_chunk_bytes" : 0,
+          "stream_chunks" : 76,
+          "tasks_scheduled" : 10,
+          "token_history_copies" : 9,
+          "tokens_decoded" : 191,
+          "tokens_prefilled" : 1563,
+          "weight_cache_hits" : 20,
+          "weight_cache_misses" : 0
+        },
+        "cpu" : {
+          "system_ms" : 556.20000000000005,
+          "user_ms" : 6966.6000000000004
+        },
+        "facts" : {
+          "gpu" : "Apple A19 Pro GPU, ML Drift family Apple10",
+          "gpu_async" : "unavailable: no post-dispatch event",
+          "gpu_wait_requested" : "active (benchmark mode)",
+          "metal_wait" : "active (busy-wait)",
+          "sampler" : "cpu (GPU sampler unavailable)"
+        },
+        "gauges" : {
+          "drafter.logits.entropy_nats" : {
+            "count" : 8,
+            "max" : 0.93910000000000005,
+            "mean" : 0.37519999999999998,
+            "min" : 0.00016330000000000001,
+            "p10" : 0.00016330000000000001,
+            "p50" : 0.25,
+            "p90" : 0.93910000000000005
+          },
+          "drafter.logits.max" : {
+            "count" : 8,
+            "max" : 25.620000000000001,
+            "mean" : 21.02,
+            "min" : 11.77,
+            "p10" : 11.77,
+            "p50" : 21.609999999999999,
+            "p90" : 25.620000000000001
+          },
+          "drafter.logits.top1_margin" : {
+            "count" : 8,
+            "max" : 11.44,
+            "mean" : 4.4550000000000001,
+            "min" : 0.2656,
+            "p10" : 0.2656,
+            "p50" : 4.391,
+            "p90" : 11.44
+          },
+          "drafter.logits.top1_prob" : {
+            "count" : 8,
+            "max" : 1,
+            "mean" : 0.88670000000000004,
+            "min" : 0.53649999999999998,
+            "p10" : 0.53649999999999998,
+            "p50" : 0.93179999999999996,
+            "p90" : 1
+          },
+          "logits.entropy_nats" : {
+            "count" : 1,
+            "max" : 0.72929999999999995,
+            "mean" : 0.72929999999999995,
+            "min" : 0.72929999999999995,
+            "p10" : 0.72929999999999995,
+            "p50" : 0.72929999999999995,
+            "p90" : 0.72929999999999995
+          },
+          "logits.max" : {
+            "count" : 1,
+            "max" : 28.920000000000002,
+            "mean" : 28.920000000000002,
+            "min" : 28.920000000000002,
+            "p10" : 28.920000000000002,
+            "p50" : 28.920000000000002,
+            "p90" : 28.920000000000002
+          },
+          "logits.top1_margin" : {
+            "count" : 1,
+            "max" : 0.21879999999999999,
+            "mean" : 0.21879999999999999,
+            "min" : 0.21879999999999999,
+            "p10" : 0.21879999999999999,
+            "p50" : 0.21879999999999999,
+            "p90" : 0.21879999999999999
+          },
+          "logits.top1_prob" : {
+            "count" : 1,
+            "max" : 0.5504,
+            "mean" : 0.5504,
+            "min" : 0.5504,
+            "p10" : 0.5504,
+            "p50" : 0.5504,
+            "p90" : 0.5504
+          }
+        },
+        "level" : 2,
+        "memory" : {
+          "available_mb" : 6212.6999999999998,
+          "footprint_mb" : 2377.1999999999998,
+          "graphics_footprint_mb" : 1244.0999999999999,
+          "peak_footprint_mb" : 2651.1999999999998
+        },
+        "schema" : 1,
+        "spans" : {
+          "CompiledModel Buffer Allocation" : {
+            "count" : 4280,
+            "max_us" : 1985.29,
+            "mean_us" : 1.01,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.19,
+            "total_ms" : 4.3129999999999997
+          },
+          "CompiledModel Buffer Registration" : {
+            "count" : 14752,
+            "max_us" : 69.420000000000002,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.16,
+            "p99_us" : 0.45000000000000001,
+            "total_ms" : 1.5429999999999999
+          },
+          "CompiledModel Creation" : {
+            "count" : 44,
+            "max_us" : 1224138.75,
+            "mean_us" : 92052.679999999993,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 1073741.8200000001,
+            "total_ms" : 4050.3180000000002
+          },
+          "CompiledModel Delegate Graph Conversion" : {
+            "count" : 22,
+            "max_us" : 630018.5,
+            "mean_us" : 58763.480000000003,
+            "p50_us" : 131.06999999999999,
+            "p90_us" : 16777.220000000001,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 1292.797
+          },
+          "CompiledModel Destruction" : {
+            "count" : 6,
+            "max_us" : 41.289999999999999,
+            "mean_us" : 15.35,
+            "p50_us" : 1.79,
+            "p90_us" : 40.960000000000001,
+            "p99_us" : 40.960000000000001,
+            "total_ms" : 0.091999999999999998
+          },
+          "CompiledModel Graph Conversion" : {
+            "count" : 22,
+            "max_us" : 1.25,
+            "mean_us" : 0.45000000000000001,
+            "p50_us" : 0.32000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 1.02,
+            "total_ms" : 0.01
+          },
+          "CompiledModel Graph Loading" : {
+            "count" : 22,
+            "max_us" : 2326,
+            "mean_us" : 197.12,
+            "p50_us" : 16.379999999999999,
+            "p90_us" : 163.84,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 4.3369999999999997
+          },
+          "CompiledModel Inference" : {
+            "count" : 4254,
+            "max_us" : 545332.20999999996,
+            "mean_us" : 1226.6600000000001,
+            "p50_us" : 4.0999999999999996,
+            "p90_us" : 32.770000000000003,
+            "p99_us" : 33554.43,
+            "total_ms" : 5218.2219999999998
+          },
+          "CompiledModel Invoke" : {
+            "count" : 4254,
+            "max_us" : 545284.75,
+            "mean_us" : 1225.4000000000001,
+            "p50_us" : 4.0999999999999996,
+            "p90_us" : 32.770000000000003,
+            "p99_us" : 33554.43,
+            "total_ms" : 5212.8590000000004
+          },
+          "CompiledModel Runtime Initialization" : {
+            "count" : 22,
+            "max_us" : 16253.17,
+            "mean_us" : 2763.73,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 10485.76,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 60.802
+          },
+          "CompiledModel TFLite Graph Conversion" : {
+            "count" : 22,
+            "max_us" : 16219.17,
+            "mean_us" : 2713.0599999999999,
+            "p50_us" : 229.38,
+            "p90_us" : 10485.76,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 59.686999999999998
+          },
+          "constraint" : {
+            "count" : 16,
+            "max_us" : 2897.96,
+            "mean_us" : 681.10000000000002,
+            "p50_us" : 524.28999999999996,
+            "p90_us" : 524.28999999999996,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 10.898
+          },
+          "context_switch" : {
+            "count" : 5,
+            "max_us" : 15457.17,
+            "mean_us" : 5607.7600000000002,
+            "p50_us" : 1.79,
+            "p90_us" : 14680.059999999999,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 28.039000000000001
+          },
+          "decode.step" : {
+            "count" : 77,
+            "max_us" : 154574.45999999999,
+            "mean_us" : 45965.470000000001,
+            "p50_us" : 41943.040000000001,
+            "p90_us" : 41943.040000000001,
+            "p99_us" : 134217.73000000001,
+            "total_ms" : 3539.3409999999999
+          },
+          "detokenize" : {
+            "count" : 193,
+            "max_us" : 5.54,
+            "mean_us" : 2.1099999999999999,
+            "p50_us" : 1.54,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.40699999999999997
+          },
+          "embedding_lookup" : {
+            "count" : 144,
+            "max_us" : 8624.0400000000009,
+            "mean_us" : 435.55000000000001,
+            "p50_us" : 20.48,
+            "p90_us" : 98.299999999999997,
+            "p99_us" : 7340.0299999999997,
+            "total_ms" : 62.719999999999999
+          },
+          "gpu.decode" : {
+            "count" : 254,
+            "max_us" : 12683.620000000001,
+            "mean_us" : 3035.3800000000001,
+            "p50_us" : 3670.02,
+            "p90_us" : 6291.46,
+            "p99_us" : 10485.76,
+            "total_ms" : 770.98599999999999
+          },
+          "gpu.drafter" : {
+            "count" : 556,
+            "max_us" : 17270.880000000001,
+            "mean_us" : 444.88,
+            "p50_us" : 3.0699999999999998,
+            "p90_us" : 917.5,
+            "p99_us" : 7340.0299999999997,
+            "total_ms" : 247.35400000000001
+          },
+          "gpu.prefill" : {
+            "count" : 81,
+            "max_us" : 92182.789999999994,
+            "mean_us" : 20822.849999999999,
+            "p50_us" : 16777.220000000001,
+            "p90_us" : 33554.43,
+            "p99_us" : 83886.080000000002,
+            "total_ms" : 1686.6510000000001
+          },
+          "gpu.queue_delay" : {
+            "count" : 1455,
+            "max_us" : 512184.41999999998,
+            "mean_us" : 11512.280000000001,
+            "p50_us" : 917.5,
+            "p90_us" : 25165.82,
+            "p99_us" : 100663.3,
+            "total_ms" : 16750.362000000001
+          },
+          "gpu.verify" : {
+            "count" : 542,
+            "max_us" : 14444.5,
+            "mean_us" : 4300.1999999999998,
+            "p50_us" : 4194.3000000000002,
+            "p90_us" : 8388.6100000000006,
+            "p99_us" : 8388.6100000000006,
+            "total_ms" : 2330.7109999999998
+          },
+          "gpu.wait.decode" : {
+            "count" : 296,
+            "max_us" : 74326.75,
+            "mean_us" : 11354.719999999999,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 33554.43,
+            "p99_us" : 58720.260000000002,
+            "total_ms" : 3360.9960000000001
+          },
+          "gpu.wait.prefill" : {
+            "count" : 9,
+            "max_us" : 541862.04000000004,
+            "mean_us" : 186949.19,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 1682.5429999999999
+          },
+          "host.lock_read" : {
+            "count" : 447,
+            "max_us" : 301.67000000000002,
+            "mean_us" : 19.300000000000001,
+            "p50_us" : 8.1899999999999995,
+            "p90_us" : 65.540000000000006,
+            "p99_us" : 98.299999999999997,
+            "total_ms" : 8.6259999999999994
+          },
+          "host.read 10240 B" : {
+            "count" : 126,
+            "max_us" : 2,
+            "mean_us" : 0.51000000000000001,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.64000000000000001,
+            "p99_us" : 1.54,
+            "total_ms" : 0.064000000000000001
+          },
+          "host.read 40960 B" : {
+            "count" : 57,
+            "max_us" : 38.329999999999998,
+            "mean_us" : 3.3199999999999998,
+            "p50_us" : 1.02,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 32.770000000000003,
+            "total_ms" : 0.189
+          },
+          "host.read 524288 B (direct)" : {
+            "count" : 203,
+            "max_us" : 60.329999999999998,
+            "mean_us" : 12.050000000000001,
+            "p50_us" : 10.24,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 49.149999999999999,
+            "total_ms" : 2.4449999999999998
+          },
+          "host.read 2097152 B (direct)" : {
+            "count" : 61,
+            "max_us" : 299.57999999999998,
+            "mean_us" : 96.430000000000007,
+            "p50_us" : 65.540000000000006,
+            "p90_us" : 98.299999999999997,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 5.8819999999999997
+          },
+          "host.unlock_write" : {
+            "count" : 1149,
+            "max_us" : 2674.1700000000001,
+            "mean_us" : 8.75,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 163.84,
+            "total_ms" : 10.052
+          },
+          "host.write 4 B" : {
+            "count" : 81,
+            "max_us" : 2.71,
+            "mean_us" : 0.25,
+            "p50_us" : 0.16,
+            "p90_us" : 0.26000000000000001,
+            "p99_us" : 2.5600000000000001,
+            "total_ms" : 0.02
+          },
+          "host.write 16 B" : {
+            "count" : 61,
+            "max_us" : 0.25,
+            "mean_us" : 0.080000000000000002,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.11,
+            "p99_us" : 0.22,
+            "total_ms" : 0.0050000000000000001
+          },
+          "host.write 28 B (direct)" : {
+            "count" : 151,
+            "max_us" : 3.29,
+            "mean_us" : 0.11,
+            "p50_us" : 0.040000000000000001,
+            "p90_us" : 0.11,
+            "p99_us" : 2.0499999999999998,
+            "total_ms" : 0.017000000000000001
+          },
+          "host.write 512 B" : {
+            "count" : 8,
+            "max_us" : 0.25,
+            "mean_us" : 0.16,
+            "p50_us" : 0.11,
+            "p90_us" : 0.22,
+            "p99_us" : 0.22,
+            "total_ms" : 0.001
+          },
+          "host.write 4096 B" : {
+            "count" : 159,
+            "max_us" : 1.8799999999999999,
+            "mean_us" : 0.17999999999999999,
+            "p50_us" : 0.11,
+            "p90_us" : 0.32000000000000001,
+            "p99_us" : 0.77000000000000002,
+            "total_ms" : 0.029000000000000001
+          },
+          "host.write 8192 B" : {
+            "count" : 4,
+            "max_us" : 2.3799999999999999,
+            "mean_us" : 0.95999999999999996,
+            "p50_us" : 0.11,
+            "p90_us" : 2.0499999999999998,
+            "p99_us" : 2.0499999999999998,
+            "total_ms" : 0.0040000000000000001
+          },
+          "host.write 10240 B" : {
+            "count" : 20,
+            "max_us" : 7.3799999999999999,
+            "mean_us" : 0.92000000000000004,
+            "p50_us" : 0.26000000000000001,
+            "p90_us" : 1.54,
+            "p99_us" : 7.1699999999999999,
+            "total_ms" : 0.017999999999999999
+          },
+          "host.write 16384 B" : {
+            "count" : 120,
+            "max_us" : 3.25,
+            "mean_us" : 0.42999999999999999,
+            "p50_us" : 0.32000000000000001,
+            "p90_us" : 0.45000000000000001,
+            "p99_us" : 1.54,
+            "total_ms" : 0.051999999999999998
+          },
+          "host.write 20480 B" : {
+            "count" : 183,
+            "max_us" : 6.3300000000000001,
+            "mean_us" : 0.57999999999999996,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.106
+          },
+          "host.write 32768 B" : {
+            "count" : 2,
+            "max_us" : 11.5,
+            "mean_us" : 6.04,
+            "p50_us" : 0.51000000000000001,
+            "p90_us" : 10.24,
+            "p99_us" : 10.24,
+            "total_ms" : 0.012
+          },
+          "host.write 40960 B" : {
+            "count" : 183,
+            "max_us" : 7.25,
+            "mean_us" : 0.79000000000000004,
+            "p50_us" : 0.64000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.14499999999999999
+          },
+          "host.write 43008 B" : {
+            "count" : 20,
+            "max_us" : 5.1200000000000001,
+            "mean_us" : 1.6299999999999999,
+            "p50_us" : 1.02,
+            "p90_us" : 3.0699999999999998,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.033000000000000002
+          },
+          "host.write 172032 B" : {
+            "count" : 61,
+            "max_us" : 15.25,
+            "mean_us" : 4.3600000000000003,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 14.34,
+            "total_ms" : 0.26600000000000001
+          },
+          "host.write 524288 B" : {
+            "count" : 46,
+            "max_us" : 55.539999999999999,
+            "mean_us" : 15.48,
+            "p50_us" : 12.289999999999999,
+            "p90_us" : 24.579999999999998,
+            "p99_us" : 49.149999999999999,
+            "total_ms" : 0.71199999999999997
+          },
+          "host.write 1048576 B" : {
+            "count" : 2,
+            "max_us" : 85.829999999999998,
+            "mean_us" : 64.209999999999994,
+            "p50_us" : 40.960000000000001,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 0.128
+          },
+          "host.write 1310720 B" : {
+            "count" : 29,
+            "max_us" : 109.92,
+            "mean_us" : 37.170000000000002,
+            "p50_us" : 24.579999999999998,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 98.299999999999997,
+            "total_ms" : 1.0780000000000001
+          },
+          "host.write 4194304 B" : {
+            "count" : 2,
+            "max_us" : 295.62,
+            "mean_us" : 202.71000000000001,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 262.13999999999999,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 0.40500000000000003
+          },
+          "host.write 5505024 B" : {
+            "count" : 13,
+            "max_us" : 431.95999999999998,
+            "mean_us" : 225.72,
+            "p50_us" : 163.84,
+            "p90_us" : 393.22000000000003,
+            "p99_us" : 393.22000000000003,
+            "total_ms" : 2.9340000000000002
+          },
+          "host.write 10485760 B" : {
+            "count" : 3,
+            "max_us" : 756.12,
+            "mean_us" : 442.42000000000002,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 655.36000000000001,
+            "p99_us" : 655.36000000000001,
+            "total_ms" : 1.327
+          },
+          "host.write 44040192 B" : {
+            "count" : 1,
+            "max_us" : 2673.25,
+            "mean_us" : 2673.25,
+            "p50_us" : 2621.4400000000001,
+            "p90_us" : 2621.4400000000001,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 2.673
+          },
+          "kv_clone" : {
+            "count" : 2,
+            "max_us" : 14118.040000000001,
+            "mean_us" : 13333.35,
+            "p50_us" : 10485.76,
+            "p90_us" : 12582.91,
+            "p99_us" : 12582.91,
+            "total_ms" : 26.667000000000002
+          },
+          "LiteRT Graph Loading From Buffer" : {
+            "count" : 26,
+            "max_us" : 131776.82999999999,
+            "mean_us" : 14505.690000000001,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 25165.82,
+            "p99_us" : 117440.50999999999,
+            "total_ms" : 377.14800000000002
+          },
+          "LiteRT Model Destruction" : {
+            "count" : 2,
+            "max_us" : 1.54,
+            "mean_us" : 1.1699999999999999,
+            "p50_us" : 0.77000000000000002,
+            "p90_us" : 1.54,
+            "p99_us" : 1.54,
+            "total_ms" : 0.002
+          },
+          "LiteRT TensorBuffer Allocation" : {
+            "count" : 266,
+            "max_us" : 33.829999999999998,
+            "mean_us" : 4.25,
+            "p50_us" : 4.0999999999999996,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 28.670000000000002,
+            "total_ms" : 1.131
+          },
+          "LiteRT TensorBuffer Destruction" : {
+            "count" : 24616,
+            "max_us" : 76.709999999999994,
+            "mean_us" : 0.070000000000000007,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.040000000000000001,
+            "total_ms" : 1.6279999999999999
+          },
+          "logits_readback" : {
+            "count" : 20,
+            "max_us" : 0.95999999999999996,
+            "mean_us" : 0.20999999999999999,
+            "p50_us" : 0.16,
+            "p90_us" : 0.32000000000000001,
+            "p99_us" : 0.90000000000000002,
+            "total_ms" : 0.0040000000000000001
+          },
+          "mask_fill" : {
+            "count" : 20,
+            "max_us" : 6,
+            "mean_us" : 1.1399999999999999,
+            "p50_us" : 0.64000000000000001,
+            "p90_us" : 1.54,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.023
+          },
+          "param_fill" : {
+            "count" : 20,
+            "max_us" : 4.29,
+            "mean_us" : 0.56000000000000005,
+            "p50_us" : 0.19,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.010999999999999999
+          },
+          "prefill.chunk" : {
+            "count" : 9,
+            "max_us" : 563573.57999999996,
+            "mean_us" : 193267.04000000001,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 1739.403
+          },
+          "prefill.embedding_lookup" : {
+            "count" : 27,
+            "max_us" : 14179.120000000001,
+            "mean_us" : 1039.4400000000001,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 1048.5799999999999,
+            "p99_us" : 12582.91,
+            "total_ms" : 28.065000000000001
+          },
+          "prefill.mask_fill" : {
+            "count" : 9,
+            "max_us" : 218.28999999999999,
+            "mean_us" : 51.539999999999999,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 196.61000000000001,
+            "p99_us" : 196.61000000000001,
+            "total_ms" : 0.46400000000000002
+          },
+          "prefill.param_fill" : {
+            "count" : 9,
+            "max_us" : 4.1699999999999999,
+            "mean_us" : 1.6299999999999999,
+            "p50_us" : 0.90000000000000002,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.014999999999999999
+          },
+          "run.decode" : {
+            "count" : 20,
+            "max_us" : 66927.419999999998,
+            "mean_us" : 39070.980000000003,
+            "p50_us" : 33554.43,
+            "p90_us" : 33554.43,
+            "p99_us" : 58720.260000000002,
+            "total_ms" : 781.41999999999996
+          },
+          "run.drafter" : {
+            "count" : 183,
+            "max_us" : 3525.9200000000001,
+            "mean_us" : 1268.1700000000001,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 1048.5799999999999,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 232.07400000000001
+          },
+          "run.prefill" : {
+            "count" : 9,
+            "max_us" : 545339.25,
+            "mean_us" : 189791.95999999999,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 1708.1279999999999
+          },
+          "run.verify" : {
+            "count" : 61,
+            "max_us" : 77082.830000000002,
+            "mean_us" : 39914.190000000002,
+            "p50_us" : 33554.43,
+            "p90_us" : 33554.43,
+            "p99_us" : 67108.860000000001,
+            "total_ms" : 2434.7649999999999
+          },
+          "sample" : {
+            "count" : 20,
+            "max_us" : 845.71000000000004,
+            "mean_us" : 105.19,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 114.69,
+            "p99_us" : 786.42999999999995,
+            "total_ms" : 2.1040000000000001
+          },
+          "session_wait" : {
+            "count" : 19,
+            "max_us" : 840366.92000000004,
+            "mean_us" : 84303.800000000003,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 335544.32000000001,
+            "p99_us" : 805306.37,
+            "total_ms" : 1601.7719999999999
+          },
+          "stream_callback" : {
+            "count" : 76,
+            "max_us" : 95.670000000000002,
+            "mean_us" : 26.73,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 32.770000000000003,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 2.032
+          },
+          "task.callback" : {
+            "count" : 10,
+            "max_us" : 97.829999999999998,
+            "mean_us" : 48.329999999999998,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 0.48299999999999998
+          },
+          "task.queue_wait" : {
+            "count" : 10,
+            "max_us" : 30.789999999999999,
+            "mean_us" : 13.33,
+            "p50_us" : 8.1899999999999995,
+            "p90_us" : 20.48,
+            "p99_us" : 28.670000000000002,
+            "total_ms" : 0.13300000000000001
+          },
+          "template" : {
+            "count" : 5,
+            "max_us" : 13.08,
+            "mean_us" : 6.3499999999999996,
+            "p50_us" : 3.0699999999999998,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 12.289999999999999,
+            "total_ms" : 0.032000000000000001
+          },
+          "tokenize" : {
+            "count" : 5,
+            "max_us" : 825.28999999999996,
+            "mean_us" : 240.97,
+            "p50_us" : 40.960000000000001,
+            "p90_us" : 786.42999999999995,
+            "p99_us" : 786.42999999999995,
+            "total_ms" : 1.2050000000000001
+          },
+          "turn.decode" : {
+            "count" : 5,
+            "max_us" : 1516532.4199999999,
+            "mean_us" : 708318.68999999994,
+            "p50_us" : 536870.91000000003,
+            "p90_us" : 1342177.28,
+            "p99_us" : 1342177.28,
+            "total_ms" : 3541.5929999999998
+          },
+          "turn.prefill" : {
+            "count" : 5,
+            "max_us" : 928630.95999999996,
+            "mean_us" : 347959.65000000002,
+            "p50_us" : 201326.59,
+            "p90_us" : 805306.37,
+            "p99_us" : 805306.37,
+            "total_ms" : 1739.798
+          }
+        }
+      },
+      "thermalStateAfterFollowUp" : 0,
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 0.95430669324999995,
+      "window" : 4096
+    },
+    "calibration_e4b_8192" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 6.1314731519999999,
+      "decodeTokPerSec" : 40.364901335751121,
+      "effectiveWindow" : 8192,
+      "footprintAfterFollowUpGB" : 2.4477135360000002,
+      "footprintAfterLoadGB" : 2.4162068880000001,
+      "footprintPeakGB" : 2.4584614400000002,
+      "inputTokens" : 2302,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 1.1s (footprint 2.42 GB, available 6.17 GB)"
+      ],
+      "longDecodeTokPerSec" : 75.285885793926511,
+      "longOutputTokens" : 122,
+      "longReplyAccepted" : true,
+      "memory.availableGB" : 6.1422210560000003,
+      "memory.footprintGB" : 2.4477135360000002,
+      "model" : "e4b",
+      "outputTokens" : 51,
+      "prefillTokPerSec" : 1573.6660925027095,
+      "recordedAt" : "2026-10-15T16:37:50Z",
+      "replyPrefix" : "The text is a repetitive list of 95 numbered sentences describing various aspects of life at a lighthouse, including wea",
+      "telemetry" : {
+        "anomalies" : [
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.11199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.45699999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.31200001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.63
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "async_unavailable",
+            "message" : "async run requested; the GPU backend has no post-dispatch event",
+            "severity" : 0,
+            "t_ms" : 148772694.51199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772695.088
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772699.22
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148775403.567
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148776247.59900001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148778826.347
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148778826.73300001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148779083.405
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148782524.65599999
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148783453.44600001
+          }
+        ],
+        "anomalies_total" : 14,
+        "counters" : {
+          "anomalies" : 14,
+          "command_buffers" : 2958,
+          "compiled_models" : 34,
+          "context_switches" : 9,
+          "decode_allocations" : 3,
+          "embedding_lookups" : 8544,
+          "errors" : 0,
+          "gpu_partitions" : 19,
+          "gpu_waits" : 622,
+          "graph_nodes" : 81189,
+          "graph_nodes_cpu_delegate" : 18372,
+          "graph_nodes_gpu" : 61011,
+          "graph_nodes_undelegated" : 1806,
+          "host_lock_copies" : 909,
+          "host_lock_copy_bytes" : 483981312,
+          "host_locks" : 3239,
+          "host_shadow_allocs" : 88,
+          "host_unlock_copies" : 2330,
+          "host_unlock_copy_bytes" : 628713420,
+          "kv_copies" : 4,
+          "kv_copy_bytes" : 0,
+          "logit_masks" : 34,
+          "logits_near_ties" : 0,
+          "logits_nonfinite" : 0,
+          "logits_rows_checked" : 17,
+          "mask_fill_bytes" : 0,
+          "mask_fills" : 58,
+          "mtp_accepted" : 230,
+          "mtp_drafted" : 372,
+          "mtp_rounds" : 124,
+          "program_cache_hits" : 15,
+          "program_cache_misses" : 0,
+          "run_option_parses" : 0,
+          "runs_decode" : 41,
+          "runs_drafter" : 372,
+          "runs_other" : 0,
+          "runs_prefill" : 17,
+          "runs_verify" : 124,
+          "sampler_cpu" : 9,
+          "sampler_gpu" : 0,
+          "stop_cancelled" : 0,
+          "stop_eos" : 6,
+          "stop_kv_full" : 0,
+          "stop_max_tokens" : 3,
+          "stream_chunk_bytes" : 0,
+          "stream_chunks" : 156,
+          "tasks_scheduled" : 18,
+          "token_history_copies" : 17,
+          "tokens_decoded" : 387,
+          "tokens_prefilled" : 4140,
+          "weight_cache_hits" : 30,
+          "weight_cache_misses" : 0
+        },
+        "cpu" : {
+          "system_ms" : 960.89999999999998,
+          "user_ms" : 13960.200000000001
+        },
+        "facts" : {
+          "gpu" : "Apple A19 Pro GPU, ML Drift family Apple10",
+          "gpu_async" : "unavailable: no post-dispatch event",
+          "gpu_wait_requested" : "active (benchmark mode)",
+          "metal_wait" : "active (busy-wait)",
+          "sampler" : "cpu (GPU sampler unavailable)"
+        },
+        "gauges" : {
+          "drafter.logits.entropy_nats" : {
+            "count" : 11,
+            "max" : 4.2850000000000001,
+            "mean" : 1.0489999999999999,
+            "min" : 0.00016330000000000001,
+            "p10" : 0.1724,
+            "p50" : 0.51780000000000004,
+            "p90" : 2.137
+          },
+          "drafter.logits.max" : {
+            "count" : 11,
+            "max" : 25.620000000000001,
+            "mean" : 20.32,
+            "min" : 11.77,
+            "p10" : 16.690000000000001,
+            "p50" : 21.219999999999999,
+            "p90" : 23.34
+          },
+          "drafter.logits.top1_margin" : {
+            "count" : 11,
+            "max" : 11.44,
+            "mean" : 3.621,
+            "min" : 0.2656,
+            "p10" : 0.4219,
+            "p50" : 2.8279999999999998,
+            "p90" : 5.375
+          },
+          "drafter.logits.top1_prob" : {
+            "count" : 11,
+            "max" : 1,
+            "mean" : 0.7702,
+            "min" : 0.33629999999999999,
+            "p10" : 0.43120000000000003,
+            "p50" : 0.90869999999999995,
+            "p90" : 0.98050000000000004
+          },
+          "logits.entropy_nats" : {
+            "count" : 6,
+            "max" : 1.2290000000000001,
+            "mean" : 0.38250000000000001,
+            "min" : 0.0013619999999999999,
+            "p10" : 0.0013619999999999999,
+            "p50" : 0.01371,
+            "p90" : 1.2290000000000001
+          },
+          "logits.max" : {
+            "count" : 6,
+            "max" : 28.920000000000002,
+            "mean" : 28.120000000000001,
+            "min" : 26.890000000000001,
+            "p10" : 26.890000000000001,
+            "p50" : 28.09,
+            "p90" : 28.920000000000002
+          },
+          "logits.top1_margin" : {
+            "count" : 6,
+            "max" : 9.2970000000000006,
+            "mean" : 4.7809999999999997,
+            "min" : 0.21879999999999999,
+            "p10" : 0.21879999999999999,
+            "p50" : 2.6560000000000001,
+            "p90" : 9.2970000000000006
+          },
+          "logits.top1_prob" : {
+            "count" : 6,
+            "max" : 0.99990000000000001,
+            "mean" : 0.84299999999999997,
+            "min" : 0.5504,
+            "p10" : 0.5504,
+            "p50" : 0.92359999999999998,
+            "p90" : 0.99990000000000001
+          }
+        },
+        "level" : 2,
+        "memory" : {
+          "available_mb" : 6142.1999999999998,
+          "footprint_mb" : 2447.6999999999998,
+          "graphics_footprint_mb" : 1594.8,
+          "peak_footprint_mb" : 2733
+        },
+        "schema" : 1,
+        "spans" : {
+          "CompiledModel Buffer Allocation" : {
+            "count" : 10616,
+            "max_us" : 2355.04,
+            "mean_us" : 0.66000000000000003,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.16,
+            "total_ms" : 6.9820000000000002
+          },
+          "CompiledModel Buffer Registration" : {
+            "count" : 33802,
+            "max_us" : 69.420000000000002,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.16,
+            "p99_us" : 0.38,
+            "total_ms" : 3.351
+          },
+          "CompiledModel Creation" : {
+            "count" : 68,
+            "max_us" : 1224138.75,
+            "mean_us" : 77009.410000000003,
+            "p50_us" : 786.42999999999995,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 1073741.8200000001,
+            "total_ms" : 5236.6400000000003
+          },
+          "CompiledModel Delegate Graph Conversion" : {
+            "count" : 34,
+            "max_us" : 630018.5,
+            "mean_us" : 54094.910000000003,
+            "p50_us" : 131.06999999999999,
+            "p90_us" : 16777.220000000001,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 1839.2270000000001
+          },
+          "CompiledModel Destruction" : {
+            "count" : 18,
+            "max_us" : 72853.960000000006,
+            "mean_us" : 4275.9399999999996,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 1835.01,
+            "p99_us" : 67108.860000000001,
+            "total_ms" : 76.966999999999999
+          },
+          "CompiledModel Graph Conversion" : {
+            "count" : 34,
+            "max_us" : 1.75,
+            "mean_us" : 0.48999999999999999,
+            "p50_us" : 0.32000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 1.54,
+            "total_ms" : 0.017000000000000001
+          },
+          "CompiledModel Graph Loading" : {
+            "count" : 34,
+            "max_us" : 2326,
+            "mean_us" : 187.72,
+            "p50_us" : 16.379999999999999,
+            "p90_us" : 163.84,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 6.3819999999999997
+          },
+          "CompiledModel Inference" : {
+            "count" : 10576,
+            "max_us" : 601982.38,
+            "mean_us" : 1011.42,
+            "p50_us" : 4.0999999999999996,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 33554.43,
+            "total_ms" : 10696.743
+          },
+          "CompiledModel Invoke" : {
+            "count" : 10576,
+            "max_us" : 601944.67000000004,
+            "mean_us" : 1010.15,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 33554.43,
+            "total_ms" : 10683.364
+          },
+          "CompiledModel Runtime Initialization" : {
+            "count" : 34,
+            "max_us" : 16253.17,
+            "mean_us" : 2754.75,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 12582.91,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 93.662000000000006
+          },
+          "CompiledModel TFLite Graph Conversion" : {
+            "count" : 34,
+            "max_us" : 16219.17,
+            "mean_us" : 2710.6100000000001,
+            "p50_us" : 229.38,
+            "p90_us" : 12582.91,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 92.161000000000001
+          },
+          "constraint" : {
+            "count" : 34,
+            "max_us" : 2897.96,
+            "mean_us" : 668.26999999999998,
+            "p50_us" : 524.28999999999996,
+            "p90_us" : 524.28999999999996,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 22.721
+          },
+          "context_switch" : {
+            "count" : 9,
+            "max_us" : 27532.919999999998,
+            "mean_us" : 9087.9200000000001,
+            "p50_us" : 1.79,
+            "p90_us" : 25165.82,
+            "p99_us" : 25165.82,
+            "total_ms" : 81.790999999999997
+          },
+          "decode.step" : {
+            "count" : 158,
+            "max_us" : 154574.45999999999,
+            "mean_us" : 45402.220000000001,
+            "p50_us" : 41943.040000000001,
+            "p90_us" : 41943.040000000001,
+            "p99_us" : 134217.73000000001,
+            "total_ms" : 7173.5510000000004
+          },
+          "detokenize" : {
+            "count" : 391,
+            "max_us" : 5.54,
+            "mean_us" : 2.2400000000000002,
+            "p50_us" : 1.79,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.874
+          },
+          "embedding_lookup" : {
+            "count" : 298,
+            "max_us" : 8624.0400000000009,
+            "mean_us" : 329.87,
+            "p50_us" : 20.48,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 6291.46,
+            "total_ms" : 98.302999999999997
+          },
+          "gpu.decode" : {
+            "count" : 530,
+            "max_us" : 12683.620000000001,
+            "mean_us" : 2868.6599999999999,
+            "p50_us" : 3670.02,
+            "p90_us" : 6291.46,
+            "p99_us" : 8388.6100000000006,
+            "total_ms" : 1520.3910000000001
+          },
+          "gpu.drafter" : {
+            "count" : 1123,
+            "max_us" : 17270.880000000001,
+            "mean_us" : 402.35000000000002,
+            "p50_us" : 3.0699999999999998,
+            "p90_us" : 917.5,
+            "p99_us" : 1310.72,
+            "total_ms" : 451.83800000000002
+          },
+          "gpu.prefill" : {
+            "count" : 153,
+            "max_us" : 101803.96000000001,
+            "mean_us" : 23182.540000000001,
+            "p50_us" : 16777.220000000001,
+            "p90_us" : 67108.860000000001,
+            "p99_us" : 100663.3,
+            "total_ms" : 3546.9279999999999
+          },
+          "gpu.queue_delay" : {
+            "count" : 2958,
+            "max_us" : 567677.42000000004,
+            "mean_us" : 11598.959999999999,
+            "p50_us" : 917.5,
+            "p90_us" : 29360.130000000001,
+            "p99_us" : 100663.3,
+            "total_ms" : 34309.728999999999
+          },
+          "gpu.verify" : {
+            "count" : 1109,
+            "max_us" : 14444.5,
+            "mean_us" : 4349.8999999999996,
+            "p50_us" : 4194.3000000000002,
+            "p90_us" : 8388.6100000000006,
+            "p99_us" : 8388.6100000000006,
+            "total_ms" : 4824.04
+          },
+          "gpu.wait.decode" : {
+            "count" : 605,
+            "max_us" : 74326.75,
+            "mean_us" : 11286.690000000001,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 33554.43,
+            "p99_us" : 33554.43,
+            "total_ms" : 6828.4459999999999
+          },
+          "gpu.wait.prefill" : {
+            "count" : 17,
+            "max_us" : 600618.67000000004,
+            "mean_us" : 208312.31,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 3541.3090000000002
+          },
+          "host.lock_read" : {
+            "count" : 909,
+            "max_us" : 301.67000000000002,
+            "mean_us" : 20.309999999999999,
+            "p50_us" : 10.24,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 114.69,
+            "total_ms" : 18.463000000000001
+          },
+          "host.read 10240 B" : {
+            "count" : 255,
+            "max_us" : 2,
+            "mean_us" : 0.51000000000000001,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.64000000000000001,
+            "p99_us" : 1.54,
+            "total_ms" : 0.13
+          },
+          "host.read 40960 B" : {
+            "count" : 117,
+            "max_us" : 42.670000000000002,
+            "mean_us" : 2.9900000000000002,
+            "p50_us" : 1.02,
+            "p90_us" : 2.5600000000000001,
+            "p99_us" : 32.770000000000003,
+            "total_ms" : 0.34999999999999998
+          },
+          "host.read 524288 B (direct)" : {
+            "count" : 413,
+            "max_us" : 60.329999999999998,
+            "mean_us" : 12.460000000000001,
+            "p50_us" : 10.24,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 49.149999999999999,
+            "total_ms" : 5.1440000000000001
+          },
+          "host.read 2097152 B (direct)" : {
+            "count" : 124,
+            "max_us" : 299.57999999999998,
+            "mean_us" : 102.56999999999999,
+            "p50_us" : 81.920000000000002,
+            "p90_us" : 114.69,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 12.718999999999999
+          },
+          "host.unlock_write" : {
+            "count" : 2330,
+            "max_us" : 2674.1700000000001,
+            "mean_us" : 11.09,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 196.61000000000001,
+            "total_ms" : 25.829999999999998
+          },
+          "host.write 4 B" : {
+            "count" : 165,
+            "max_us" : 2.71,
+            "mean_us" : 0.20000000000000001,
+            "p50_us" : 0.11,
+            "p90_us" : 0.22,
+            "p99_us" : 1.79,
+            "total_ms" : 0.033000000000000002
+          },
+          "host.write 16 B" : {
+            "count" : 124,
+            "max_us" : 0.25,
+            "mean_us" : 0.080000000000000002,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.11,
+            "p99_us" : 0.19,
+            "total_ms" : 0.01
+          },
+          "host.write 28 B (direct)" : {
+            "count" : 306,
+            "max_us" : 4.3799999999999999,
+            "mean_us" : 0.11,
+            "p50_us" : 0.040000000000000001,
+            "p90_us" : 0.11,
+            "p99_us" : 1.02,
+            "total_ms" : 0.032000000000000001
+          },
+          "host.write 512 B" : {
+            "count" : 14,
+            "max_us" : 5,
+            "mean_us" : 0.57999999999999996,
+            "p50_us" : 0.16,
+            "p90_us" : 1.02,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.0080000000000000002
+          },
+          "host.write 4096 B" : {
+            "count" : 161,
+            "max_us" : 1.8799999999999999,
+            "mean_us" : 0.19,
+            "p50_us" : 0.11,
+            "p90_us" : 0.32000000000000001,
+            "p99_us" : 1.28,
+            "total_ms" : 0.029999999999999999
+          },
+          "host.write 8192 B" : {
+            "count" : 172,
+            "max_us" : 2.3799999999999999,
+            "mean_us" : 0.26000000000000001,
+            "p50_us" : 0.19,
+            "p90_us" : 0.38,
+            "p99_us" : 1.02,
+            "total_ms" : 0.044999999999999998
+          },
+          "host.write 10240 B" : {
+            "count" : 41,
+            "max_us" : 7.3799999999999999,
+            "mean_us" : 0.77000000000000002,
+            "p50_us" : 0.26000000000000001,
+            "p90_us" : 1.54,
+            "p99_us" : 7.1699999999999999,
+            "total_ms" : 0.032000000000000001
+          },
+          "host.write 16384 B" : {
+            "count" : 120,
+            "max_us" : 3.25,
+            "mean_us" : 0.42999999999999999,
+            "p50_us" : 0.32000000000000001,
+            "p90_us" : 0.45000000000000001,
+            "p99_us" : 1.54,
+            "total_ms" : 0.051999999999999998
+          },
+          "host.write 20480 B" : {
+            "count" : 372,
+            "max_us" : 12.210000000000001,
+            "mean_us" : 0.57999999999999996,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.217
+          },
+          "host.write 32768 B" : {
+            "count" : 128,
+            "max_us" : 11.5,
+            "mean_us" : 0.81000000000000005,
+            "p50_us" : 0.64000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 2.5600000000000001,
+            "total_ms" : 0.104
+          },
+          "host.write 40960 B" : {
+            "count" : 372,
+            "max_us" : 7.25,
+            "mean_us" : 0.82999999999999996,
+            "p50_us" : 0.64000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 3.0699999999999998,
+            "total_ms" : 0.308
+          },
+          "host.write 43008 B" : {
+            "count" : 41,
+            "max_us" : 5.8799999999999999,
+            "mean_us" : 1.6399999999999999,
+            "p50_us" : 1.02,
+            "p90_us" : 3.0699999999999998,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.067000000000000004
+          },
+          "host.write 172032 B" : {
+            "count" : 124,
+            "max_us" : 15.25,
+            "mean_us" : 4.3700000000000001,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 10.24,
+            "total_ms" : 0.54100000000000004
+          },
+          "host.write 524288 B" : {
+            "count" : 82,
+            "max_us" : 55.539999999999999,
+            "mean_us" : 14.720000000000001,
+            "p50_us" : 10.24,
+            "p90_us" : 20.48,
+            "p99_us" : 49.149999999999999,
+            "total_ms" : 1.2070000000000001
+          },
+          "host.write 1048576 B" : {
+            "count" : 14,
+            "max_us" : 93.790000000000006,
+            "mean_us" : 43.93,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 0.61499999999999999
+          },
+          "host.write 1310720 B" : {
+            "count" : 51,
+            "max_us" : 128.41999999999999,
+            "mean_us" : 39.009999999999998,
+            "p50_us" : 24.579999999999998,
+            "p90_us" : 65.540000000000006,
+            "p99_us" : 114.69,
+            "total_ms" : 1.9890000000000001
+          },
+          "host.write 4194304 B" : {
+            "count" : 2,
+            "max_us" : 295.62,
+            "mean_us" : 202.71000000000001,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 262.13999999999999,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 0.40500000000000003
+          },
+          "host.write 5505024 B" : {
+            "count" : 23,
+            "max_us" : 544.41999999999996,
+            "mean_us" : 240.78999999999999,
+            "p50_us" : 163.84,
+            "p90_us" : 393.22000000000003,
+            "p99_us" : 524.28999999999996,
+            "total_ms" : 5.5380000000000003
+          },
+          "host.write 8388608 B" : {
+            "count" : 4,
+            "max_us" : 941.21000000000004,
+            "mean_us" : 385.16000000000003,
+            "p50_us" : 163.84,
+            "p90_us" : 917.5,
+            "p99_us" : 917.5,
+            "total_ms" : 1.5409999999999999
+          },
+          "host.write 10485760 B" : {
+            "count" : 10,
+            "max_us" : 1014.71,
+            "mean_us" : 513.09000000000003,
+            "p50_us" : 458.75,
+            "p90_us" : 655.36000000000001,
+            "p99_us" : 917.5,
+            "total_ms" : 5.1310000000000002
+          },
+          "host.write 44040192 B" : {
+            "count" : 4,
+            "max_us" : 2673.25,
+            "mean_us" : 1938.29,
+            "p50_us" : 1310.72,
+            "p90_us" : 2621.4400000000001,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 7.7530000000000001
+          },
+          "kv_clone" : {
+            "count" : 4,
+            "max_us" : 26185.290000000001,
+            "mean_us" : 19495.330000000002,
+            "p50_us" : 12582.91,
+            "p90_us" : 25165.82,
+            "p99_us" : 25165.82,
+            "total_ms" : 77.980999999999995
+          },
+          "LiteRT Graph Loading From Buffer" : {
+            "count" : 40,
+            "max_us" : 145083.17000000001,
+            "mean_us" : 15174.4,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 29360.130000000001,
+            "p99_us" : 134217.73000000001,
+            "total_ms" : 606.976
+          },
+          "LiteRT Model Destruction" : {
+            "count" : 16,
+            "max_us" : 2216.0799999999999,
+            "mean_us" : 260.35000000000002,
+            "p50_us" : 3.0699999999999998,
+            "p90_us" : 786.42999999999995,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 4.1660000000000004
+          },
+          "LiteRT TensorBuffer Allocation" : {
+            "count" : 434,
+            "max_us" : 33.829999999999998,
+            "mean_us" : 4.2199999999999998,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 24.579999999999998,
+            "total_ms" : 1.8300000000000001
+          },
+          "LiteRT TensorBuffer Destruction" : {
+            "count" : 50533,
+            "max_us" : 346.45999999999998,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.040000000000000001,
+            "total_ms" : 5.0359999999999996
+          },
+          "logits_readback" : {
+            "count" : 41,
+            "max_us" : 0.95999999999999996,
+            "mean_us" : 0.19,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.32000000000000001,
+            "p99_us" : 0.90000000000000002,
+            "total_ms" : 0.0080000000000000002
+          },
+          "mask_fill" : {
+            "count" : 41,
+            "max_us" : 6,
+            "mean_us" : 1.1499999999999999,
+            "p50_us" : 0.90000000000000002,
+            "p90_us" : 1.54,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.047
+          },
+          "param_fill" : {
+            "count" : 41,
+            "max_us" : 4.29,
+            "mean_us" : 0.47999999999999998,
+            "p50_us" : 0.26000000000000001,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.02
+          },
+          "prefill.chunk" : {
+            "count" : 17,
+            "max_us" : 619746.70999999996,
+            "mean_us" : 215364.88,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 3661.203
+          },
+          "prefill.embedding_lookup" : {
+            "count" : 51,
+            "max_us" : 14179.120000000001,
+            "mean_us" : 1273.9200000000001,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 2621.4400000000001,
+            "p99_us" : 12582.91,
+            "total_ms" : 64.969999999999999
+          },
+          "prefill.mask_fill" : {
+            "count" : 17,
+            "max_us" : 408.12,
+            "mean_us" : 93.780000000000001,
+            "p50_us" : 40.960000000000001,
+            "p90_us" : 327.68000000000001,
+            "p99_us" : 393.22000000000003,
+            "total_ms" : 1.5940000000000001
+          },
+          "prefill.param_fill" : {
+            "count" : 17,
+            "max_us" : 5.3799999999999999,
+            "mean_us" : 1.6000000000000001,
+            "p50_us" : 0.90000000000000002,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.027
+          },
+          "run.decode" : {
+            "count" : 41,
+            "max_us" : 66927.419999999998,
+            "mean_us" : 37585.949999999997,
+            "p50_us" : 33554.43,
+            "p90_us" : 33554.43,
+            "p99_us" : 58720.260000000002,
+            "total_ms" : 1541.0239999999999
+          },
+          "run.drafter" : {
+            "count" : 372,
+            "max_us" : 8031.8299999999999,
+            "mean_us" : 1323,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 1310.72,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 492.15699999999998
+          },
+          "run.prefill" : {
+            "count" : 17,
+            "max_us" : 601986.79000000004,
+            "mean_us" : 210657.28,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 3581.174
+          },
+          "run.verify" : {
+            "count" : 124,
+            "max_us" : 77082.830000000002,
+            "mean_us" : 40067.709999999999,
+            "p50_us" : 33554.43,
+            "p90_us" : 33554.43,
+            "p99_us" : 67108.860000000001,
+            "total_ms" : 4968.3969999999999
+          },
+          "sample" : {
+            "count" : 41,
+            "max_us" : 845.71000000000004,
+            "mean_us" : 105.39,
+            "p50_us" : 40.960000000000001,
+            "p90_us" : 114.69,
+            "p99_us" : 786.42999999999995,
+            "total_ms" : 4.3209999999999997
+          },
+          "session_wait" : {
+            "count" : 35,
+            "max_us" : 928400.29000000004,
+            "mean_us" : 78291.960000000006,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 335544.32000000001,
+            "p99_us" : 805306.37,
+            "total_ms" : 2740.2190000000001
+          },
+          "stream_callback" : {
+            "count" : 156,
+            "max_us" : 161.66999999999999,
+            "mean_us" : 27.73,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 32.770000000000003,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 4.3259999999999996
+          },
+          "task.callback" : {
+            "count" : 18,
+            "max_us" : 97.829999999999998,
+            "mean_us" : 44.82,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 0.80700000000000005
+          },
+          "task.queue_wait" : {
+            "count" : 18,
+            "max_us" : 30.789999999999999,
+            "mean_us" : 11.800000000000001,
+            "p50_us" : 7.1699999999999999,
+            "p90_us" : 20.48,
+            "p99_us" : 28.670000000000002,
+            "total_ms" : 0.21199999999999999
+          },
+          "template" : {
+            "count" : 9,
+            "max_us" : 13.08,
+            "mean_us" : 5.0300000000000002,
+            "p50_us" : 3.0699999999999998,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 12.289999999999999,
+            "total_ms" : 0.044999999999999998
+          },
+          "tokenize" : {
+            "count" : 9,
+            "max_us" : 1480.5799999999999,
+            "mean_us" : 337.06999999999999,
+            "p50_us" : 65.540000000000006,
+            "p90_us" : 1310.72,
+            "p99_us" : 1310.72,
+            "total_ms" : 3.0339999999999998
+          },
+          "turn.decode" : {
+            "count" : 9,
+            "max_us" : 1620494.75,
+            "mean_us" : 797583.81999999995,
+            "p50_us" : 536870.91000000003,
+            "p90_us" : 1610612.74,
+            "p99_us" : 1610612.74,
+            "total_ms" : 7178.2539999999999
+          },
+          "turn.prefill" : {
+            "count" : 9,
+            "max_us" : 1438055.1200000001,
+            "mean_us" : 406871.85999999999,
+            "p50_us" : 201326.59,
+            "p90_us" : 1342177.28,
+            "p99_us" : 1342177.28,
+            "total_ms" : 3661.8470000000002
+          }
+        }
+      },
+      "thermalStateAfterFollowUp" : 0,
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 1.4628262062499999,
+      "window" : 8192
+    },
+    "calibration_e4b_16384" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 5.3706000720000002,
+      "decodeTokPerSec" : 44.327491246181459,
+      "effectiveWindow" : 16384,
+      "footprintAfterFollowUpGB" : 3.2032617920000002,
+      "footprintAfterLoadGB" : 2.8421578799999998,
+      "footprintPeakGB" : 3.2193345199999999,
+      "inputTokens" : 4398,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=16384 thinking=off in 1.2s (footprint 2.84 GB, available 5.75 GB)"
+      ],
+      "longDecodeTokPerSec" : 71.533246765674377,
+      "longOutputTokens" : 122,
+      "longReplyAccepted" : true,
+      "memory.availableGB" : 5.3866728000000004,
+      "memory.footprintGB" : 3.2032617920000002,
+      "model" : "e4b",
+      "outputTokens" : 52,
+      "prefillTokPerSec" : 1312.9044588547856,
+      "recordedAt" : "2026-10-15T16:38:00Z",
+      "replyPrefix" : "The text is a repetitive list of 188 numbered sentences describing various aspects of life at a lighthouse, including we",
+      "telemetry" : {
+        "anomalies" : [
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.11199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.45699999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.31200001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.63
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "async_unavailable",
+            "message" : "async run requested; the GPU backend has no post-dispatch event",
+            "severity" : 0,
+            "t_ms" : 148772694.51199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772695.088
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772699.22
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148775403.567
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148776247.59900001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148778826.347
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148778826.73300001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148779083.405
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148782524.65599999
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148783453.44600001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148786274.53
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148786274.947
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148786564.315
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148791903.65099999
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148792748.30500001
+          }
+        ],
+        "anomalies_total" : 19,
+        "counters" : {
+          "anomalies" : 19,
+          "command_buffers" : 4374,
+          "compiled_models" : 46,
+          "context_switches" : 13,
+          "decode_allocations" : 4,
+          "embedding_lookups" : 18010,
+          "errors" : 0,
+          "gpu_partitions" : 26,
+          "gpu_waits" : 918,
+          "graph_nodes" : 108253,
+          "graph_nodes_cpu_delegate" : 24496,
+          "graph_nodes_gpu" : 81349,
+          "graph_nodes_undelegated" : 2408,
+          "host_lock_copies" : 1346,
+          "host_lock_copy_bytes" : 716689408,
+          "host_locks" : 4810,
+          "host_shadow_allocs" : 120,
+          "host_unlock_copies" : 3464,
+          "host_unlock_copy_bytes" : 1405377264,
+          "kv_copies" : 6,
+          "kv_copy_bytes" : 0,
+          "logit_masks" : 48,
+          "logits_near_ties" : 0,
+          "logits_nonfinite" : 0,
+          "logits_rows_checked" : 25,
+          "mask_fill_bytes" : 0,
+          "mask_fills" : 86,
+          "mtp_accepted" : 350,
+          "mtp_drafted" : 552,
+          "mtp_rounds" : 184,
+          "program_cache_hits" : 20,
+          "program_cache_misses" : 0,
+          "run_option_parses" : 0,
+          "runs_decode" : 58,
+          "runs_drafter" : 552,
+          "runs_other" : 0,
+          "runs_prefill" : 28,
+          "runs_verify" : 184,
+          "sampler_cpu" : 12,
+          "sampler_gpu" : 0,
+          "stop_cancelled" : 0,
+          "stop_eos" : 9,
+          "stop_kv_full" : 0,
+          "stop_max_tokens" : 4,
+          "stream_chunk_bytes" : 0,
+          "stream_chunks" : 229,
+          "tasks_scheduled" : 26,
+          "token_history_copies" : 28,
+          "tokens_decoded" : 580,
+          "tokens_prefilled" : 8814,
+          "weight_cache_hits" : 40,
+          "weight_cache_misses" : 0
+        },
+        "cpu" : {
+          "system_ms" : 1491,
+          "user_ms" : 22974.299999999999
+        },
+        "facts" : {
+          "gpu" : "Apple A19 Pro GPU, ML Drift family Apple10",
+          "gpu_async" : "unavailable: no post-dispatch event",
+          "gpu_wait_requested" : "active (benchmark mode)",
+          "metal_wait" : "active (busy-wait)",
+          "sampler" : "cpu (GPU sampler unavailable)"
+        },
+        "gauges" : {
+          "drafter.logits.entropy_nats" : {
+            "count" : 18,
+            "max" : 4.5720000000000001,
+            "mean" : 1.111,
+            "min" : 0.00016330000000000001,
+            "p10" : 0.0089149999999999993,
+            "p50" : 0.51780000000000004,
+            "p90" : 4.2850000000000001
+          },
+          "drafter.logits.max" : {
+            "count" : 18,
+            "max" : 25.620000000000001,
+            "mean" : 20.43,
+            "min" : 11.77,
+            "p10" : 16.030000000000001,
+            "p50" : 20.84,
+            "p90" : 24.670000000000002
+          },
+          "drafter.logits.top1_margin" : {
+            "count" : 18,
+            "max" : 11.44,
+            "mean" : 3.6150000000000002,
+            "min" : 0.2656,
+            "p10" : 0.3594,
+            "p50" : 2.8279999999999998,
+            "p90" : 6.7969999999999997
+          },
+          "drafter.logits.top1_prob" : {
+            "count" : 18,
+            "max" : 1,
+            "mean" : 0.76270000000000004,
+            "min" : 0.28320000000000001,
+            "p10" : 0.33629999999999999,
+            "p50" : 0.878,
+            "p90" : 0.99890000000000001
+          },
+          "logits.entropy_nats" : {
+            "count" : 7,
+            "max" : 1.2290000000000001,
+            "mean" : 0.32790000000000002,
+            "min" : 2.8269999999999999e-28,
+            "p10" : 2.8269999999999999e-28,
+            "p50" : 0.01371,
+            "p90" : 1.2290000000000001
+          },
+          "logits.max" : {
+            "count" : 7,
+            "max" : 28.920000000000002,
+            "mean" : 28.140000000000001,
+            "min" : 26.890000000000001,
+            "p10" : 26.890000000000001,
+            "p50" : 28.23,
+            "p90" : 28.920000000000002
+          },
+          "logits.top1_margin" : {
+            "count" : 7,
+            "max" : 65530,
+            "mean" : 9366,
+            "min" : 0.21879999999999999,
+            "p10" : 0.21879999999999999,
+            "p50" : 6.7190000000000003,
+            "p90" : 65530
+          },
+          "logits.top1_prob" : {
+            "count" : 7,
+            "max" : 1,
+            "mean" : 0.86539999999999995,
+            "min" : 0.5504,
+            "p10" : 0.5504,
+            "p50" : 0.99839999999999995,
+            "p90" : 1
+          }
+        },
+        "level" : 2,
+        "memory" : {
+          "available_mb" : 5386.6999999999998,
+          "footprint_mb" : 3203.3000000000002,
+          "graphics_footprint_mb" : 2340.6999999999998,
+          "peak_footprint_mb" : 3728.9000000000001
+        },
+        "schema" : 1,
+        "spans" : {
+          "CompiledModel Buffer Allocation" : {
+            "count" : 21078,
+            "max_us" : 2355.04,
+            "mean_us" : 0.40999999999999998,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.11,
+            "total_ms" : 8.7400000000000002
+          },
+          "CompiledModel Buffer Registration" : {
+            "count" : 60806,
+            "max_us" : 69.420000000000002,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.11,
+            "p99_us" : 0.38,
+            "total_ms" : 5.9649999999999999
+          },
+          "CompiledModel Creation" : {
+            "count" : 92,
+            "max_us" : 1224138.75,
+            "mean_us" : 70768.770000000004,
+            "p50_us" : 655.36000000000001,
+            "p90_us" : 29360.130000000001,
+            "p99_us" : 1073741.8200000001,
+            "total_ms" : 6510.7269999999999
+          },
+          "CompiledModel Delegate Graph Conversion" : {
+            "count" : 46,
+            "max_us" : 630018.5,
+            "mean_us" : 52850.32,
+            "p50_us" : 131.06999999999999,
+            "p90_us" : 16777.220000000001,
+            "p99_us" : 536870.91000000003,
+            "total_ms" : 2431.1149999999998
+          },
+          "CompiledModel Destruction" : {
+            "count" : 30,
+            "max_us" : 111503.71000000001,
+            "mean_us" : 6509.5200000000004,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 2097.1500000000001,
+            "p99_us" : 100663.3,
+            "total_ms" : 195.286
+          },
+          "CompiledModel Graph Conversion" : {
+            "count" : 46,
+            "max_us" : 1.79,
+            "mean_us" : 0.51000000000000001,
+            "p50_us" : 0.32000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 1.54,
+            "total_ms" : 0.024
+          },
+          "CompiledModel Graph Loading" : {
+            "count" : 46,
+            "max_us" : 2326,
+            "mean_us" : 194.31,
+            "p50_us" : 16.379999999999999,
+            "p90_us" : 163.84,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 8.9380000000000006
+          },
+          "CompiledModel Inference" : {
+            "count" : 21024,
+            "max_us" : 746083.75,
+            "mean_us" : 852.64999999999998,
+            "p50_us" : 4.0999999999999996,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 33554.43,
+            "total_ms" : 17926.133999999998
+          },
+          "CompiledModel Invoke" : {
+            "count" : 21024,
+            "max_us" : 746041.17000000004,
+            "mean_us" : 851.50999999999999,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 33554.43,
+            "total_ms" : 17902.091
+          },
+          "CompiledModel Runtime Initialization" : {
+            "count" : 46,
+            "max_us" : 16253.17,
+            "mean_us" : 2688.3499999999999,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 12582.91,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 123.664
+          },
+          "CompiledModel TFLite Graph Conversion" : {
+            "count" : 46,
+            "max_us" : 16219.17,
+            "mean_us" : 2647,
+            "p50_us" : 229.38,
+            "p90_us" : 12582.91,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 121.762
+          },
+          "constraint" : {
+            "count" : 48,
+            "max_us" : 2897.96,
+            "mean_us" : 674.26999999999998,
+            "p50_us" : 524.28999999999996,
+            "p90_us" : 655.36000000000001,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 32.365000000000002
+          },
+          "context_switch" : {
+            "count" : 13,
+            "max_us" : 107783.21000000001,
+            "mean_us" : 21325.84,
+            "p50_us" : 2.5600000000000001,
+            "p90_us" : 83886.080000000002,
+            "p99_us" : 100663.3,
+            "total_ms" : 277.23599999999999
+          },
+          "decode.step" : {
+            "count" : 232,
+            "max_us" : 154574.45999999999,
+            "mean_us" : 45964.209999999999,
+            "p50_us" : 41943.040000000001,
+            "p90_us" : 41943.040000000001,
+            "p99_us" : 83886.080000000002,
+            "total_ms" : 10663.698
+          },
+          "detokenize" : {
+            "count" : 586,
+            "max_us" : 6,
+            "mean_us" : 2.3199999999999998,
+            "p50_us" : 1.79,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 1.357
+          },
+          "embedding_lookup" : {
+            "count" : 438,
+            "max_us" : 8624.0400000000009,
+            "mean_us" : 239.25,
+            "p50_us" : 24.579999999999998,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 6291.46,
+            "total_ms" : 104.79300000000001
+          },
+          "gpu.decode" : {
+            "count" : 748,
+            "max_us" : 12683.620000000001,
+            "mean_us" : 2847.3600000000001,
+            "p50_us" : 3670.02,
+            "p90_us" : 6291.46,
+            "p99_us" : 8388.6100000000006,
+            "total_ms" : 2129.8240000000001
+          },
+          "gpu.drafter" : {
+            "count" : 1663,
+            "max_us" : 17270.880000000001,
+            "mean_us" : 397.49000000000001,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 1048.5799999999999,
+            "p99_us" : 1310.72,
+            "total_ms" : 661.02999999999997
+          },
+          "gpu.prefill" : {
+            "count" : 252,
+            "max_us" : 158372.07999999999,
+            "mean_us" : 28882.439999999999,
+            "p50_us" : 16777.220000000001,
+            "p90_us" : 83886.080000000002,
+            "p99_us" : 117440.50999999999,
+            "total_ms" : 7278.375
+          },
+          "gpu.queue_delay" : {
+            "count" : 4374,
+            "max_us" : 706020.5,
+            "mean_us" : 13343.75,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 29360.130000000001,
+            "p99_us" : 134217.73000000001,
+            "total_ms" : 58365.582000000002
+          },
+          "gpu.verify" : {
+            "count" : 1649,
+            "max_us" : 14444.5,
+            "mean_us" : 4439.2299999999996,
+            "p50_us" : 4194.3000000000002,
+            "p90_us" : 8388.6100000000006,
+            "p99_us" : 10485.76,
+            "total_ms" : 7320.2939999999999
+          },
+          "gpu.wait.decode" : {
+            "count" : 890,
+            "max_us" : 74326.75,
+            "mean_us" : 11419.940000000001,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 33554.43,
+            "p99_us" : 41943.040000000001,
+            "total_ms" : 10163.743
+          },
+          "gpu.wait.prefill" : {
+            "count" : 28,
+            "max_us" : 744834.29000000004,
+            "mean_us" : 259799.64999999999,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 671088.64000000001,
+            "total_ms" : 7274.3900000000003
+          },
+          "host.lock_read" : {
+            "count" : 1346,
+            "max_us" : 301.67000000000002,
+            "mean_us" : 21.32,
+            "p50_us" : 10.24,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 131.06999999999999,
+            "total_ms" : 28.696999999999999
+          },
+          "host.read 10240 B" : {
+            "count" : 378,
+            "max_us" : 2,
+            "mean_us" : 0.5,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.64000000000000001,
+            "p99_us" : 1.28,
+            "total_ms" : 0.189
+          },
+          "host.read 40960 B" : {
+            "count" : 174,
+            "max_us" : 42.670000000000002,
+            "mean_us" : 2.9199999999999999,
+            "p50_us" : 1.02,
+            "p90_us" : 3.0699999999999998,
+            "p99_us" : 32.770000000000003,
+            "total_ms" : 0.50800000000000001
+          },
+          "host.read 524288 B (direct)" : {
+            "count" : 610,
+            "max_us" : 71.290000000000006,
+            "mean_us" : 12.4,
+            "p50_us" : 10.24,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 49.149999999999999,
+            "total_ms" : 7.5650000000000004
+          },
+          "host.read 2097152 B (direct)" : {
+            "count" : 184,
+            "max_us" : 299.57999999999998,
+            "mean_us" : 110.22,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 114.69,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 20.280000000000001
+          },
+          "host.unlock_write" : {
+            "count" : 3464,
+            "max_us" : 4286.3800000000001,
+            "mean_us" : 16.789999999999999,
+            "p50_us" : 0.51000000000000001,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 458.75,
+            "total_ms" : 58.170000000000002
+          },
+          "host.write 4 B" : {
+            "count" : 242,
+            "max_us" : 2.71,
+            "mean_us" : 0.19,
+            "p50_us" : 0.16,
+            "p90_us" : 0.26000000000000001,
+            "p99_us" : 1.28,
+            "total_ms" : 0.047
+          },
+          "host.write 16 B" : {
+            "count" : 184,
+            "max_us" : 0.57999999999999996,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.16,
+            "p99_us" : 0.38,
+            "total_ms" : 0.017999999999999999
+          },
+          "host.write 28 B (direct)" : {
+            "count" : 454,
+            "max_us" : 4.3799999999999999,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0.040000000000000001,
+            "p90_us" : 0.11,
+            "p99_us" : 1.02,
+            "total_ms" : 0.042999999999999997
+          },
+          "host.write 512 B" : {
+            "count" : 21,
+            "max_us" : 5,
+            "mean_us" : 0.46999999999999997,
+            "p50_us" : 0.19,
+            "p90_us" : 0.64000000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.01
+          },
+          "host.write 4096 B" : {
+            "count" : 165,
+            "max_us" : 1.8799999999999999,
+            "mean_us" : 0.20000000000000001,
+            "p50_us" : 0.11,
+            "p90_us" : 0.32000000000000001,
+            "p99_us" : 1.28,
+            "total_ms" : 0.033000000000000002
+          },
+          "host.write 8192 B" : {
+            "count" : 172,
+            "max_us" : 2.3799999999999999,
+            "mean_us" : 0.26000000000000001,
+            "p50_us" : 0.19,
+            "p90_us" : 0.38,
+            "p99_us" : 1.02,
+            "total_ms" : 0.044999999999999998
+          },
+          "host.write 10240 B" : {
+            "count" : 58,
+            "max_us" : 7.3799999999999999,
+            "mean_us" : 0.70999999999999996,
+            "p50_us" : 0.32000000000000001,
+            "p90_us" : 1.54,
+            "p99_us" : 7.1699999999999999,
+            "total_ms" : 0.041000000000000002
+          },
+          "host.write 16384 B" : {
+            "count" : 274,
+            "max_us" : 3.25,
+            "mean_us" : 0.47999999999999998,
+            "p50_us" : 0.38,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 1.54,
+            "total_ms" : 0.13100000000000001
+          },
+          "host.write 20480 B" : {
+            "count" : 552,
+            "max_us" : 19.420000000000002,
+            "mean_us" : 0.65000000000000002,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.35699999999999998
+          },
+          "host.write 32768 B" : {
+            "count" : 128,
+            "max_us" : 11.5,
+            "mean_us" : 0.81000000000000005,
+            "p50_us" : 0.64000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 2.5600000000000001,
+            "total_ms" : 0.104
+          },
+          "host.write 40960 B" : {
+            "count" : 552,
+            "max_us" : 7.25,
+            "mean_us" : 0.85999999999999999,
+            "p50_us" : 0.77000000000000002,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 3.0699999999999998,
+            "total_ms" : 0.47199999999999998
+          },
+          "host.write 43008 B" : {
+            "count" : 58,
+            "max_us" : 6.4199999999999999,
+            "mean_us" : 1.6599999999999999,
+            "p50_us" : 1.02,
+            "p90_us" : 3.0699999999999998,
+            "p99_us" : 6.1399999999999997,
+            "total_ms" : 0.096000000000000002
+          },
+          "host.write 65536 B" : {
+            "count" : 120,
+            "max_us" : 4.79,
+            "mean_us" : 1.3899999999999999,
+            "p50_us" : 1.28,
+            "p90_us" : 1.28,
+            "p99_us" : 1.54,
+            "total_ms" : 0.16700000000000001
+          },
+          "host.write 172032 B" : {
+            "count" : 184,
+            "max_us" : 15.25,
+            "mean_us" : 4.2999999999999998,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 10.24,
+            "total_ms" : 0.79200000000000004
+          },
+          "host.write 524288 B" : {
+            "count" : 110,
+            "max_us" : 55.539999999999999,
+            "mean_us" : 14.59,
+            "p50_us" : 10.24,
+            "p90_us" : 14.34,
+            "p99_us" : 40.960000000000001,
+            "total_ms" : 1.6040000000000001
+          },
+          "host.write 1048576 B" : {
+            "count" : 14,
+            "max_us" : 93.790000000000006,
+            "mean_us" : 43.93,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 0.61499999999999999
+          },
+          "host.write 1310720 B" : {
+            "count" : 77,
+            "max_us" : 159.12,
+            "mean_us" : 42.469999999999999,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 131.06999999999999,
+            "total_ms" : 3.27
+          },
+          "host.write 2097152 B" : {
+            "count" : 14,
+            "max_us" : 270.82999999999998,
+            "mean_us" : 107.94,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 131.06999999999999,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 1.5109999999999999
+          },
+          "host.write 4194304 B" : {
+            "count" : 2,
+            "max_us" : 295.62,
+            "mean_us" : 202.71000000000001,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 262.13999999999999,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 0.40500000000000003
+          },
+          "host.write 5505024 B" : {
+            "count" : 35,
+            "max_us" : 621.38,
+            "mean_us" : 248.21000000000001,
+            "p50_us" : 163.84,
+            "p90_us" : 458.75,
+            "p99_us" : 524.28999999999996,
+            "total_ms" : 8.6869999999999994
+          },
+          "host.write 8388608 B" : {
+            "count" : 4,
+            "max_us" : 941.21000000000004,
+            "mean_us" : 385.16000000000003,
+            "p50_us" : 163.84,
+            "p90_us" : 917.5,
+            "p99_us" : 917.5,
+            "total_ms" : 1.5409999999999999
+          },
+          "host.write 10485760 B" : {
+            "count" : 25,
+            "max_us" : 1078.1700000000001,
+            "mean_us" : 501.33999999999997,
+            "p50_us" : 458.75,
+            "p90_us" : 655.36000000000001,
+            "p99_us" : 1048.5799999999999,
+            "total_ms" : 12.534000000000001
+          },
+          "host.write 16777216 B" : {
+            "count" : 8,
+            "max_us" : 1804.54,
+            "mean_us" : 664.04999999999995,
+            "p50_us" : 458.75,
+            "p90_us" : 1572.8599999999999,
+            "p99_us" : 1572.8599999999999,
+            "total_ms" : 5.3120000000000003
+          },
+          "host.write 44040192 B" : {
+            "count" : 11,
+            "max_us" : 4285.8299999999999,
+            "mean_us" : 1824.74,
+            "p50_us" : 1310.72,
+            "p90_us" : 2621.4400000000001,
+            "p99_us" : 4194.3000000000002,
+            "total_ms" : 20.071999999999999
+          },
+          "kv_clone" : {
+            "count" : 6,
+            "max_us" : 101491.42,
+            "mean_us" : 44513.650000000001,
+            "p50_us" : 20971.52,
+            "p90_us" : 100663.3,
+            "p99_us" : 100663.3,
+            "total_ms" : 267.08199999999999
+          },
+          "LiteRT Graph Loading From Buffer" : {
+            "count" : 54,
+            "max_us" : 153778.5,
+            "mean_us" : 15786.16,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 29360.130000000001,
+            "p99_us" : 134217.73000000001,
+            "total_ms" : 852.452
+          },
+          "LiteRT Model Destruction" : {
+            "count" : 30,
+            "max_us" : 3350,
+            "mean_us" : 353.19,
+            "p50_us" : 7.1699999999999999,
+            "p90_us" : 917.5,
+            "p99_us" : 3145.73,
+            "total_ms" : 10.596
+          },
+          "LiteRT TensorBuffer Allocation" : {
+            "count" : 602,
+            "max_us" : 40.670000000000002,
+            "mean_us" : 4.5599999999999996,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 24.579999999999998,
+            "total_ms" : 2.7429999999999999
+          },
+          "LiteRT TensorBuffer Destruction" : {
+            "count" : 75194,
+            "max_us" : 548.41999999999996,
+            "mean_us" : 0.17000000000000001,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.040000000000000001,
+            "total_ms" : 13.154
+          },
+          "logits_readback" : {
+            "count" : 58,
+            "max_us" : 0.95999999999999996,
+            "mean_us" : 0.19,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.38,
+            "p99_us" : 0.90000000000000002,
+            "total_ms" : 0.010999999999999999
+          },
+          "mask_fill" : {
+            "count" : 58,
+            "max_us" : 6,
+            "mean_us" : 1.3999999999999999,
+            "p50_us" : 1.02,
+            "p90_us" : 2.0499999999999998,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.081000000000000003
+          },
+          "param_fill" : {
+            "count" : 58,
+            "max_us" : 4.29,
+            "mean_us" : 0.47999999999999998,
+            "p50_us" : 0.26000000000000001,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.028000000000000001
+          },
+          "prefill.chunk" : {
+            "count" : 28,
+            "max_us" : 761194.42000000004,
+            "mean_us" : 267908.77000000002,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 671088.64000000001,
+            "p99_us" : 671088.64000000001,
+            "total_ms" : 7501.4459999999999
+          },
+          "prefill.embedding_lookup" : {
+            "count" : 84,
+            "max_us" : 17452.330000000002,
+            "mean_us" : 1551.71,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 4194.3000000000002,
+            "p99_us" : 16777.220000000001,
+            "total_ms" : 130.34399999999999
+          },
+          "prefill.mask_fill" : {
+            "count" : 28,
+            "max_us" : 1317.9200000000001,
+            "mean_us" : 232.47999999999999,
+            "p50_us" : 65.540000000000006,
+            "p90_us" : 786.42999999999995,
+            "p99_us" : 1310.72,
+            "total_ms" : 6.5090000000000003
+          },
+          "prefill.param_fill" : {
+            "count" : 28,
+            "max_us" : 5.3799999999999999,
+            "mean_us" : 1.51,
+            "p50_us" : 0.90000000000000002,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.042000000000000003
+          },
+          "run.decode" : {
+            "count" : 58,
+            "max_us" : 66927.419999999998,
+            "mean_us" : 37227.080000000002,
+            "p50_us" : 33554.43,
+            "p90_us" : 33554.43,
+            "p99_us" : 58720.260000000002,
+            "total_ms" : 2159.1709999999998
+          },
+          "run.drafter" : {
+            "count" : 552,
+            "max_us" : 8031.8299999999999,
+            "mean_us" : 1358.04,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 1310.72,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 749.63800000000003
+          },
+          "run.prefill" : {
+            "count" : 28,
+            "max_us" : 746089.25,
+            "mean_us" : 261994.79999999999,
+            "p50_us" : 117440.50999999999,
+            "p90_us" : 536870.91000000003,
+            "p99_us" : 671088.64000000001,
+            "total_ms" : 7335.8540000000003
+          },
+          "run.verify" : {
+            "count" : 184,
+            "max_us" : 77082.830000000002,
+            "mean_us" : 40832.410000000003,
+            "p50_us" : 33554.43,
+            "p90_us" : 41943.040000000001,
+            "p99_us" : 67108.860000000001,
+            "total_ms" : 7513.1629999999996
+          },
+          "sample" : {
+            "count" : 58,
+            "max_us" : 845.71000000000004,
+            "mean_us" : 106.64,
+            "p50_us" : 40.960000000000001,
+            "p90_us" : 114.69,
+            "p99_us" : 786.42999999999995,
+            "total_ms" : 6.1849999999999996
+          },
+          "session_wait" : {
+            "count" : 51,
+            "max_us" : 928400.29000000004,
+            "mean_us" : 74787.490000000005,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 201326.59,
+            "p99_us" : 805306.37,
+            "total_ms" : 3814.1619999999998
+          },
+          "stream_callback" : {
+            "count" : 229,
+            "max_us" : 161.66999999999999,
+            "mean_us" : 28.82,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 32.770000000000003,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 6.5999999999999996
+          },
+          "task.callback" : {
+            "count" : 26,
+            "max_us" : 97.829999999999998,
+            "mean_us" : 43.909999999999997,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 65.540000000000006,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 1.1419999999999999
+          },
+          "task.queue_wait" : {
+            "count" : 26,
+            "max_us" : 30.789999999999999,
+            "mean_us" : 11.84,
+            "p50_us" : 8.1899999999999995,
+            "p90_us" : 20.48,
+            "p99_us" : 28.670000000000002,
+            "total_ms" : 0.308
+          },
+          "template" : {
+            "count" : 13,
+            "max_us" : 13.08,
+            "mean_us" : 5.0700000000000003,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 12.289999999999999,
+            "total_ms" : 0.066000000000000003
+          },
+          "tokenize" : {
+            "count" : 13,
+            "max_us" : 2842.9200000000001,
+            "mean_us" : 490.77999999999997,
+            "p50_us" : 65.540000000000006,
+            "p90_us" : 1310.72,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 6.3799999999999999
+          },
+          "turn.decode" : {
+            "count" : 13,
+            "max_us" : 1705506.21,
+            "mean_us" : 820834.06000000006,
+            "p50_us" : 536870.91000000003,
+            "p90_us" : 1610612.74,
+            "p99_us" : 1610612.74,
+            "total_ms" : 10670.843000000001
+          },
+          "turn.prefill" : {
+            "count" : 13,
+            "max_us" : 3327268.9199999999,
+            "mean_us" : 577107,
+            "p50_us" : 201326.59,
+            "p90_us" : 1342177.28,
+            "p99_us" : 3221225.4700000002,
+            "total_ms" : 7502.3909999999996
+          }
+        }
+      },
+      "thermalStateAfterFollowUp" : 0,
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 3.3498248637500003,
+      "window" : 16384
+    },
+    "calibration_e4b_32768" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 3.479361656,
+      "decodeTokPerSec" : 42.207085373610482,
+      "effectiveWindow" : 32768,
+      "footprintAfterFollowUpGB" : 5.0319788880000003,
+      "footprintAfterLoadGB" : 4.0816896639999998,
+      "footprintPeakGB" : 5.1105729359999996,
+      "inputTokens" : 8607,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=32768 thinking=off in 1.5s (footprint 4.08 GB, available 4.51 GB)"
+      ],
+      "longDecodeTokPerSec" : 65.404402729966478,
+      "longOutputTokens" : 124,
+      "longReplyAccepted" : true,
+      "memory.availableGB" : 3.5579557039999998,
+      "memory.footprintGB" : 5.0319788880000003,
+      "model" : "e4b",
+      "outputTokens" : 54,
+      "prefillTokPerSec" : 1143.0985356929173,
+      "recordedAt" : "2026-10-15T16:38:14Z",
+      "replyPrefix" : "The text is a repetitive list of 374 numbered sentences describing various aspects of a lighthouse keeper's life, includ",
+      "telemetry" : {
+        "anomalies" : [
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.11199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772300.45699999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.31200001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772314.63
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "async_unavailable",
+            "message" : "async run requested; the GPU backend has no post-dispatch event",
+            "severity" : 0,
+            "t_ms" : 148772694.51199999
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772695.088
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148772699.22
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148775403.567
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148776247.59900001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148778826.347
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148778826.73300001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148779083.405
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148782524.65599999
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148783453.44600001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148786274.53
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148786274.947
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148786564.315
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148791903.65099999
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148792748.30500001
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148796017.197
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148796017.616
+          },
+          {
+            "a" : 262144,
+            "b" : 1,
+            "code" : "sampler_fallback_to_cpu",
+            "message" : "GPU sampler unavailable: sampling on the CPU (full logits readback per step)",
+            "severity" : 1,
+            "t_ms" : 148796366.83000001
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148806107.14399999
+          },
+          {
+            "a" : 0,
+            "b" : 0,
+            "code" : "kv_context_switch",
+            "message" : "executor switched sessions: KV snapshot and restore",
+            "severity" : 0,
+            "t_ms" : 148807090.82600001
+          }
+        ],
+        "anomalies_total" : 24,
+        "counters" : {
+          "anomalies" : 24,
+          "command_buffers" : 5817,
+          "compiled_models" : 58,
+          "context_switches" : 17,
+          "decode_allocations" : 5,
+          "embedding_lookups" : 35886,
+          "errors" : 0,
+          "gpu_partitions" : 33,
+          "gpu_waits" : 1215,
+          "graph_nodes" : 135317,
+          "graph_nodes_cpu_delegate" : 30620,
+          "graph_nodes_gpu" : 101687,
+          "graph_nodes_undelegated" : 3010,
+          "host_lock_copies" : 1776,
+          "host_lock_copy_bytes" : 945666048,
+          "host_locks" : 6409,
+          "host_shadow_allocs" : 152,
+          "host_unlock_copies" : 4633,
+          "host_unlock_copy_bytes" : 3153875028,
+          "kv_copies" : 8,
+          "kv_copy_bytes" : 0,
+          "logit_masks" : 62,
+          "logits_near_ties" : 0,
+          "logits_nonfinite" : 0,
+          "logits_rows_checked" : 33,
+          "mask_fill_bytes" : 0,
+          "mask_fills" : 119,
+          "mtp_accepted" : 473,
+          "mtp_drafted" : 729,
+          "mtp_rounds" : 243,
+          "program_cache_hits" : 25,
+          "program_cache_misses" : 0,
+          "run_option_parses" : 0,
+          "runs_decode" : 75,
+          "runs_drafter" : 729,
+          "runs_other" : 0,
+          "runs_prefill" : 44,
+          "runs_verify" : 243,
+          "sampler_cpu" : 15,
+          "sampler_gpu" : 0,
+          "stop_cancelled" : 0,
+          "stop_eos" : 12,
+          "stop_kv_full" : 0,
+          "stop_max_tokens" : 5,
+          "stream_chunk_bytes" : 0,
+          "stream_chunks" : 301,
+          "tasks_scheduled" : 34,
+          "token_history_copies" : 44,
+          "tokens_decoded" : 777,
+          "tokens_prefilled" : 17699,
+          "weight_cache_hits" : 50,
+          "weight_cache_misses" : 0
+        },
+        "cpu" : {
+          "system_ms" : 2290.0999999999999,
+          "user_ms" : 36782
+        },
+        "facts" : {
+          "gpu" : "Apple A19 Pro GPU, ML Drift family Apple10",
+          "gpu_async" : "unavailable: no post-dispatch event",
+          "gpu_wait_requested" : "active (benchmark mode)",
+          "metal_wait" : "active (busy-wait)",
+          "sampler" : "cpu (GPU sampler unavailable)"
+        },
+        "gauges" : {
+          "drafter.logits.entropy_nats" : {
+            "count" : 25,
+            "max" : 4.5720000000000001,
+            "mean" : 1.0209999999999999,
+            "min" : 0.00016330000000000001,
+            "p10" : 0.0089149999999999993,
+            "p50" : 0.51780000000000004,
+            "p90" : 2.593
+          },
+          "drafter.logits.max" : {
+            "count" : 25,
+            "max" : 25.620000000000001,
+            "mean" : 20.91,
+            "min" : 11.77,
+            "p10" : 16.690000000000001,
+            "p50" : 21.609999999999999,
+            "p90" : 24.670000000000002
+          },
+          "drafter.logits.top1_margin" : {
+            "count" : 25,
+            "max" : 11.44,
+            "mean" : 4.0449999999999999,
+            "min" : 0.2656,
+            "p10" : 0.4219,
+            "p50" : 3.859,
+            "p90" : 8.5389999999999997
+          },
+          "drafter.logits.top1_prob" : {
+            "count" : 25,
+            "max" : 1,
+            "mean" : 0.78569999999999995,
+            "min" : 0.28320000000000001,
+            "p10" : 0.43120000000000003,
+            "p50" : 0.90869999999999995,
+            "p90" : 0.99890000000000001
+          },
+          "logits.entropy_nats" : {
+            "count" : 8,
+            "max" : 1.2290000000000001,
+            "mean" : 0.36349999999999999,
+            "min" : 2.8269999999999999e-28,
+            "p10" : 2.8269999999999999e-28,
+            "p50" : 0.01371,
+            "p90" : 1.2290000000000001
+          },
+          "logits.max" : {
+            "count" : 8,
+            "max" : 28.920000000000002,
+            "mean" : 25.940000000000001,
+            "min" : 10.57,
+            "p10" : 10.57,
+            "p50" : 28.09,
+            "p90" : 28.920000000000002
+          },
+          "logits.top1_margin" : {
+            "count" : 8,
+            "max" : 65530,
+            "mean" : 8195,
+            "min" : 0.21879999999999999,
+            "p10" : 0.21879999999999999,
+            "p50" : 2.6560000000000001,
+            "p90" : 65530
+          },
+          "logits.top1_prob" : {
+            "count" : 8,
+            "max" : 1,
+            "mean" : 0.84450000000000003,
+            "min" : 0.5504,
+            "p10" : 0.5504,
+            "p50" : 0.92359999999999998,
+            "p90" : 1
+          }
+        },
+        "level" : 2,
+        "memory" : {
+          "available_mb" : 3558,
+          "footprint_mb" : 5032,
+          "graphics_footprint_mb" : 3014.1999999999998,
+          "peak_footprint_mb" : 6068.1999999999998
+        },
+        "schema" : 1,
+        "spans" : {
+          "CompiledModel Buffer Allocation" : {
+            "count" : 39950,
+            "max_us" : 2355.04,
+            "mean_us" : 0.28999999999999998,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.11,
+            "total_ms" : 11.465
+          },
+          "CompiledModel Buffer Registration" : {
+            "count" : 104808,
+            "max_us" : 69.420000000000002,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.11,
+            "p99_us" : 0.38,
+            "total_ms" : 10.298
+          },
+          "CompiledModel Creation" : {
+            "count" : 116,
+            "max_us" : 1224138.75,
+            "mean_us" : 70639.75,
+            "p50_us" : 655.36000000000001,
+            "p90_us" : 29360.130000000001,
+            "p99_us" : 671088.64000000001,
+            "total_ms" : 8194.2109999999993
+          },
+          "CompiledModel Delegate Graph Conversion" : {
+            "count" : 58,
+            "max_us" : 761213.25,
+            "mean_us" : 55560.050000000003,
+            "p50_us" : 163.84,
+            "p90_us" : 16777.220000000001,
+            "p99_us" : 671088.64000000001,
+            "total_ms" : 3222.4830000000002
+          },
+          "CompiledModel Destruction" : {
+            "count" : 42,
+            "max_us" : 113075.38,
+            "mean_us" : 7492.1400000000003,
+            "p50_us" : 40.960000000000001,
+            "p90_us" : 2097.1500000000001,
+            "p99_us" : 100663.3,
+            "total_ms" : 314.67000000000002
+          },
+          "CompiledModel Graph Conversion" : {
+            "count" : 58,
+            "max_us" : 1.79,
+            "mean_us" : 0.56999999999999995,
+            "p50_us" : 0.38,
+            "p90_us" : 1.02,
+            "p99_us" : 1.54,
+            "total_ms" : 0.033000000000000002
+          },
+          "CompiledModel Graph Loading" : {
+            "count" : 58,
+            "max_us" : 3913.79,
+            "mean_us" : 234.30000000000001,
+            "p50_us" : 16.379999999999999,
+            "p90_us" : 393.22000000000003,
+            "p99_us" : 3670.02,
+            "total_ms" : 13.59
+          },
+          "CompiledModel Inference" : {
+            "count" : 39882,
+            "max_us" : 967615.29000000004,
+            "mean_us" : 743.40999999999997,
+            "p50_us" : 4.0999999999999996,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 1835.01,
+            "total_ms" : 29648.674999999999
+          },
+          "CompiledModel Invoke" : {
+            "count" : 39882,
+            "max_us" : 967575.5,
+            "mean_us" : 742.39999999999998,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 1835.01,
+            "total_ms" : 29608.361000000001
+          },
+          "CompiledModel Runtime Initialization" : {
+            "count" : 58,
+            "max_us" : 16253.17,
+            "mean_us" : 2700.5799999999999,
+            "p50_us" : 262.13999999999999,
+            "p90_us" : 12582.91,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 156.63300000000001
+          },
+          "CompiledModel TFLite Graph Conversion" : {
+            "count" : 58,
+            "max_us" : 16219.17,
+            "mean_us" : 2659.8899999999999,
+            "p50_us" : 229.38,
+            "p90_us" : 12582.91,
+            "p99_us" : 14680.059999999999,
+            "total_ms" : 154.274
+          },
+          "constraint" : {
+            "count" : 62,
+            "max_us" : 3110.79,
+            "mean_us" : 687.47000000000003,
+            "p50_us" : 524.28999999999996,
+            "p90_us" : 655.36000000000001,
+            "p99_us" : 2621.4400000000001,
+            "total_ms" : 42.622999999999998
+          },
+          "context_switch" : {
+            "count" : 17,
+            "max_us" : 197645.32999999999,
+            "mean_us" : 37360.900000000001,
+            "p50_us" : 5.1200000000000001,
+            "p90_us" : 134217.73000000001,
+            "p99_us" : 167772.16,
+            "total_ms" : 635.13499999999999
+          },
+          "decode.step" : {
+            "count" : 305,
+            "max_us" : 154574.45999999999,
+            "mean_us" : 47478.699999999997,
+            "p50_us" : 41943.040000000001,
+            "p90_us" : 50331.650000000001,
+            "p99_us" : 83886.080000000002,
+            "total_ms" : 14481.004000000001
+          },
+          "detokenize" : {
+            "count" : 784,
+            "max_us" : 9.0800000000000001,
+            "mean_us" : 2.5099999999999998,
+            "p50_us" : 1.79,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 7.1699999999999999,
+            "total_ms" : 1.9690000000000001
+          },
+          "embedding_lookup" : {
+            "count" : 576,
+            "max_us" : 8624.0400000000009,
+            "mean_us" : 212.75,
+            "p50_us" : 24.579999999999998,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 5242.8800000000001,
+            "total_ms" : 122.54300000000001
+          },
+          "gpu.decode" : {
+            "count" : 965,
+            "max_us" : 12683.620000000001,
+            "mean_us" : 2846.9899999999998,
+            "p50_us" : 3670.02,
+            "p90_us" : 6291.46,
+            "p99_us" : 7340.0299999999997,
+            "total_ms" : 2747.3440000000001
+          },
+          "gpu.drafter" : {
+            "count" : 2194,
+            "max_us" : 17270.880000000001,
+            "mean_us" : 414.41000000000003,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 1048.5799999999999,
+            "p99_us" : 1572.8599999999999,
+            "total_ms" : 909.21600000000001
+          },
+          "gpu.prefill" : {
+            "count" : 396,
+            "max_us" : 179679.5,
+            "mean_us" : 38109.68,
+            "p50_us" : 16777.220000000001,
+            "p90_us" : 117440.50999999999,
+            "p99_us" : 167772.16,
+            "total_ms" : 15091.433999999999
+          },
+          "gpu.queue_delay" : {
+            "count" : 5817,
+            "max_us" : 922322.75,
+            "mean_us" : 16770.799999999999,
+            "p50_us" : 1048.5799999999999,
+            "p90_us" : 33554.43,
+            "p99_us" : 268435.46000000002,
+            "total_ms" : 97555.767999999996
+          },
+          "gpu.verify" : {
+            "count" : 2180,
+            "max_us" : 18490.209999999999,
+            "mean_us" : 4615.6599999999999,
+            "p50_us" : 4194.3000000000002,
+            "p90_us" : 8388.6100000000006,
+            "p99_us" : 10485.76,
+            "total_ms" : 10062.134
+          },
+          "gpu.wait.decode" : {
+            "count" : 1171,
+            "max_us" : 74326.75,
+            "mean_us" : 11796.34,
+            "p50_us" : 1310.72,
+            "p90_us" : 33554.43,
+            "p99_us" : 50331.650000000001,
+            "total_ms" : 13813.509
+          },
+          "gpu.wait.prefill" : {
+            "count" : 44,
+            "max_us" : 966326.67000000004,
+            "mean_us" : 343890.35999999999,
+            "p50_us" : 134217.73000000001,
+            "p90_us" : 805306.37,
+            "p99_us" : 939524.09999999998,
+            "total_ms" : 15131.175999999999
+          },
+          "host.lock_read" : {
+            "count" : 1776,
+            "max_us" : 301.67000000000002,
+            "mean_us" : 21.489999999999998,
+            "p50_us" : 10.24,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 131.06999999999999,
+            "total_ms" : 38.173999999999999
+          },
+          "host.read 10240 B" : {
+            "count" : 499,
+            "max_us" : 2,
+            "mean_us" : 0.51000000000000001,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.64000000000000001,
+            "p99_us" : 1.28,
+            "total_ms" : 0.255
+          },
+          "host.read 40960 B" : {
+            "count" : 230,
+            "max_us" : 42.670000000000002,
+            "mean_us" : 3.0699999999999998,
+            "p50_us" : 1.02,
+            "p90_us" : 3.0699999999999998,
+            "p99_us" : 32.770000000000003,
+            "total_ms" : 0.70699999999999996
+          },
+          "host.read 524288 B (direct)" : {
+            "count" : 804,
+            "max_us" : 71.290000000000006,
+            "mean_us" : 12.67,
+            "p50_us" : 10.24,
+            "p90_us" : 12.289999999999999,
+            "p99_us" : 40.960000000000001,
+            "total_ms" : 10.185
+          },
+          "host.read 2097152 B (direct)" : {
+            "count" : 243,
+            "max_us" : 299.57999999999998,
+            "mean_us" : 110.40000000000001,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 114.69,
+            "p99_us" : 229.38,
+            "total_ms" : 26.827000000000002
+          },
+          "host.unlock_write" : {
+            "count" : 4633,
+            "max_us" : 17319.380000000001,
+            "mean_us" : 32.579999999999998,
+            "p50_us" : 0.51000000000000001,
+            "p90_us" : 10.24,
+            "p99_us" : 786.42999999999995,
+            "total_ms" : 150.94900000000001
+          },
+          "host.write 4 B" : {
+            "count" : 318,
+            "max_us" : 2.71,
+            "mean_us" : 0.19,
+            "p50_us" : 0.16,
+            "p90_us" : 0.26000000000000001,
+            "p99_us" : 1.28,
+            "total_ms" : 0.060999999999999999
+          },
+          "host.write 16 B" : {
+            "count" : 243,
+            "max_us" : 0.57999999999999996,
+            "mean_us" : 0.10000000000000001,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.16,
+            "p99_us" : 0.45000000000000001,
+            "total_ms" : 0.024
+          },
+          "host.write 28 B (direct)" : {
+            "count" : 605,
+            "max_us" : 22.210000000000001,
+            "mean_us" : 0.14999999999999999,
+            "p50_us" : 0.040000000000000001,
+            "p90_us" : 0.16,
+            "p99_us" : 1.02,
+            "total_ms" : 0.089999999999999997
+          },
+          "host.write 512 B" : {
+            "count" : 29,
+            "max_us" : 5,
+            "mean_us" : 0.46000000000000002,
+            "p50_us" : 0.19,
+            "p90_us" : 0.90000000000000002,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.012999999999999999
+          },
+          "host.write 4096 B" : {
+            "count" : 173,
+            "max_us" : 5.1200000000000001,
+            "mean_us" : 0.23999999999999999,
+            "p50_us" : 0.11,
+            "p90_us" : 0.45000000000000001,
+            "p99_us" : 1.79,
+            "total_ms" : 0.041000000000000002
+          },
+          "host.write 8192 B" : {
+            "count" : 172,
+            "max_us" : 2.3799999999999999,
+            "mean_us" : 0.26000000000000001,
+            "p50_us" : 0.19,
+            "p90_us" : 0.38,
+            "p99_us" : 1.02,
+            "total_ms" : 0.044999999999999998
+          },
+          "host.write 10240 B" : {
+            "count" : 75,
+            "max_us" : 7.3799999999999999,
+            "mean_us" : 0.68999999999999995,
+            "p50_us" : 0.32000000000000001,
+            "p90_us" : 0.90000000000000002,
+            "p99_us" : 7.1699999999999999,
+            "total_ms" : 0.051999999999999998
+          },
+          "host.write 16384 B" : {
+            "count" : 274,
+            "max_us" : 3.25,
+            "mean_us" : 0.47999999999999998,
+            "p50_us" : 0.38,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 1.54,
+            "total_ms" : 0.13100000000000001
+          },
+          "host.write 20480 B" : {
+            "count" : 729,
+            "max_us" : 19.420000000000002,
+            "mean_us" : 0.64000000000000001,
+            "p50_us" : 0.45000000000000001,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.46800000000000003
+          },
+          "host.write 32000 B" : {
+            "count" : 152,
+            "max_us" : 6.4199999999999999,
+            "mean_us" : 0.98999999999999999,
+            "p50_us" : 0.77000000000000002,
+            "p90_us" : 1.28,
+            "p99_us" : 3.0699999999999998,
+            "total_ms" : 0.14999999999999999
+          },
+          "host.write 32768 B" : {
+            "count" : 128,
+            "max_us" : 11.5,
+            "mean_us" : 0.81000000000000005,
+            "p50_us" : 0.64000000000000001,
+            "p90_us" : 0.77000000000000002,
+            "p99_us" : 2.5600000000000001,
+            "total_ms" : 0.104
+          },
+          "host.write 40960 B" : {
+            "count" : 729,
+            "max_us" : 7.25,
+            "mean_us" : 0.90000000000000002,
+            "p50_us" : 0.77000000000000002,
+            "p90_us" : 0.90000000000000002,
+            "p99_us" : 3.0699999999999998,
+            "total_ms" : 0.65300000000000002
+          },
+          "host.write 43008 B" : {
+            "count" : 75,
+            "max_us" : 6.54,
+            "mean_us" : 1.73,
+            "p50_us" : 1.02,
+            "p90_us" : 3.0699999999999998,
+            "p99_us" : 6.1399999999999997,
+            "total_ms" : 0.13
+          },
+          "host.write 65536 B" : {
+            "count" : 120,
+            "max_us" : 4.79,
+            "mean_us" : 1.3899999999999999,
+            "p50_us" : 1.28,
+            "p90_us" : 1.28,
+            "p99_us" : 1.54,
+            "total_ms" : 0.16700000000000001
+          },
+          "host.write 128000 B" : {
+            "count" : 118,
+            "max_us" : 25.829999999999998,
+            "mean_us" : 3.2400000000000002,
+            "p50_us" : 2.5600000000000001,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 8.1899999999999995,
+            "total_ms" : 0.38200000000000001
+          },
+          "host.write 172032 B" : {
+            "count" : 243,
+            "max_us" : 15.25,
+            "mean_us" : 4.4199999999999999,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 4.0999999999999996,
+            "p99_us" : 10.24,
+            "total_ms" : 1.073
+          },
+          "host.write 524288 B" : {
+            "count" : 138,
+            "max_us" : 74.579999999999998,
+            "mean_us" : 14.76,
+            "p50_us" : 10.24,
+            "p90_us" : 14.34,
+            "p99_us" : 49.149999999999999,
+            "total_ms" : 2.0369999999999999
+          },
+          "host.write 1048576 B" : {
+            "count" : 14,
+            "max_us" : 93.790000000000006,
+            "mean_us" : 43.93,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 0.61499999999999999
+          },
+          "host.write 1310720 B" : {
+            "count" : 107,
+            "max_us" : 159.12,
+            "mean_us" : 44.509999999999998,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 131.06999999999999,
+            "total_ms" : 4.7629999999999999
+          },
+          "host.write 2097152 B" : {
+            "count" : 14,
+            "max_us" : 270.82999999999998,
+            "mean_us" : 107.94,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 131.06999999999999,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 1.5109999999999999
+          },
+          "host.write 4096000 B" : {
+            "count" : 16,
+            "max_us" : 620.38,
+            "mean_us" : 254.58000000000001,
+            "p50_us" : 229.38,
+            "p90_us" : 524.28999999999996,
+            "p99_us" : 524.28999999999996,
+            "total_ms" : 4.0730000000000004
+          },
+          "host.write 4194304 B" : {
+            "count" : 2,
+            "max_us" : 295.62,
+            "mean_us" : 202.71000000000001,
+            "p50_us" : 98.299999999999997,
+            "p90_us" : 262.13999999999999,
+            "p99_us" : 262.13999999999999,
+            "total_ms" : 0.40500000000000003
+          },
+          "host.write 5505024 B" : {
+            "count" : 49,
+            "max_us" : 715.91999999999996,
+            "mean_us" : 271.70999999999998,
+            "p50_us" : 163.84,
+            "p90_us" : 524.28999999999996,
+            "p99_us" : 655.36000000000001,
+            "total_ms" : 13.314
+          },
+          "host.write 8388608 B" : {
+            "count" : 4,
+            "max_us" : 941.21000000000004,
+            "mean_us" : 385.16000000000003,
+            "p50_us" : 163.84,
+            "p90_us" : 917.5,
+            "p99_us" : 917.5,
+            "total_ms" : 1.5409999999999999
+          },
+          "host.write 10485760 B" : {
+            "count" : 56,
+            "max_us" : 2156.8299999999999,
+            "mean_us" : 507.91000000000003,
+            "p50_us" : 458.75,
+            "p90_us" : 524.28999999999996,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 28.443000000000001
+          },
+          "host.write 16777216 B" : {
+            "count" : 8,
+            "max_us" : 1804.54,
+            "mean_us" : 664.04999999999995,
+            "p50_us" : 458.75,
+            "p90_us" : 1572.8599999999999,
+            "p99_us" : 1572.8599999999999,
+            "total_ms" : 5.3120000000000003
+          },
+          "host.write 32768000 B" : {
+            "count" : 16,
+            "max_us" : 17313.830000000002,
+            "mean_us" : 2195.9899999999998,
+            "p50_us" : 917.5,
+            "p90_us" : 4194.3000000000002,
+            "p99_us" : 16777.220000000001,
+            "total_ms" : 35.136000000000003
+          },
+          "host.write 44040192 B" : {
+            "count" : 26,
+            "max_us" : 9799.7099999999991,
+            "mean_us" : 1914.8699999999999,
+            "p50_us" : 1310.72,
+            "p90_us" : 2621.4400000000001,
+            "p99_us" : 8388.6100000000006,
+            "total_ms" : 49.786999999999999
+          },
+          "kv_clone" : {
+            "count" : 8,
+            "max_us" : 197584.75,
+            "mean_us" : 76159.830000000002,
+            "p50_us" : 25165.82,
+            "p90_us" : 167772.16,
+            "p99_us" : 167772.16,
+            "total_ms" : 609.279
+          },
+          "LiteRT Graph Loading From Buffer" : {
+            "count" : 68,
+            "max_us" : 174822.82999999999,
+            "mean_us" : 16619.540000000001,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 29360.130000000001,
+            "p99_us" : 167772.16,
+            "total_ms" : 1130.1289999999999
+          },
+          "LiteRT Model Destruction" : {
+            "count" : 44,
+            "max_us" : 3438.29,
+            "mean_us" : 383.10000000000002,
+            "p50_us" : 8.1899999999999995,
+            "p90_us" : 1048.5799999999999,
+            "p99_us" : 3145.73,
+            "total_ms" : 16.856000000000002
+          },
+          "LiteRT TensorBuffer Allocation" : {
+            "count" : 770,
+            "max_us" : 68.079999999999998,
+            "mean_us" : 5.3200000000000003,
+            "p50_us" : 3.5800000000000001,
+            "p90_us" : 10.24,
+            "p99_us" : 24.579999999999998,
+            "total_ms" : 4.0979999999999999
+          },
+          "LiteRT TensorBuffer Destruction" : {
+            "count" : 100395,
+            "max_us" : 1179.96,
+            "mean_us" : 0.31,
+            "p50_us" : 0,
+            "p90_us" : 0.040000000000000001,
+            "p99_us" : 0.040000000000000001,
+            "total_ms" : 31.268000000000001
+          },
+          "logits_readback" : {
+            "count" : 75,
+            "max_us" : 0.95999999999999996,
+            "mean_us" : 0.19,
+            "p50_us" : 0.080000000000000002,
+            "p90_us" : 0.38,
+            "p99_us" : 0.90000000000000002,
+            "total_ms" : 0.014
+          },
+          "mask_fill" : {
+            "count" : 75,
+            "max_us" : 6.0800000000000001,
+            "mean_us" : 1.8500000000000001,
+            "p50_us" : 1.28,
+            "p90_us" : 2.5600000000000001,
+            "p99_us" : 5.1200000000000001,
+            "total_ms" : 0.13900000000000001
+          },
+          "param_fill" : {
+            "count" : 75,
+            "max_us" : 4.29,
+            "mean_us" : 0.46000000000000002,
+            "p50_us" : 0.26000000000000001,
+            "p90_us" : 0.51000000000000001,
+            "p99_us" : 4.0999999999999996,
+            "total_ms" : 0.035000000000000003
+          },
+          "prefill.chunk" : {
+            "count" : 44,
+            "max_us" : 984714.82999999996,
+            "mean_us" : 354425.75,
+            "p50_us" : 134217.73000000001,
+            "p90_us" : 805306.37,
+            "p99_us" : 939524.09999999998,
+            "total_ms" : 15594.733
+          },
+          "prefill.embedding_lookup" : {
+            "count" : 132,
+            "max_us" : 27798.209999999999,
+            "mean_us" : 1966.74,
+            "p50_us" : 327.68000000000001,
+            "p90_us" : 7340.0299999999997,
+            "p99_us" : 16777.220000000001,
+            "total_ms" : 259.61000000000001
+          },
+          "prefill.mask_fill" : {
+            "count" : 44,
+            "max_us" : 6429.4200000000001,
+            "mean_us" : 625.25999999999999,
+            "p50_us" : 196.61000000000001,
+            "p90_us" : 1572.8599999999999,
+            "p99_us" : 6291.46,
+            "total_ms" : 27.512
+          },
+          "prefill.param_fill" : {
+            "count" : 44,
+            "max_us" : 10.75,
+            "mean_us" : 1.74,
+            "p50_us" : 0.90000000000000002,
+            "p90_us" : 3.5800000000000001,
+            "p99_us" : 10.24,
+            "total_ms" : 0.075999999999999998
+          },
+          "run.decode" : {
+            "count" : 75,
+            "max_us" : 66927.419999999998,
+            "mean_us" : 37146.07,
+            "p50_us" : 33554.43,
+            "p90_us" : 33554.43,
+            "p99_us" : 58720.260000000002,
+            "total_ms" : 2785.9549999999999
+          },
+          "run.drafter" : {
+            "count" : 729,
+            "max_us" : 8031.8299999999999,
+            "mean_us" : 1439.3499999999999,
+            "p50_us" : 1310.72,
+            "p90_us" : 1572.8599999999999,
+            "p99_us" : 2097.1500000000001,
+            "total_ms" : 1049.289
+          },
+          "run.prefill" : {
+            "count" : 44,
+            "max_us" : 967619.62,
+            "mean_us" : 345980.46000000002,
+            "p50_us" : 134217.73000000001,
+            "p90_us" : 805306.37,
+            "p99_us" : 939524.09999999998,
+            "total_ms" : 15223.139999999999
+          },
+          "run.verify" : {
+            "count" : 243,
+            "max_us" : 77082.830000000002,
+            "mean_us" : 42506.629999999997,
+            "p50_us" : 33554.43,
+            "p90_us" : 41943.040000000001,
+            "p99_us" : 67108.860000000001,
+            "total_ms" : 10329.111000000001
+          },
+          "sample" : {
+            "count" : 75,
+            "max_us" : 845.71000000000004,
+            "mean_us" : 107.39,
+            "p50_us" : 40.960000000000001,
+            "p90_us" : 114.69,
+            "p99_us" : 786.42999999999995,
+            "total_ms" : 8.0540000000000003
+          },
+          "session_wait" : {
+            "count" : 67,
+            "max_us" : 982867.20999999996,
+            "mean_us" : 75808.970000000001,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 268435.46000000002,
+            "p99_us" : 939524.09999999998,
+            "total_ms" : 5079.201
+          },
+          "stream_callback" : {
+            "count" : 301,
+            "max_us" : 161.66999999999999,
+            "mean_us" : 30.390000000000001,
+            "p50_us" : 28.670000000000002,
+            "p90_us" : 40.960000000000001,
+            "p99_us" : 81.920000000000002,
+            "total_ms" : 9.1470000000000002
+          },
+          "task.callback" : {
+            "count" : 34,
+            "max_us" : 154.71000000000001,
+            "mean_us" : 46.270000000000003,
+            "p50_us" : 32.770000000000003,
+            "p90_us" : 81.920000000000002,
+            "p99_us" : 131.06999999999999,
+            "total_ms" : 1.573
+          },
+          "task.queue_wait" : {
+            "count" : 34,
+            "max_us" : 30.789999999999999,
+            "mean_us" : 12.300000000000001,
+            "p50_us" : 8.1899999999999995,
+            "p90_us" : 20.48,
+            "p99_us" : 28.670000000000002,
+            "total_ms" : 0.41799999999999998
+          },
+          "template" : {
+            "count" : 17,
+            "max_us" : 13.08,
+            "mean_us" : 5.3799999999999999,
+            "p50_us" : 4.0999999999999996,
+            "p90_us" : 8.1899999999999995,
+            "p99_us" : 12.289999999999999,
+            "total_ms" : 0.091999999999999998
+          },
+          "tokenize" : {
+            "count" : 17,
+            "max_us" : 6613.3299999999999,
+            "mean_us" : 792.95000000000005,
+            "p50_us" : 65.540000000000006,
+            "p90_us" : 2621.4400000000001,
+            "p99_us" : 6291.46,
+            "total_ms" : 13.48
+          },
+          "turn.decode" : {
+            "count" : 17,
+            "max_us" : 1895905.6699999999,
+            "mean_us" : 852405.20999999996,
+            "p50_us" : 536870.91000000003,
+            "p90_us" : 1610612.74,
+            "p99_us" : 1879048.1899999999,
+            "total_ms" : 14490.888999999999
+          },
+          "turn.prefill" : {
+            "count" : 17,
+            "max_us" : 7505847.8799999999,
+            "mean_us" : 917419.25,
+            "p50_us" : 201326.59,
+            "p90_us" : 3221225.4700000002,
+            "p99_us" : 6442450.9400000004,
+            "total_ms" : 15596.127
+          }
+        }
+      },
+      "thermalStateAfterFollowUp" : 0,
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 7.5295346212499998,
+      "window" : 32768
+    }
+  },
+  "startedAt" : "2026-10-15T16:37:36Z"
+}

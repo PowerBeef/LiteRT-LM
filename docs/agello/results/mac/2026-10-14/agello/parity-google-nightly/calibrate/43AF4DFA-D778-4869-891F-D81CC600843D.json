@@ -1,0 +1,23 @@
+{
+  "accepted" : true,
+  "appLimitGB" : 17.179869184000001,
+  "availableGB" : 14.389975416,
+  "decodeTokPerSec" : 69.003866643610351,
+  "effectiveWindow" : 8192,
+  "footprintAfterLoadGB" : 2.2014779519999998,
+  "footprintPeakGB" : 2.7898937680000002,
+  "inputTokens" : 2302,
+  "loaded" : true,
+  "loadLog" : [
+    "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+    "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 0.9s (footprint 2.20 GB, available 14.98 GB)"
+  ],
+  "memory.availableGB" : 14.389975416,
+  "memory.footprintGB" : 2.7898937680000002,
+  "model" : "e4b",
+  "prefillTokPerSec" : 2161.926731605276,
+  "recordedAt" : "2026-10-14T22:30:13Z",
+  "replyPrefix" : "The text is a repetitive list of 95 numbered sentences describing various aspects of life at a lighthouse, including wea",
+  "ttftSeconds" : 1.0647909415000001,
+  "window" : 8192
+}

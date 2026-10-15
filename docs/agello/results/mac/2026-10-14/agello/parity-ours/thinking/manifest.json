@@ -1,0 +1,86 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "1C54D291-2C32-4E39-BA68-F2A850DB4D7D.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_02_thinking_0_43499384-5B06-4396-9BDF-648B8A33A5C2.json",
+        "timestamp" : 1792015599.353
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "50127B8A-4531-4ADF-9333-77EA637CFB12.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_02_thinking_0_6187460E-1AC1-4A32-B81E-7C6EAB763B81.json",
+        "timestamp" : 1792015597.777
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "91F6FC02-E8CC-4B2B-814A-0CFC5E2997DC.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_02_thinking_0_6F6AF5AA-D121-43EE-A4DA-8B1C9F4AA6C9.json",
+        "timestamp" : 1792015586.821
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "27FD93E7-F50C-4985-BD48-77A486A7F8FD.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_02_thinking_0_0F8E4ABB-39C7-4C22-B5B2-A837E44E09F0.json",
+        "timestamp" : 1792015568.08
+      }
+    ],
+    "testIdentifier" : "ThinkingScenarioTests/test01_ThinkingBudgets()",
+    "testIdentifierURL" : "test://com.apple.xcode/Agello/AgelloDeviceTests/ThinkingScenarioTests/test01_ThinkingBudgets"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "189CF4FC-30E6-4004-9642-B8C12F8948B3.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_03_reasoning_chat_0_7C22E156-2158-44C0-852B-251615035C9B.json",
+        "timestamp" : 1792015609.033
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "D4179CB3-67D8-40E1-A032-CF2337DD0B96.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_03_reasoning_chat_0_C272CBBE-9B0C-4CF1-969D-6FB4B9D5E0E6.json",
+        "timestamp" : 1792015608.119
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "B7FE5200-EAB5-4FD9-B3F5-8500DDF8FA6F.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_03_reasoning_chat_0_7122DE7B-4CB8-41AD-9DD8-98DD38BA76C7.json",
+        "timestamp" : 1792015606.586
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "AD50AD16-094F-429F-B101-4BD0AB0E16BC.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "e4b_03_reasoning_cache_0_060A2FA3-F722-45A2-9ADB-AC6361E0D1C0.json",
+        "timestamp" : 1792015602.634
+      }
+    ],
+    "testIdentifier" : "ThinkingScenarioTests/test02_ReasoningStaysOutOfCache()",
+    "testIdentifierURL" : "test://com.apple.xcode/Agello/AgelloDeviceTests/ThinkingScenarioTests/test02_ReasoningStaysOutOfCache"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "accepted" : false,
+  "error" : "This message is too long for the model's memory. Shorten it or raise the KV cache in Settings.",
+  "followUp" : "ready",
+  "memory.availableGB" : 15.399280144,
+  "memory.footprintGB" : 1.7805726559999999,
+  "promptBytes" : 5040,
+  "recordedAt" : "2026-10-14T22:10:26Z"
+}

@@ -1,0 +1,56 @@
+{
+  "memory.availableGB" : 14.588600015999999,
+  "memory.footprintGB" : 2.5912691680000002,
+  "prompt" : "d, and staff recommend continuing the current monitoring programme with quarterly reviews and an annual summary for the regional office.\n\nCoordination with neighbouring districts improved this year. Shared equipment reduced costs, and joint training sessions helped new staff learn inspection procedures faster.\n<\/excerpts>\n\nQuestion: What was the harbour renovation budget, and when was it approved?",
+  "recordedAt" : "2026-10-14T22:14:21Z",
+  "results" : [
+    {
+      "chunks" : "The| harbour| renovation| budget| was| |4|.|2| million| dollars|,| approved| by| the| council| in| March| |2|0|2|6| (|co|astal|-|report|.|pdf|,| p|.| |2|2|–|2|4|).",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, approved by the council in March 2026 (coastal-report.pdf, p. 22–24).",
+      "variant" : "app_seed0_stream"
+    },
+    {
+      "chunks" : "",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, approved by the council in March 2026 (coastal-report.pdf, p. 22–24).",
+      "variant" : "app_seed0_whole"
+    },
+    {
+      "chunks" : "The| harbour| renovation| budget| was| |4|.|2| million| dollars|,| approved| by| the| council| in| March| |2|0|2|6| (|co|astal|-|report|.|pdf|,| p|.| |2|2|).",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, approved by the council in March 2026 (coastal-report.pdf, p. 22).",
+      "variant" : "noTools_seed0_stream"
+    },
+    {
+      "chunks" : "The| harbour| renovation| budget| was| |4|.|2| million| dollars|,| and| it| was| approved| by| the| council| in| March| |2|0|2|6| (|co|astal|-|report|.|pdf|,| pp|.| |2|2|–|2|4|).",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, pp. 22–24).",
+      "variant" : "greedy_stream"
+    },
+    {
+      "chunks" : "",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, pp. 22–24).",
+      "variant" : "greedy_whole"
+    },
+    {
+      "chunks" : "The| harbour| renovation| budget| was| |4|.|2| million| dollars|,| approved| by| the| council| in| March| |2|0|2|6| (|co|astal|-|report|.|pdf|,| p|.| |2|2|–|2|4|).",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, approved by the council in March 2026 (coastal-report.pdf, p. 22–24).",
+      "variant" : "app_seed1_stream"
+    },
+    {
+      "chunks" : "The| harbour| renovation| budget| was| |4|.|2| million| dollars|,| approved| by| the| council| in| March| |2|0|2|6| (|co|astal|-|report|.|pdf|,| pp|.| |2|2|–|2|4|).",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, approved by the council in March 2026 (coastal-report.pdf, pp. 22–24).",
+      "variant" : "app_seed2_stream"
+    },
+    {
+      "chunks" : "The| harbour| renovation| budget| was| |4|.|2| million| dollars|,| approved| by| the| council| in| March| |2|0|2|6| (|co|astal|-|report|.|pdf|,| p|.| |2|2|–|2|4|).",
+      "corrupted" : "no",
+      "text" : "The harbour renovation budget was 4.2 million dollars, approved by the council in March 2026 (coastal-report.pdf, p. 22–24).",
+      "variant" : "app_seed3_stream"
+    }
+  ]
+}

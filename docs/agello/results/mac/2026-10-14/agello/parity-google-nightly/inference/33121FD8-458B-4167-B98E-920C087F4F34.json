@@ -1,0 +1,17 @@
+{
+  "memory.availableGB" : 13.232347056,
+  "memory.footprintGB" : 3.9475221280000001,
+  "recordedAt" : "2026-10-14T22:11:12Z",
+  "results" : [
+    {
+      "accepted" : true,
+      "backend" : "GPU",
+      "exact" : true,
+      "expected" : "360450296322042052577609842187885426869520014813",
+      "generationError" : "",
+      "inputTokens" : 2329,
+      "reply" : "360450296322042052577609842187885426869520014813",
+      "sentences" : 129
+    }
+  ]
+}

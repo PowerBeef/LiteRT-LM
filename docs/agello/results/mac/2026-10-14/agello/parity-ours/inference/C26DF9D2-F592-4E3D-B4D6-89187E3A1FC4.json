@@ -1,0 +1,36 @@
+{
+  "after" : "We discussed suggestions for a Golden Retriever puppy's name, specifically those starting with the letter 'M', and then I answered your question about the capital of Canada.",
+  "memory.availableGB" : 14.63911088,
+  "memory.footprintGB" : 2.5407583040000001,
+  "recordedAt" : "2026-10-14T21:47:14Z",
+  "results" : [
+    {
+      "answer" : "I can suggest some classic names like Goldie or Sunny. You could also try something more unique like Copper or Honey.",
+      "firstSentenceSeconds" : 0.98865294456481934,
+      "heard" : "What's a good name for a golden retriever puppy",
+      "language" : "en-US",
+      "said" : "What's a good name for a golden retriever puppy?",
+      "totalSeconds" : 2.4574600458145142,
+      "wer" : 0
+    },
+    {
+      "answer" : "I can suggest names like Max, Milo, or Murphy. Those are all popular and sweet names for a Golden Retriever.",
+      "firstSentenceSeconds" : 0.83660900592803955,
+      "heard" : "And one that starts with the letter M",
+      "language" : "en-US",
+      "said" : "And one that starts with the letter M?",
+      "totalSeconds" : 0.95870804786682129,
+      "wer" : 0
+    },
+    {
+      "answer" : "De rien. La capitale du Canada est Ottawa.",
+      "firstSentenceSeconds" : 0.48855996131896973,
+      "heard" : "Merci, et quelle est la capitale du Canada",
+      "language" : "fr-CA",
+      "said" : "Merci! Et quelle est la capitale du Canada?",
+      "totalSeconds" : 0.48956298828125,
+      "wer" : 0
+    }
+  ],
+  "title" : "Golden Retriever Puppy Name Ideas"
+}

@@ -1,0 +1,23 @@
+{
+  "accepted" : true,
+  "appLimitGB" : 17.179869184000001,
+  "availableGB" : 13.318035544000001,
+  "decodeTokPerSec" : 66.333491629165636,
+  "effectiveWindow" : 16384,
+  "footprintAfterLoadGB" : 3.0662909119999999,
+  "footprintPeakGB" : 3.86183364,
+  "inputTokens" : 4398,
+  "loaded" : true,
+  "loadLog" : [
+    "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+    "ok GPU vision=true audio=true mtp=true kv=16384 thinking=off in 5.5s (footprint 3.07 GB, available 14.11 GB)"
+  ],
+  "memory.availableGB" : 13.318035544000001,
+  "memory.footprintGB" : 3.86183364,
+  "model" : "e4b",
+  "prefillTokPerSec" : 1610.1775771865603,
+  "recordedAt" : "2026-10-14T22:07:22Z",
+  "replyPrefix" : "The text is a repetitive list of 188 numbered sentences describing various aspects of a lighthouse keeper's life, includ",
+  "ttftSeconds" : 2.73137575775,
+  "window" : 16384
+}

@@ -1,0 +1,19 @@
+{
+  "memory.availableGB" : 14.720229120000001,
+  "memory.footprintGB" : 2.4596400639999998,
+  "recordedAt" : "2026-10-14T22:14:26Z",
+  "results" : [
+    {
+      "case" : "gpu_full",
+      "corrupted" : "no",
+      "promptTokensApprox" : "3752",
+      "reply" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, p. 22–24)."
+    },
+    {
+      "case" : "gpu_top3",
+      "corrupted" : "no",
+      "promptTokensApprox" : "1662",
+      "reply" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, p. 22–24)."
+    }
+  ]
+}

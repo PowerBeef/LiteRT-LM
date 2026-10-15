@@ -1,0 +1,27 @@
+{
+  "memory.availableGB" : 13.235230639999999,
+  "memory.footprintGB" : 3.944638544,
+  "recordedAt" : "2026-10-14T22:11:19Z",
+  "results" : [
+    {
+      "accepted" : true,
+      "backend" : "GPU",
+      "exact" : true,
+      "expected" : "360450296322042052577609842187885426869520014813",
+      "generationError" : "",
+      "inputTokens" : 2329,
+      "reply" : "360450296322042052577609842187885426869520014813",
+      "sentences" : 129
+    },
+    {
+      "accepted" : true,
+      "backend" : "GPU",
+      "exact" : true,
+      "expected" : "264598852324464436528445692378236997464565306650",
+      "generationError" : "",
+      "inputTokens" : 4294,
+      "reply" : "264598852324464436528445692378236997464565306650",
+      "sentences" : 255
+    }
+  ]
+}

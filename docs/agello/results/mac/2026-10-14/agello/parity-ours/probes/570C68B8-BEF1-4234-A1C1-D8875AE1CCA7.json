@@ -1,0 +1,19 @@
+{
+  "memory.availableGB" : 14.226234368,
+  "memory.footprintGB" : 2.9536348160000001,
+  "recordedAt" : "2026-10-14T21:51:37Z",
+  "results" : [
+    {
+      "message" : "I'm vegetarian and I live in Montreal. S",
+      "output" : "{\"memories\":[\"Is vegetarian\",\n\"Lives in Montreal\"]}",
+      "seconds" : "1.0",
+      "variant" : "A_current"
+    },
+    {
+      "message" : "My daughter Léa is 6 and loves dinosaurs",
+      "output" : "{\"memories\":[\"Has a daughter, Léa (6)\"]}",
+      "seconds" : "1.0",
+      "variant" : "A_current"
+    }
+  ]
+}

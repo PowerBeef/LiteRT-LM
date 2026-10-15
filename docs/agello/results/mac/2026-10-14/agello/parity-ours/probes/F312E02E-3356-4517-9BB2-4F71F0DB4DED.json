@@ -1,0 +1,12 @@
+{
+  "memory.availableGB" : 15.167725576,
+  "memory.footprintGB" : 2.0121436080000001,
+  "queries" : [
+    "who won the most recent Tour de France",
+    "most recent Tour de France winner and margin of victory",
+    "Tour de France 2024 winner and lead"
+  ],
+  "raw" : "{\n\"queries\":\n[\n\"who won the most recent Tour de France\",\n\"most recent Tour de France winner and margin of victory\",\n\"Tour de France 2024 winner and lead\"\n]\n}",
+  "recordedAt" : "2026-10-14T21:48:49Z",
+  "seconds" : 1.1951019763946533
+}

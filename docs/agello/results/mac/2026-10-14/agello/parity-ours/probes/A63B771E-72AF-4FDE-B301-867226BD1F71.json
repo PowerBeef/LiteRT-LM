@@ -1,0 +1,79 @@
+{
+  "memory.availableGB" : 14.212848592,
+  "memory.footprintGB" : 2.9670205919999999,
+  "recordedAt" : "2026-10-14T21:51:46Z",
+  "results" : [
+    {
+      "message" : "I'm vegetarian and I live in Montreal. S",
+      "output" : "{\"memories\":[\"Is vegetarian\",\n\"Lives in Montreal\"]}",
+      "seconds" : "1.0",
+      "variant" : "A_current"
+    },
+    {
+      "message" : "My daughter Léa is 6 and loves dinosaurs",
+      "output" : "{\"memories\":[\"Has a daughter, Léa (6)\"]}",
+      "seconds" : "1.0",
+      "variant" : "A_current"
+    },
+    {
+      "message" : "Remember that my gate code is 4521.",
+      "output" : "{\"memories\":[\"Gate code is 4521\"]}",
+      "seconds" : "1.0",
+      "variant" : "A_current"
+    },
+    {
+      "message" : "Je travaille comme infirmière de nuit, d",
+      "output" : "{\"memories\":[]}",
+      "seconds" : "0.8",
+      "variant" : "A_current"
+    },
+    {
+      "message" : "What is 2+2?",
+      "output" : "{\n\"memories\":\n[]\n}",
+      "seconds" : "0.9",
+      "variant" : "A_current"
+    },
+    {
+      "message" : "I'm vegetarian and I live in Montreal. S",
+      "output" : "{\"memories\":[\"Is vegetarian\",\n\"Lives in Montreal\"]}",
+      "seconds" : "1.0",
+      "variant" : "B_instructionsFirst"
+    },
+    {
+      "message" : "My daughter Léa is 6 and loves dinosaurs",
+      "output" : "{\"memories\":[\"Has a daughter, Léa (6)\"]}",
+      "seconds" : "1.0",
+      "variant" : "B_instructionsFirst"
+    },
+    {
+      "message" : "Remember that my gate code is 4521.",
+      "output" : "{\"memories\":[\"Gate code is 4521\"]}",
+      "seconds" : "1.0",
+      "variant" : "B_instructionsFirst"
+    },
+    {
+      "message" : "Je travaille comme infirmière de nuit, d",
+      "output" : "{\"memories\":[\"Works as a night nurse\"]}",
+      "seconds" : "0.9",
+      "variant" : "B_instructionsFirst"
+    },
+    {
+      "message" : "What is 2+2?",
+      "output" : "{\"memories\":[]}",
+      "seconds" : "0.8",
+      "variant" : "B_instructionsFirst"
+    },
+    {
+      "message" : "I'm vegetarian and I live in Montreal. S",
+      "output" : "{\"facts\":[\"Vegetarian\",\n\"Lives in Montreal\"]}",
+      "seconds" : "1.0",
+      "variant" : "C_factsKey"
+    },
+    {
+      "message" : "My daughter Léa is 6 and loves dinosaurs",
+      "output" : "{\"facts\":[\"Daughter named Léa (6)\",\n\"Léa loves dinosaurs\"]}",
+      "seconds" : "1.1",
+      "variant" : "C_factsKey"
+    }
+  ]
+}

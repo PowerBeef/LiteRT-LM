@@ -1,0 +1,21 @@
+{
+  "memory.availableGB" : 14.644402912,
+  "memory.footprintGB" : 2.5354662719999999,
+  "recordedAt" : "2026-10-14T21:47:06Z",
+  "results" : [
+    {
+      "language" : "en-US",
+      "reference" : "Please book a table for four people at seven thirty tomorrow evening, near the train station.",
+      "seconds" : 0.47585701942443848,
+      "transcript" : "Please book a table for four people at 7:30 tomorrow evening, near the train station.",
+      "wer" : 0.125
+    },
+    {
+      "language" : "en-US",
+      "reference" : "Remind me to call the dentist on Monday and to buy milk, eggs, and coffee on the way home.",
+      "seconds" : 0.46876001358032227,
+      "transcript" : "Remind me to call the dentist on Monday and to buy milk, eggs, and coffee on the way home.",
+      "wer" : 0
+    }
+  ]
+}

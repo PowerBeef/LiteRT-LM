@@ -1,0 +1,8 @@
+{
+  "calls" : 1,
+  "memory.availableGB" : 13.491671016,
+  "memory.footprintGB" : 3.688198168,
+  "recordedAt" : "2026-10-14T22:04:13Z",
+  "reply" : "The order service is currently offline, so I was unable to look up the status for order 4417.",
+  "thrown" : ""
+}

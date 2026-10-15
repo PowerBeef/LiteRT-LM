@@ -1,0 +1,13 @@
+{
+  "memory.availableGB" : 14.28811544,
+  "memory.footprintGB" : 2.8917537439999998,
+  "modelDeclaresFunctionCalling" : "see 01_load caps",
+  "recordedAt" : "2026-10-14T21:45:38Z",
+  "reply" : "The result of 1234 * 5678 is 7,006,652.",
+  "toolNames" : [
+    "calculate"
+  ],
+  "toolsInvoked" : [
+    "calculate"
+  ]
+}

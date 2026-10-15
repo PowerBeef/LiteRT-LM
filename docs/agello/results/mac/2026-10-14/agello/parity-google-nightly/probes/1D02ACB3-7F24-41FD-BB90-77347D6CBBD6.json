@@ -1,0 +1,13 @@
+{
+  "memory.availableGB" : 14.353357920000001,
+  "memory.footprintGB" : 2.8265112640000001,
+  "recordedAt" : "2026-10-14T22:15:08Z",
+  "results" : [
+    {
+      "message" : "I'm vegetarian and I live in Montreal. S",
+      "output" : "{\"memories\":[\"Is vegetarian\",\n\"Lives in Montreal\"]}",
+      "seconds" : "1.7",
+      "variant" : "A_current"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "audio" : true,
+  "backend" : "GPU",
+  "engineState" : "ready",
+  "footprintDeltaGB" : 2.391712144,
+  "kvTokens" : 8192,
+  "loaded" : true,
+  "loadLog" : [
+    "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+    "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 8.0s (footprint 2.65 GB, available 14.53 GB)"
+  ],
+  "loadSeconds" : 8.1301339864730835,
+  "memory.availableGB" : 14.526994952000001,
+  "memory.footprintGB" : 2.6528742319999998,
+  "mtp" : true,
+  "recordedAt" : "2026-10-14T21:45:25Z",
+  "thinkingBudget" : 0,
+  "vision" : true,
+  "visualTokenBudget" : 280
+}

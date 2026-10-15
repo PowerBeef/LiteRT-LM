@@ -1,0 +1,15 @@
+{
+  "memory.availableGB" : 13.118262816,
+  "memory.footprintGB" : 4.0616063679999996,
+  "recordedAt" : "2026-10-14T22:03:58Z",
+  "rows" : [
+    {
+      "folders" : {
+        "embedding" : 0.18021732800000001,
+        "kv-8192" : 2.4698650560000002
+      },
+      "loadSeconds" : 4.4000000000000004,
+      "tokens" : 8192
+    }
+  ]
+}

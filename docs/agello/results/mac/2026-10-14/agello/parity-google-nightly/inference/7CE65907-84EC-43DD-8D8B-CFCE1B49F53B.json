@@ -1,0 +1,25 @@
+{
+  "generationError" : "",
+  "memory.availableGB" : 13.552310240000001,
+  "memory.footprintGB" : 3.6275425600000002,
+  "recordedAt" : "2026-10-14T22:09:57Z",
+  "reply" : "Red",
+  "resolvedOff" : {
+    "audio" : true,
+    "backend" : "GPU",
+    "kvTokens" : 8192,
+    "mtp" : true,
+    "thinkingBudget" : 0,
+    "vision" : false,
+    "visualTokenBudget" : 0
+  },
+  "resolvedOn" : {
+    "audio" : true,
+    "backend" : "GPU",
+    "kvTokens" : 8192,
+    "mtp" : true,
+    "thinkingBudget" : 0,
+    "vision" : true,
+    "visualTokenBudget" : 280
+  }
+}

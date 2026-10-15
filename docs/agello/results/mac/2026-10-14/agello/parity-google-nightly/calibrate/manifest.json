@@ -1,0 +1,44 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "37E78048-4B83-4003-9A70-1B20901FC21F.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "calibration_e4b_32768_0_E5A2FFD4-E712-4D1B-952D-14258FFAF4D9.json",
+        "timestamp" : 1792017045.621
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "EE54D9DE-6539-407F-9D38-B0A84F13CE9F.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "calibration_e4b_16384_0_E7106417-E96F-4C5E-B679-D370C020E57B.json",
+        "timestamp" : 1792017026.081
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "43AF4DFA-D778-4869-891F-D81CC600843D.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "calibration_e4b_8192_0_3B83264A-1E00-4F62-9677-AD59A3B014E5.json",
+        "timestamp" : 1792017013.561
+      },
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "922C9643-AADF-4EEC-9568-70D773ED2554.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "calibration_e4b_4096_0_A6AF7554-2D5F-47EA-BE59-0C6B2D6D0154.json",
+        "timestamp" : 1792017008.032
+      }
+    ],
+    "testIdentifier" : "CalibrationScenarioTests/test01_CalibrateE4B()",
+    "testIdentifierURL" : "test://com.apple.xcode/Agello/AgelloDeviceTests/CalibrationScenarioTests/test01_CalibrateE4B"
+  }
+]

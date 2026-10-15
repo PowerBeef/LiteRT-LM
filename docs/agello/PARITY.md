@@ -4,8 +4,8 @@ Our build (`agello-next`: the 0.19.0-nightly.20261013 source, the tool-call patc
 accelerator linked statically, response formats without the closed constraint provider) against
 Google's prebuilt binaries of the same nightly. Mac mini M6 (GPU family Apple11), macOS 27.0.1;
 Agello runs as an iPhone app on the Mac (`PLATFORM=mac`), so both use the iOS slice and Metal.
-Raw results: Agello's `build/mac-harness-next/` (ours) and `build/mac-harness-nightly/` (Google's)
-on the development Mac; the calibration reports are copied to `results/mac/2026-10-14/agello/`.
+Raw results: every scenario's metrics in `results/mac/2026-10-14/agello/parity-ours/` and
+`parity-google-nightly/` (one folder per suite), calibration reports beside them.
 
 ## Agello's suites
 
@@ -45,7 +45,7 @@ for ours natively and 49.8 for Google's v0.18.0 binary in Agello on the same Mac
 ## After T5's first step (2026-10-14)
 
 Our build with direct host copies on Metal (LiteRT `584f3461`, tracks/T5-unified-memory.md),
-same calibration (`build/mac-harness-t5/`), against the same Google results:
+same calibration (`results/mac/2026-10-14/agello/calibrate-ours-t5.json`), against the same Google results:
 
 | Window | Decode tok/s, Google / ours before / ours now | Now vs Google | Prefill tok/s, Google / now | TTFT s | Peak footprint GB |
 | --- | --- | --- | --- | --- | --- |

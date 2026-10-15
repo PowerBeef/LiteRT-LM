@@ -1,0 +1,49 @@
+{
+  "memory.availableGB" : 14.208752256,
+  "memory.footprintGB" : 2.9711169279999998,
+  "recordedAt" : "2026-10-14T22:29:34Z",
+  "results" : [
+    {
+      "availableGB" : 14.450858744,
+      "budget" : 512,
+      "case" : "math",
+      "decodeTokPerSec" : 82.765503959177948,
+      "error" : "",
+      "footprintGB" : 2.7290104400000001,
+      "outputTokens" : 17,
+      "replyLength" : 41,
+      "replyPrefix" : "The result of 17 multiplied by 23 is 391.",
+      "seconds" : 5.0704048871994019,
+      "thinkingEnabled" : true,
+      "thoughtLength" : 390
+    },
+    {
+      "availableGB" : 14.214699648,
+      "budget" : 1024,
+      "case" : "code_issue703",
+      "decodeTokPerSec" : 96.702384957041787,
+      "error" : "",
+      "footprintGB" : 2.9651695359999999,
+      "outputTokens" : 1581,
+      "replyLength" : 3320,
+      "replyPrefix" : "This is a common task in programming. Both PHP and Python offer highly optimized built-in functions to handle sorting, so you rarely need to implement a sorting",
+      "seconds" : 20.002016067504883,
+      "thinkingEnabled" : true,
+      "thoughtLength" : 2485
+    },
+    {
+      "availableGB" : 14.208752256,
+      "budget" : 2048,
+      "case" : "logic",
+      "decodeTokPerSec" : 123.53672363033083,
+      "error" : "",
+      "footprintGB" : 2.9711169279999998,
+      "outputTokens" : 977,
+      "replyLength" : 924,
+      "replyPrefix" : "This is a classic riddle that requires setting up a simple algebraic equation.\n\nHere is the careful reasoning:\n\n1.  **Define the variables:**\n    *   Let $B$ be",
+      "seconds" : 11.448287010192871,
+      "thinkingEnabled" : true,
+      "thoughtLength" : 1852
+    }
+  ]
+}

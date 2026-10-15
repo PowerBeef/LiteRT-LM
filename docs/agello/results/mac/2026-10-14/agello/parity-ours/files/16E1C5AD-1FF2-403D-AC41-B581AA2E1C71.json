@@ -1,0 +1,30 @@
+{
+  "againSeconds" : 3.0984319448471069,
+  "cachedSummaryChars" : 4632,
+  "followUpMentionsPages" : false,
+  "followUpReply" : "The harbour renovation budget was **4.2 million dollars**, and it was approved by the council in **March 2026** (coastal-report.pdf, p. 16).",
+  "followUpSeconds" : 1.6717739105224609,
+  "followUpSources" : [
+    "coastal-report.pdf, pp. 22–24",
+    "coastal-report.pdf, pp. 14–16",
+    "coastal-report.pdf, pp. 38–40",
+    "coastal-report.pdf, pp. 30–32",
+    "coastal-report.pdf, pp. 34–36",
+    "coastal-report.pdf, pp. 12–14",
+    "coastal-report.pdf, pp. 6–8"
+  ],
+  "footprintGB" : 3.3036141360000002,
+  "memory.availableGB" : 13.876255048000001,
+  "memory.footprintGB" : 3.3036141360000002,
+  "recordedAt" : "2026-10-14T22:05:50Z",
+  "summaryReply" : "Here is a summary of the report:\n\n*   **Overall Status:** Most indicators across all reviewed areas—including Coastal Erosion, Lighthouse Operations, Fisheries, Visitor Services, Storm Preparedness, Habitat Restoration, Water Quality, and Harbour Maintenance—remained within normal ranges, with observed seasonal variation (coastal-report.pdf, p. 4).\n*   **Monitoring & Recommendations:** A consistent recommendation across all sections is to continue the current monitoring programme, which includes quarterly reviews and an annual summary for the regional office (coastal-report.pdf, p. 4; coastal-",
+  "summarySeconds" : 16.052947998046875,
+  "summaryStats" : {
+    "backend" : "GPU",
+    "decodeTokPerSec" : 109.94638887217376,
+    "inputTokens" : 1235,
+    "outputTokens" : 325,
+    "totalSeconds" : 3.5488729476928711,
+    "ttftSeconds" : 0.60053500874999999
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "memory.availableGB" : 13.990189768,
+  "memory.footprintGB" : 3.1896794160000002,
+  "mtpOn" : {
+    "examples" : [
+
+    ],
+    "failures" : 0,
+    "speculative" : true,
+    "trials" : 16
+  },
+  "recordedAt" : "2026-10-14T22:12:54Z"
+}

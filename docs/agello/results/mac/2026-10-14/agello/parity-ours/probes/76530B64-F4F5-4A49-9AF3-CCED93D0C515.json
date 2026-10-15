@@ -1,0 +1,25 @@
+{
+  "memory.availableGB" : 14.477041,
+  "memory.footprintGB" : 2.7028281839999999,
+  "recordedAt" : "2026-10-14T21:51:52Z",
+  "results" : [
+    {
+      "firstSentence" : "0.45",
+      "language" : "en-US",
+      "mode" : "A_direct",
+      "reference" : "What's a good name for a golden retriever puppy?",
+      "reply" : "How about Sunny, Goldie, or Buddy? These names fit a golden retriever's cheerful personality.",
+      "total" : "0.70",
+      "ttft" : "0.33"
+    },
+    {
+      "firstSentence" : "0.40",
+      "language" : "en-US",
+      "mode" : "A_direct",
+      "reference" : "How long should I boil an egg for a soft yolk?",
+      "reply" : "For a soft-boiled egg, boil it for about 6 to 7 minutes. This should give you a runny yolk and a set white.",
+      "total" : "0.57",
+      "ttft" : "0.24"
+    }
+  ]
+}

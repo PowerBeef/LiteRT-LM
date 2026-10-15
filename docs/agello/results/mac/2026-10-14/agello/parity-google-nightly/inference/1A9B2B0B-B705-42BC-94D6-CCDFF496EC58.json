@@ -1,0 +1,17 @@
+{
+  "memory.availableGB" : 14.643075808000001,
+  "memory.footprintGB" : 2.5367769920000001,
+  "recordedAt" : "2026-10-14T22:10:58Z",
+  "results" : [
+    {
+      "answer" : "A great name for a golden retriever puppy could be Sunny, Goldie, or Buddy. These names fit their friendly and golden nature perfectly.",
+      "firstSentenceSeconds" : 0.91954100131988525,
+      "heard" : "What's a good name for a golden retriever puppy",
+      "language" : "en-US",
+      "said" : "What's a good name for a golden retriever puppy?",
+      "totalSeconds" : 3.5757020711898804,
+      "wer" : 0
+    }
+  ],
+  "title" : "Golden Retriever Puppy Name Ideas"
+}

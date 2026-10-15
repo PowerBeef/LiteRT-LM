@@ -1,0 +1,13 @@
+{
+  "backend" : "GPU",
+  "decodeTokPerSec" : 74.75444473108621,
+  "inputTokens" : 257,
+  "memory.availableGB" : 14.290130672,
+  "memory.footprintGB" : 2.8897385120000001,
+  "outputTokens" : 7,
+  "recordedAt" : "2026-10-14T21:45:27Z",
+  "reply" : "The capital of France is Paris.",
+  "seconds" : 2.1713980436325073,
+  "totalSeconds" : 0.55085194110870361,
+  "ttftSeconds" : 0.46883821399999998
+}

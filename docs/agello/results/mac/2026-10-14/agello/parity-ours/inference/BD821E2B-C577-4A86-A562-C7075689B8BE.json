@@ -1,0 +1,14 @@
+{
+  "memory.availableGB" : 14.642322144,
+  "memory.footprintGB" : 2.5375470400000002,
+  "recordedAt" : "2026-10-14T21:47:05Z",
+  "results" : [
+    {
+      "language" : "en-US",
+      "reference" : "Please book a table for four people at seven thirty tomorrow evening, near the train station.",
+      "seconds" : 0.47585701942443848,
+      "transcript" : "Please book a table for four people at 7:30 tomorrow evening, near the train station.",
+      "wer" : 0.125
+    }
+  ]
+}

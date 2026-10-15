@@ -1,0 +1,17 @@
+{
+  "memory.availableGB" : 14.635965152000001,
+  "memory.footprintGB" : 2.5439040319999999,
+  "recordedAt" : "2026-10-14T21:47:11Z",
+  "results" : [
+    {
+      "answer" : "I can suggest some classic names like Goldie or Sunny. You could also try something more unique like Copper or Honey.",
+      "firstSentenceSeconds" : 0.98865294456481934,
+      "heard" : "What's a good name for a golden retriever puppy",
+      "language" : "en-US",
+      "said" : "What's a good name for a golden retriever puppy?",
+      "totalSeconds" : 2.4574600458145142,
+      "wer" : 0
+    }
+  ],
+  "title" : "Golden Retriever Puppy Name Ideas"
+}

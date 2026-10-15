@@ -1,0 +1,47 @@
+[
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "176A213C-D7E0-4EA1-BA91-E11B263E1574.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "knowledge01_index_0_4B588DF1-54A9-41F8-A960-C4E66C92823B.json",
+        "timestamp" : 1792016895.657
+      }
+    ],
+    "testIdentifier" : "KnowledgeScenarioTests/test01_IndexAndRetrieveWithEmbeddingGemma()",
+    "testIdentifierURL" : "test://com.apple.xcode/Agello/AgelloDeviceTests/KnowledgeScenarioTests/test01_IndexAndRetrieveWithEmbeddingGemma"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "27D56BA7-CB93-46C1-838C-34AE7C00A664.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "knowledge02_summarize_0_1942EA5E-6583-47DE-AC2D-0B96B1DCE81E.json",
+        "timestamp" : 1792016922.334
+      }
+    ],
+    "testIdentifier" : "KnowledgeScenarioTests/test02_SummarizeLongPDFThenCitedFollowUp()",
+    "testIdentifierURL" : "test://com.apple.xcode/Agello/AgelloDeviceTests/KnowledgeScenarioTests/test02_SummarizeLongPDFThenCitedFollowUp"
+  },
+  {
+    "attachments" : [
+      {
+        "configurationName" : "Test Scheme Action",
+        "deviceId" : "00008152-0011182130814036",
+        "deviceName" : "My Mac",
+        "exportedFileName" : "15B69CF5-A6C4-4337-A0A7-4661749E0C9A.json",
+        "isAssociatedWithFailure" : false,
+        "suggestedHumanReadableName" : "knowledge03_chatsByMeaning_0_70C6DC69-735A-4629-8AAB-910529DD8392.json",
+        "timestamp" : 1792016931.414
+      }
+    ],
+    "testIdentifier" : "KnowledgeScenarioTests/test03_ChatsByMeaning()",
+    "testIdentifierURL" : "test://com.apple.xcode/Agello/AgelloDeviceTests/KnowledgeScenarioTests/test03_ChatsByMeaning"
+  }
+]

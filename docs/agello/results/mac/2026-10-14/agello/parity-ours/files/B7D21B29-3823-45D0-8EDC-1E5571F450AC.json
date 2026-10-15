@@ -1,0 +1,44 @@
+{
+  "embeddingDownloadSeconds" : 0,
+  "footprintGB" : 2.8817252,
+  "hits" : [
+    {
+      "citations" : [
+        "coastal-report.pdf, pp. 6–8",
+        "coastal-report.pdf, pp. 1–2",
+        "coastal-report.pdf, pp. 24–26"
+      ],
+      "expectedPage" : 7,
+      "question" : "When was the lighthouse automated?",
+      "rank" : 0,
+      "searchSeconds" : 0.010388970375061035
+    },
+    {
+      "citations" : [
+        "coastal-report.pdf, pp. 22–24",
+        "coastal-report.pdf, pp. 14–16",
+        "coastal-report.pdf, pp. 38–40"
+      ],
+      "expectedPage" : 23,
+      "question" : "How much money was approved for renovating the harbour?",
+      "rank" : 0,
+      "searchSeconds" : 0.0091800689697265625
+    },
+    {
+      "citations" : [
+        "coastal-report.pdf, pp. 34–36",
+        "coastal-report.pdf, pp. 10–12",
+        "coastal-report.pdf, pp. 30–32"
+      ],
+      "expectedPage" : 35,
+      "question" : "How many seals did the divers count?",
+      "rank" : 0,
+      "searchSeconds" : 0.0086619853973388672
+    }
+  ],
+  "indexSeconds" : 0.81954598426818848,
+  "memory.availableGB" : 14.298143983999999,
+  "memory.footprintGB" : 2.8817252,
+  "passages" : 20,
+  "recordedAt" : "2026-10-14T22:05:27Z"
+}
