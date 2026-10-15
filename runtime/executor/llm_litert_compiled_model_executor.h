@@ -485,6 +485,12 @@ class LlmLiteRtCompiledModelExecutorBase : public LlmExecutor {
   // state/context restore, step change or failed round invalidates it, and the
   // next MTP round then goes through the priming path.
   bool mtp_primed_ = false;
+
+  // Agello (T2): the sampled ids of a plain decode step, kept for the next
+  // step of the same shape instead of allocated every step.
+  std::optional<TensorBuffer> decode_output_tokens_;
+  std::pair<int, int> decode_output_tokens_shape_ = {0, 0};
+  absl::StatusOr<TensorBuffer*> DecodeOutputTokens(int batch_size, int length);
 };
 
 // The static executor for the prefill-decode compiled model.

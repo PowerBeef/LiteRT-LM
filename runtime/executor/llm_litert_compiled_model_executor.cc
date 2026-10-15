@@ -1135,7 +1135,6 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::DecodeInternal(
   if (signatures_.input_attn_mask.has_value() && !skip_cpu_global_causal_mask) {
     AGELLO_SPAN(kMaskFill, 1);
     AGELLO_COUNT(kMaskFills);
-    AGELLO_COUNT(kTokenHistoryCopies);
     ABSL_RETURN_IF_ERROR(InitializeAttentionMask(
         decode_input_buffers_[signatures_.input_attn_mask.value()],
         use_fp16_precision_));
@@ -1145,11 +1144,10 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::DecodeInternal(
           use_fp16_precision_));
     }
     const AttentionMaskParams& attn_params = decode_attn_params;
-    auto tokens_copy =
-        llm_context_->processed_context().processed_tokens().GetCopyOfTokens();
-    absl::Span<const int> token_ids_span =
-        tokens_copy.empty() ? absl::Span<const int>()
-                            : absl::MakeConstSpan(tokens_copy[0]);
+    // Agello (T2): the token history only tells which queries are vision
+    // placeholders (ExecutorVisionData::kSpecialToken, -1), and a decode step's
+    // query is a sampled token, never one: no copy of the history per step.
+    absl::Span<const int> token_ids_span;
 
     ABSL_RETURN_IF_ERROR(FillAttentionMask(
         decode_input_buffers_[signatures_.input_attn_mask.value()], step,
@@ -1338,17 +1336,15 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
     const absl::Time plain_start = absl::Now();
     ABSL_ASSIGN_OR_RETURN(auto decoded_logits,
                           DecodeLogitsImpl(ExecutorInputs(), decode_params));
-    std::optional<TensorBuffer> output_tokens;
+    TensorBuffer* output_tokens = nullptr;
     {
       LITERT_ASSIGN_OR_RETURN(auto decoded_logits_type,
                               decoded_logits.TensorType());
       auto dimensions = decoded_logits_type.Layout().Dimensions();
       // Shape of decoded_logits is [batch_size, Token_length, vocab_size].
       RET_CHECK_EQ(dimensions.size(), 3);
-      AGELLO_COUNT(kDecodeAllocations);
-      LITERT_ASSIGN_OR_RETURN(
-          output_tokens,
-          CreateTensorBuffer<int>({dimensions[0], dimensions[1]}));
+      ABSL_ASSIGN_OR_RETURN(output_tokens,
+                            DecodeOutputTokens(dimensions[0], dimensions[1]));
     }
     ABSL_RETURN_IF_ERROR(SampleLogits(decoded_logits, *output_tokens));
     {
@@ -1406,14 +1402,12 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
         auto dimensions = decoded_logits_type.Layout().Dimensions();
         // Shape of decoded_logits is [batch_size, Token_length, vocab_size].
         RET_CHECK_EQ(dimensions.size(), 3);
-        AGELLO_COUNT(kDecodeAllocations);
-        LITERT_ASSIGN_OR_RETURN(
-            auto output_tokens,
-            CreateTensorBuffer<int>({dimensions[0], dimensions[1]}));
-        ABSL_RETURN_IF_ERROR(SampleLogits(decoded_logits, output_tokens));
+        ABSL_ASSIGN_OR_RETURN(TensorBuffer * output_tokens,
+                              DecodeOutputTokens(dimensions[0], dimensions[1]));
+        ABSL_RETURN_IF_ERROR(SampleLogits(decoded_logits, *output_tokens));
         AGELLO_SPAN(kLogitsReadback);
         LITERT_ASSIGN_OR_RETURN(output_tokens_vector,
-                                CopyFromTensorBuffer2D<int>(output_tokens));
+                                CopyFromTensorBuffer2D<int>(*output_tokens));
         RET_CHECK_EQ(output_tokens_vector.size(), 1);
         RET_CHECK_EQ(output_tokens_vector[0].size(), 1);
         token_id = output_tokens_vector[0][0];
@@ -1589,6 +1583,20 @@ LlmLiteRtCompiledModelExecutorBase::GetPrefillSignatureKey() const {
   }
   RET_CHECK(!prefill_signature_key.empty());
   return prefill_signature_key;
+}
+
+absl::StatusOr<TensorBuffer*>
+LlmLiteRtCompiledModelExecutorBase::DecodeOutputTokens(int batch_size,
+                                                       int length) {
+  if (!decode_output_tokens_.has_value() ||
+      decode_output_tokens_shape_ != std::make_pair(batch_size, length)) {
+    AGELLO_COUNT(kDecodeAllocations);
+    LITERT_ASSIGN_OR_RETURN(auto buffer,
+                            CreateTensorBuffer<int>({batch_size, length}));
+    decode_output_tokens_ = std::move(buffer);
+    decode_output_tokens_shape_ = {batch_size, length};
+  }
+  return &*decode_output_tokens_;
 }
 
 absl::StatusOr<std::unique_ptr<StateInterface>>
