@@ -48,6 +48,7 @@ cc_library(
         "//runtime/executor:state_interface",
         "//runtime/proto:executor_metadata_cc_proto",
         "//runtime/util:litert_status_util",
+        "//runtime/util:metal_raw_buffer",
         "//runtime/util:tensor_buffer_util",
     ],
 )

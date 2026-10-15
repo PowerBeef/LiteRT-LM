@@ -373,6 +373,7 @@ cc_library(
     srcs = ["tensor_buffer_util.cc"],
     hdrs = ["tensor_buffer_util.h"],
     deps = [
+        ":metal_raw_buffer",
         "@com_google_absl//absl/status:statusor",
         "@com_google_absl//absl/types:span",
         "@litert//litert/cc:litert_environment",
@@ -381,6 +382,30 @@ cc_library(
         "@litert//litert/cc:litert_tensor_buffer",
         "@litert//litert/cc:litert_tensor_buffer_types",
     ],
+)
+
+# Agello (T3): the CPU view of a shared Metal buffer (raw KV snapshots).
+cc_library(
+    name = "metal_raw_buffer",
+    hdrs = ["metal_raw_buffer.h"],
+    deps = select({
+        "@platforms//os:ios": [":metal_raw_buffer_apple"],
+        "@platforms//os:macos": [":metal_raw_buffer_apple"],
+        "//conditions:default": [":metal_raw_buffer_stub"],
+    }),
+)
+
+objc_library(
+    name = "metal_raw_buffer_apple",
+    srcs = ["metal_raw_buffer.mm"],
+    hdrs = ["metal_raw_buffer.h"],
+    sdk_frameworks = ["Metal"],
+)
+
+cc_library(
+    name = "metal_raw_buffer_stub",
+    srcs = ["metal_raw_buffer_stub.cc"],
+    hdrs = ["metal_raw_buffer.h"],
 )
 
 cc_test(

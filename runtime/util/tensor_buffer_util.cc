@@ -16,6 +16,7 @@
 
 #include <cstring>
 #include <memory>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -42,6 +43,20 @@ absl::StatusOr<std::vector<int>> TensorBufferDims(
   LITERT_ASSIGN_OR_RETURN(auto tensor_type, tensor_buffer.TensorType());
   auto dims = tensor_type.Layout().Dimensions();
   return std::vector<int>(dims.begin(), dims.end());
+}
+
+std::optional<MetalRawBuffer> RawMetalStorage(const ::litert::TensorBuffer& tensor_buffer) {
+  if (!tensor_buffer.IsMetalMemory()) return std::nullopt;
+  auto mtl_buffer = tensor_buffer.GetMetalBuffer();
+  auto packed_size = tensor_buffer.PackedSize();
+  if (!mtl_buffer || !packed_size) return std::nullopt;
+  std::optional<MetalRawBuffer> raw = GetMetalRawBuffer(*mtl_buffer);
+  // A buffer of its own: its length is the tensor's, up to the allocation's rounding.
+  constexpr size_t kAllocationSlack = 64 * 1024;
+  if (!raw || raw->length < *packed_size || raw->length - *packed_size > kAllocationSlack) {
+    return std::nullopt;
+  }
+  return raw;
 }
 
 absl::StatusOr<::litert::TensorBuffer> CopyTensorBuffer(

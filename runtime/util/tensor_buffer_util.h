@@ -15,6 +15,7 @@
 #ifndef THIRD_PARTY_ODML_LITERT_LM_RUNTIME_UTIL_TENSOR_BUFFER_UTIL_H_
 #define THIRD_PARTY_ODML_LITERT_LM_RUNTIME_UTIL_TENSOR_BUFFER_UTIL_H_
 
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -24,6 +25,7 @@
 #include "litert/cc/litert_macros.h"  // from @litert
 #include "litert/cc/litert_ranked_tensor_type.h"  // from @litert
 #include "litert/cc/litert_tensor_buffer.h"  // from @litert
+#include "runtime/util/metal_raw_buffer.h"
 
 namespace litert::lm {
 
@@ -37,6 +39,11 @@ absl::StatusOr<std::vector<int>> TensorBufferDims(
     const ::litert::TensorBuffer& tensor_buffer);
 
 // Creates a deep copy of the given tensor buffer.
+// Agello (T3): the raw storage of a Metal tensor buffer that has a shared MTLBuffer of its own
+// (what TensorBuffer::CreateManaged allocates): its bytes in the GPU's layout. nullopt for other
+// buffers, including views into a larger MTLBuffer (their offset isn't visible here).
+std::optional<MetalRawBuffer> RawMetalStorage(const litert::TensorBuffer& tensor_buffer);
+
 absl::StatusOr<litert::TensorBuffer> CopyTensorBuffer(
     litert::Environment& env, const litert::TensorBuffer& tensor_buffer);
 

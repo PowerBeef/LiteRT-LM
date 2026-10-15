@@ -163,6 +163,9 @@ class LitertState : public StateInterface {
       bank_2_state_buffers_;
 
   bool bank_1_is_input_ = true;
+  // Agello (T3): this state is a raw snapshot of Metal buffers (DeepCopy): host buffers holding
+  // each MTLBuffer's bytes in the GPU's layout, only meaningful to CopyContentsFrom.
+  bool raw_metal_snapshot_ = false;
 
   AllocationPolicy allocation_policy_;
 };

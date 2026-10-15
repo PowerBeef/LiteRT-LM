@@ -44,6 +44,7 @@
 #include "runtime/executor/common_utils.h"
 #include "runtime/executor/litert_compiled_model_executor_utils.h"
 #include "runtime/executor/state_interface.h"
+#include "runtime/util/metal_raw_buffer.h"
 #include "runtime/util/status_macros.h"
 #include "runtime/util/tensor_buffer_util.h"
 
@@ -268,11 +269,45 @@ absl::Status LitertState::BroadcastAndCopyFrom(StateInterface& other) {
   return absl::OkStatus();
 }
 
+namespace {
+
+// Agello (T3): a raw snapshot of a buffer with its own shared MTLBuffer: a host buffer of the
+// MTLBuffer's length holding its bytes as they are. A lock would convert the GPU layout to row
+// order and back on restore (the KV caches' transpose cost about 290 ms per snapshot at 16K).
+absl::StatusOr<TensorBuffer> RawMetalSnapshot(Environment& env, const TensorBuffer& buffer,
+                                              const MetalRawBuffer& raw) {
+  LITERT_ASSIGN_OR_RETURN(auto tensor_type, buffer.TensorType());
+  LITERT_ASSIGN_OR_RETURN(
+      auto copy,
+      TensorBuffer::CreateManaged(env, TensorBufferType::kHostMemory, tensor_type, raw.length));
+  LITERT_ASSIGN_OR_RETURN(auto lock_and_addr,
+                          TensorBufferScopedLock::Create(copy, TensorBuffer::LockMode::kWrite));
+  memcpy(lock_and_addr.second, raw.contents, raw.length);
+  return copy;
+}
+
+}  // namespace
+
 absl::StatusOr<std::unique_ptr<StateInterface>> LitertState::DeepCopy() const {
+  // Agello (T3): raw snapshots when every buffer is a Metal buffer of its own.
+  bool raw = !bank_1_state_buffers_.empty();
+  auto all_raw = [](const absl::flat_hash_map<std::string, StateBuffer>& bank) {
+    for (const auto& [_, state_buffer] : bank) {
+      if (!RawMetalStorage(state_buffer.buffer)) return false;
+    }
+    return true;
+  };
+  raw = raw && all_raw(bank_1_state_buffers_) &&
+        (!bank_2_state_buffers_.has_value() || all_raw(*bank_2_state_buffers_));
+  auto copy_buffer = [&](const TensorBuffer& buffer) -> absl::StatusOr<TensorBuffer> {
+    if (raw) return RawMetalSnapshot(env_, buffer, *RawMetalStorage(buffer));
+    LITERT_ASSIGN_OR_RETURN(auto buf_copy, CopyTensorBuffer(env_, buffer));
+    return buf_copy;
+  };
+
   absl::flat_hash_map<std::string, StateBuffer> bank_1_state_buffers;
   for (const auto& [name, state_buffer] : bank_1_state_buffers_) {
-    LITERT_ASSIGN_OR_RETURN(auto buf_copy,
-                            CopyTensorBuffer(env_, state_buffer.buffer));
+    ABSL_ASSIGN_OR_RETURN(auto buf_copy, copy_buffer(state_buffer.buffer));
     bank_1_state_buffers[name] = StateBuffer{
         .buffer = std::move(buf_copy),
         .type = state_buffer.type,
@@ -286,8 +321,7 @@ absl::StatusOr<std::unique_ptr<StateInterface>> LitertState::DeepCopy() const {
     bank_2_state_buffers.emplace();
     auto& map = *bank_2_state_buffers;
     for (const auto& [name, state_buffer] : *bank_2_state_buffers_) {
-      LITERT_ASSIGN_OR_RETURN(auto buf_copy,
-                              CopyTensorBuffer(env_, state_buffer.buffer));
+      ABSL_ASSIGN_OR_RETURN(auto buf_copy, copy_buffer(state_buffer.buffer));
       map[name] = StateBuffer{
           .buffer = std::move(buf_copy),
           .type = state_buffer.type,
@@ -300,6 +334,7 @@ absl::StatusOr<std::unique_ptr<StateInterface>> LitertState::DeepCopy() const {
       batch_size_, num_entries_, env_, std::move(bank_1_state_buffers),
       std::move(bank_2_state_buffers), allocation_policy_));
   copy->bank_1_is_input_ = bank_1_is_input_;
+  copy->raw_metal_snapshot_ = raw;
 
   return copy;
 }
@@ -331,13 +366,27 @@ absl::Status LitertState::CopyContentsFrom(const LitertState& other) {
   RET_CHECK_EQ(bank_2_state_buffers_.has_value(),
                other.bank_2_state_buffers_.has_value());
 
-  auto copy_bank = [](absl::flat_hash_map<std::string, StateBuffer>& dst,
-                      const absl::flat_hash_map<std::string, StateBuffer>& src)
+  const bool raw = other.raw_metal_snapshot_;
+  auto copy_bank = [raw](absl::flat_hash_map<std::string, StateBuffer>& dst,
+                         const absl::flat_hash_map<std::string, StateBuffer>& src)
       -> absl::Status {
     RET_CHECK_EQ(dst.size(), src.size());
     for (auto& [name, state_buffer] : dst) {
       auto it = src.find(name);
       RET_CHECK(it != src.end()) << "Missing state buffer: " << name;
+      if (raw) {
+        // Agello (T3): a raw snapshot goes back byte for byte into the same kind of buffer.
+        std::optional<MetalRawBuffer> storage = RawMetalStorage(state_buffer.buffer);
+        RET_CHECK(storage.has_value()) << "Raw snapshot restored into another buffer kind: "
+                                       << name;
+        LITERT_ASSIGN_OR_RETURN(size_t src_size, it->second.buffer.Size());
+        RET_CHECK_EQ(src_size, storage->length);
+        LITERT_ASSIGN_OR_RETURN(auto src_lock_and_addr,
+                                TensorBufferScopedLock::Create(
+                                    it->second.buffer, TensorBuffer::LockMode::kRead));
+        memcpy(storage->contents, src_lock_and_addr.second, storage->length);
+        continue;
+      }
       ABSL_RETURN_IF_ERROR(
           CopyBufferContents(state_buffer.buffer, it->second.buffer));
     }
