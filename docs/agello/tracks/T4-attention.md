@@ -97,8 +97,8 @@ Results (M6, against step 1; raw records in `results/mac/2026-10-15/`):
 Fidelity: 88/88 digit copies exact, all 83 cases' replies identical to step 1's, for each of the
 two kernel changes. Agello on the Mac: inference 21/21 (both), probes 12/12; no error anomalies.
 
-Since before T4 (decode-step cost of a 30K context, prefill of a 30K prompt): decode 33.1 → 43.1
-tok/s and prefill 945 → 2,061 tok/s.
+Since before T4, for a 30K-token prompt at a 32K window: decode 30.6 → 42–43 tok/s (+39%), prefill
+945 → 2,061 tok/s (2.2×).
 
 ## Next
 
