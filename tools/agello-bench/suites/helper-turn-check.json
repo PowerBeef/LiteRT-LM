@@ -1,0 +1,6 @@
+[
+ {"id": "h2k-none", "kind": "helper-turn", "sentences": 129, "decode": 32, "keep": true, "helper": false},
+ {"id": "h2k-keep", "kind": "helper-turn", "sentences": 129, "decode": 32, "keep": true},
+ {"id": "h8k-none", "kind": "helper-turn", "sentences": 500, "decode": 32, "keep": true, "helper": false},
+ {"id": "h8k-keep", "kind": "helper-turn", "sentences": 500, "decode": 32, "keep": true}
+]

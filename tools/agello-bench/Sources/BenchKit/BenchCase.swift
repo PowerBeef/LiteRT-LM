@@ -15,6 +15,12 @@ public struct BenchCase: Codable, Sendable, Equatable {
     /// sized prefill + decode + 32 tokens, `prefill` synthetic prompt tokens,
     /// then `decode` tokens. Agello's in-app benchmark is this call.
     case engineBenchmark = "engine-benchmark"
+    /// The first reply after a helper (T3): a history of `sentences` filler
+    /// sentences in the main conversation, a helper prompt in a second
+    /// conversation, then a short message. `keep` sends it on the main
+    /// conversation (the runtime restores it); otherwise on a new conversation
+    /// seeded with the history, as Agello does today. `ttft` is that message's.
+    case helperTurn = "helper-turn"
   }
 
   public var id: String
@@ -27,6 +33,10 @@ public struct BenchCase: Codable, Sendable, Equatable {
   public var decode: Int?
   /// Prompt tokens for an engine benchmark.
   public var prefill: Int?
+  /// Helper turn: keep the main conversation instead of reseeding it.
+  public var keep: Bool?
+  /// Helper turn: run the helper (default); false is the control without one.
+  public var helper: Bool?
 
   public init(
     id: String, kind: Kind = .digitCopy, sentences: Int = 0, late: Bool = false, seed: Int = 1,
@@ -50,6 +60,8 @@ public struct BenchCase: Codable, Sendable, Equatable {
     seed = try c.decodeIfPresent(Int.self, forKey: .seed) ?? 1
     decode = try c.decodeIfPresent(Int.self, forKey: .decode)
     prefill = try c.decodeIfPresent(Int.self, forKey: .prefill)
+    keep = try c.decodeIfPresent(Bool.self, forKey: .keep)
+    helper = try c.decodeIfPresent(Bool.self, forKey: .helper)
   }
 
   /// Load a suite: a JSON array of cases.

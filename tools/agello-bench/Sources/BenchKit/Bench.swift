@@ -96,6 +96,9 @@ public struct Bench: Sendable {
     if item.kind == .engineBenchmark {
       return try await engineBenchmark(item, rep: rep, warmup: warmup)
     }
+    if item.kind == .helperTurn {
+      return try await helperTurn(item, rep: rep, warmup: warmup)
+    }
     guard let engine else { throw BenchError.noEngine }
     let prompt: String
     let digits: String?
@@ -107,7 +110,7 @@ public struct Bench: Sendable {
     case .speed:
       (prompt, digits) = (Prompts.speed(item), nil)
       maxOutputTokens = item.decode ?? 256
-    case .engineBenchmark:
+    case .engineBenchmark, .helperTurn:
       preconditionFailure("handled above")
     }
     let conversation = try await engine.createConversation(
@@ -131,6 +134,55 @@ public struct Bench: Sendable {
       firstMismatchPosition: mismatch.map { info.lastPrefillTokenCount - 1 + $0 },
       kind: item.kind.rawValue, label: label, run: run, rep: rep, warmup: warmup,
       kv: settings.maxNumTokens, ttft: info.timeToFirstTokenInSecond,
+      thermal: ProcessInfo.processInfo.thermalState.label,
+      footprintMB: Double(footprint.bytes) / 1e6, peakFootprintMB: Double(footprint.peakBytes) / 1e6,
+      loadSeconds: loadSeconds, cache: cache, modelSHA256: modelSHA256, machine: machine)
+  }
+
+  /// The first reply after a helper: see `BenchCase.Kind.helperTurn`.
+  func helperTurn(_ item: BenchCase, rep: Int, warmup: Bool) async throws -> CaseRecord {
+    guard let engine else { throw BenchError.noEngine }
+    func greedy() throws -> ConversationConfig {
+      ConversationConfig(samplerConfig: try SamplerConfig(topK: 1, topP: 1, temperature: 0))
+    }
+    let history = Prompts.filler(sentences: item.sentences)
+      + "\n\nRead these notes. Reply only with: noted."
+    var main: Conversation? = try await engine.createConversation(with: try greedy())
+    let noted = try await main!.sendMessage(Message(history), maxOutputTokens: 8).toString
+    if item.helper != false {
+      let helper = try await engine.createConversation(with: try greedy())
+      _ = try await helper.sendMessage(
+        Message("Give a three-word title for a chat about a lighthouse."), maxOutputTokens: 12)
+    }
+    let followUp = Message("Name one thing these notes say the keeper checks.")
+    let conversation: Conversation
+    if item.keep == true {
+      conversation = main!
+    } else {
+      main = nil
+      conversation = try await engine.createConversation(
+        with: ConversationConfig(
+          initialMessages: [Message(history, role: .user), Message(noted, role: .model)],
+          samplerConfig: try SamplerConfig(topK: 1, topP: 1, temperature: 0)))
+    }
+    let started = ContinuousClock.now
+    var first: Double?
+    var reply = ""
+    for try await chunk in conversation.sendMessageStream(followUp, maxOutputTokens: item.decode ?? 32) {
+      if first == nil { first = (ContinuousClock.now - started).seconds }
+      reply += chunk.toString
+    }
+    let seconds = (ContinuousClock.now - started).seconds
+    let info = try Timing(conversation, benchmarkMode: settings.benchmarkMode)
+    let footprint = Footprint.current()
+    return CaseRecord(
+      id: item.id, backend: settings.backend, activation: settings.fp32 ? "fp32" : "default",
+      model: settings.model.lastPathComponent, sentences: item.sentences, late: false,
+      seed: item.seed, prefill: info.lastPrefillTokenCount, decode: info.lastDecodeTokenCount,
+      exact: nil, expected: nil, output: reply, seconds: seconds, mtp: settings.mtp,
+      prefillTPS: info.lastPrefillTokensPerSecond, decodeTPS: info.lastDecodeTokensPerSecond,
+      firstMismatch: nil, firstMismatchPosition: nil, kind: item.kind.rawValue, label: label,
+      run: run, rep: rep, warmup: warmup, kv: settings.maxNumTokens, ttft: first ?? seconds,
       thermal: ProcessInfo.processInfo.thermalState.label,
       footprintMB: Double(footprint.bytes) / 1e6, peakFootprintMB: Double(footprint.peakBytes) / 1e6,
       loadSeconds: loadSeconds, cache: cache, modelSHA256: modelSHA256, machine: machine)

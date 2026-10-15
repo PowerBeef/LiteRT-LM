@@ -1,0 +1,8 @@
+[
+ {"id": "h2k-reseed", "kind": "helper-turn", "sentences": 129, "decode": 32},
+ {"id": "h2k-keep", "kind": "helper-turn", "sentences": 129, "decode": 32, "keep": true},
+ {"id": "h4k-reseed", "kind": "helper-turn", "sentences": 250, "decode": 32},
+ {"id": "h4k-keep", "kind": "helper-turn", "sentences": 250, "decode": 32, "keep": true},
+ {"id": "h8k-reseed", "kind": "helper-turn", "sentences": 500, "decode": 32},
+ {"id": "h8k-keep", "kind": "helper-turn", "sentences": 500, "decode": 32, "keep": true}
+]
