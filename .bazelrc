@@ -562,3 +562,5 @@ build:agello --objccopt=-std=gnu++20
 # A missing symbol is a link error, not a null pointer at run time (build:macos links with
 # -undefined dynamic_lookup).
 build:agello --linkopt=-Wl,-undefined,error
+# Commits and flags for litert_lm_get_build_info.
+build:agello --workspace_status_command=agello/workspace_status.sh

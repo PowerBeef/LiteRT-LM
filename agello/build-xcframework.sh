@@ -6,6 +6,7 @@
 set -eu
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+export AGELLO_BUILD_FLAGS="--config=agello -c opt $*"
 bazelisk build --config=agello -c opt "$@" //agello:CLiteRTLM
 rm -rf dist/CLiteRTLM.xcframework
 mkdir -p dist
@@ -26,6 +27,7 @@ source_of() {
   echo "Bazel: $(bazelisk version 2>/dev/null | sed -n 's/^Build label: //p')"
   echo "Xcode: $(xcodebuild -version | tr '\n' ' ')"
   echo "Flags: --config=agello -c opt $*"
+  echo "Build id: $(sed -n 's/^STABLE_AGELLO_BUILD_ID //p' bazel-out/stable-status.txt)"
   echo "Built: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
   for slice in dist/CLiteRTLM.xcframework/*/CLiteRTLM.framework; do
     binary="$(find "$slice" -name CLiteRTLM -type f | head -n 1)"

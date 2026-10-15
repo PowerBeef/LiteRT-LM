@@ -8,6 +8,22 @@
 
 load("@build_bazel_rules_apple//apple:apple.bzl", "apple_xcframework")
 
+# litert_lm_get_build_info's JSON, from the stamp agello/workspace_status.sh prints.
+genrule(
+    name = "build_info_stamp",
+    outs = ["build_info_stamp.cc"],
+    cmd = "$(location make_build_info.sh) bazel-out/stable-status.txt > $@",
+    stamp = 1,
+    tools = ["make_build_info.sh"],
+)
+
+cc_library(
+    name = "build_info",
+    srcs = [":build_info_stamp"],
+    visibility = ["//visibility:public"],
+    alwayslink = True,
+)
+
 apple_xcframework(
     name = "CLiteRTLM",
     bundle_id = "com.patricedery.agello.CLiteRTLM",
@@ -30,6 +46,7 @@ apple_xcframework(
         "//c:experimental.h",
         "//c:model_info.h",
         "//c:telemetry.h",
+        "//c:build_info.h",
     ],
     deps = ["//swift:CLiteRTLM_objc"],
 )

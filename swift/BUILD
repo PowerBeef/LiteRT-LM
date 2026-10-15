@@ -38,6 +38,7 @@ swift_library(
         "ModelInfo.swift",
         "ResponseFormat.swift",
         "Telemetry.swift",
+        "BuildInfo.swift",
         "Tool.swift",
         "ToolManager.swift",
     ],
@@ -120,6 +121,7 @@ C_LITERT_LM_PUBLIC_HDRS = [
     "//c:experimental.h",
     "//c:model_info.h",
     "//c:telemetry.h",
+    "//c:build_info.h",
 ]
 
 swift_interop_hint(

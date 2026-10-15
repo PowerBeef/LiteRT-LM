@@ -27,6 +27,7 @@ package(
 licenses(["notice"])
 
 exports_files([
+    "build_info.h",
     "telemetry.h",
     "api_export.h",
     "conversation.cc",
@@ -341,6 +342,7 @@ cc_library(
         "error_reporter.cc",
         "experimental.cc",
         "telemetry.cc",
+        "build_info.cc",
         "model_info.cc",
     ],
     hdrs = [
@@ -352,11 +354,13 @@ cc_library(
         "experimental.h",
         "model_info.h",
         "telemetry.h",
+        "build_info.h",
     ],
     defines = LITERT_LM_DEBUGGER_DEFINES,
     visibility = ["//visibility:public"],
     deps = ENGINE_COMMON_DEPS + [
         "@agello_telemetry//:telemetry",
+        "//agello:build_info",
         "//runtime/core:engine_impl",
     ],
     alwayslink = True,
@@ -372,6 +376,7 @@ cc_library(
         "error_reporter.cc",
         "experimental.cc",
         "telemetry.cc",
+        "build_info.cc",
         "model_info.cc",
     ],
     hdrs = [
@@ -383,11 +388,13 @@ cc_library(
         "experimental.h",
         "model_info.h",
         "telemetry.h",
+        "build_info.h",
     ],
     defines = LITERT_LM_DEBUGGER_DEFINES,
     visibility = ["//visibility:public"],
     deps = ENGINE_COMMON_DEPS + [
         "@agello_telemetry//:telemetry",
+        "//agello:build_info",
         "//runtime/core:engine_advanced_impl_cpu_only",
     ],
     alwayslink = True,
