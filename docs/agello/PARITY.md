@@ -58,11 +58,26 @@ The MTP gap is closed, still with the CPU sampler: the readbacks it needs no lon
 Drift's per-element conversion. Single runs per window, so read the margins as within a few
 percent. Peak footprint is 1–6% above Google's (unchanged by this step).
 
+## After T4's first step (2026-10-14)
+
+Attention select and softmax bounded to the filled length (LiteRT `aa05bd2d`,
+tracks/T4-attention.md). Same calibration (`results/mac/2026-10-14/agello/calibrate-ours-t4.json`):
+
+| Window | Decode tok/s, Google / ours | Prefill tok/s, Google / ours | TTFT s, Google / ours | Peak footprint GB |
+| --- | --- | --- | --- | --- |
+| 4,096 | 73.6 / 83.5 (+13%) | 2,047 / 2,447 (+20%) | 0.63 / 0.53 | 2.50 / 2.66 |
+| 8,192 | 69.0 / 76.0 (+10%) | 2,162 / 2,939 (+36%) | 1.06 / 0.78 | 2.79 / 2.90 |
+| 16,384 | 73.9 / 75.5 (+2%) | 1,619 / 2,678 (+65%) | 2.72 / 1.64 | 3.77 / 3.82 |
+| 32,768 | 61.9 / 65.4 (+6%) | 1,092 / 2,347 (+115%) | 7.88 / 3.67 | 5.61 / 5.95 |
+
+Single runs per window, recorded about five hours apart.
+
 ## Verdict
 
 - Correctness: parity. Same suites pass, digit copies exact, replies identical to Google's on the
   short suite.
-- Prefill, TTFT, memory: parity (within ±5%; footprint +1–6%).
+- Prefill and TTFT: at parity, then ahead since T4's first step: prefill +20% at 4K to +115% at
+  32K, TTFT halved at 32K. Memory: footprint 1–6% above Google's.
 - Decode with MTP: at parity since T5's first step (above). Before it, −8% to −17%: our build
   samples on the CPU (`sampler = cpu`, the GPU sampler being closed source), MTP samples four to
   five times per round, and each 262,144-logit readback went through ML Drift's per-element

@@ -24,8 +24,12 @@ is the engine load's snapshot. Read them with `tools/agello-bench/telemetry.py` 
 | `direct-ab2-mtp.jsonl`, `direct-ab2-nomtp.jsonl` | Same, with direct writes and tiled reads (LiteRT `584f3461`) | T5 note, "Reads and writes" |
 | `direct2-verify.jsonl` | `AGELLO_VERIFY_DIRECT_COPIES=1` with direct writes, before the tiled reads: every direct copy checked against ML Drift's conversion (the final build's check is `agello/inference-t5-verify.json`) | T5 note, Verification |
 
+| `t4-base.jsonl` | Before T4 (LiteRT `584f3461`): 2K prompt at windows 8K and 32K, MTP off and on | T4 note |
+| `t4-ab-kv{4096,8192,32768}{,-mtp}.jsonl` | T4's pass off and on in the same binary (LiteRT `aa05bd2d`, `AGELLO_BOUNDED_ATTENTION=0` for `off`), ABAB, 1 warm-up and 3 repetitions per arm | T4 note |
+| `t4-fid.jsonl` | The digit-copy suites (`short`, `long`, `cross4096`, `xl`) at a 32K window, off then on | T4 note, Fidelity |
+
 Frameworks (SHA-256 of the macOS slice): `base` `a0cdb032…`, T5 reads `055bd719…`, T5 final
-`c7793a8e…`.
+`c7793a8e…`, T4 `434de205…`.
 
 ## `agello/`: Agello's `harness-report.json` (Mac, `PLATFORM=mac`)
 
@@ -40,6 +44,9 @@ phone. Each scenario of our builds carries `telemetry`.
 | `inference-before-t5.json` | Ours, LiteRT `5083cfae` (iOS slice `23c4b7e7…`) | `inference`, 21/21, 139 s | T5 note: session snapshots before |
 | `inference-t5.json` | Ours, LiteRT `584f3461` | `inference`, 21/21, 119 s | T5 note: session snapshots after |
 | `inference-t5-verify.json` | Same, with `TEST_RUNNER_AGELLO_VERIFY_DIRECT_COPIES=1` | `inference`, 21/21 | T5 note: 10,480 copies, none different |
+| `calibrate-ours-t4.json`, `calibrate-ours-t4-off.json` | Ours, LiteRT `aa05bd2d`, T4's pass on, and off (`TEST_RUNNER_AGELLO_BOUNDED_ATTENTION=0`); the `on` run after the `off` one | `calibrate` | PARITY.md, T4 note |
+| `calibrate-ours-t4-cold.json` | Same build, the pass on, the first runs after the cache key changed: one-off stalls of about 430 ms in the CPU embedders (cold caches) | `calibrate` | T4 note |
+| `inference-t4.json`, `probes-t4.json`, `thinking-t4.json`, `files-t4.json` | Ours, LiteRT `aa05bd2d` | 21/21, 12/12 (3 skipped), 2/2, 3/3 | T4 note |
 
 Calibration runs are single runs per window. Google's and our first calibration were recorded
 about two hours before the T5 run.

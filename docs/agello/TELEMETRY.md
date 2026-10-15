@@ -128,8 +128,8 @@ Shares of summed kernel time (each kernel in its own encoder, so absolute times 
 | Prefill | Neural Accelerator int8 convolutions 39%, mask select 11.5%, softmax 16.4%, int4→int8 weight conversion 8.4%, activation quantization 3.7% | **mask select 23%, softmax 37%**, convolutions 20.5% (same work as at 8K), weight conversion 4.4% |
 
 The matmul work doesn't depend on T; the select and the softmax scale with it. Bounding them to
-the filled length (T4, first step) should bring 32K prefill close to its 8K speed (about 2×) and
-add about 8% to decode at 32K. The int4 weights are converted to int8 on every prefill run (T9:
+the filled length (T4's first step, tracks/T4-attention.md) did more than estimated: prefill +140%
+at 32K and +37.5% at 8K, decode +14% at 32K. The int4 weights are converted to int8 on every prefill run (T9:
 native int4 for the Neural Accelerator path).
 
 ### Load, delegation and host copies (2K prompt, 64 generated, MTP)
