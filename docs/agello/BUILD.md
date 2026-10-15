@@ -12,7 +12,10 @@ agello/build-xcframework.sh          # dist/CLiteRTLM.xcframework (iPhone and Ma
 - `WORKSPACE` pins LiteRT and ML Drift by commit and archive sha256. To change them, uncomment
   the `--override_repository` lines in `.bazelrc.user` (local checkouts), then push, re-pin (the
   commit and `shasum -a 256` of `https://github.com/PowerBeef/<repo>/archive/<commit>.tar.gz`),
-  comment the overrides out and rebuild: the framework comes out byte-identical.
+  comment the overrides out and rebuild. The binary isn't byte-identical (the build info compiled
+  into it names the build), so check behavior: agello-bench `suites/short.json` at 8K must give
+  the override build's replies (2026-10-15, LiteRT `97e06d36`, ML Drift `2184a7f`: 15/15 identical,
+  build `2e54fbdb9ca9`).
 - Push `agello-next` from the main checkout (`../LiteRT-LM`); from the worktree, Git LFS's
   pre-push lock check fails.
 
