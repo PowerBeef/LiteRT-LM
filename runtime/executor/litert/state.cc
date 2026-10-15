@@ -274,9 +274,23 @@ namespace {
 // Agello (T3): a raw snapshot of a buffer with its own shared MTLBuffer: a host buffer of the
 // MTLBuffer's length holding its bytes as they are. A lock would convert the GPU layout to row
 // order and back on restore (the KV caches' transpose cost about 290 ms per snapshot at 16K).
+// The host buffer has pages of its own, unmapped when the snapshot is freed.
 absl::StatusOr<TensorBuffer> RawMetalSnapshot(Environment& env, const TensorBuffer& buffer,
                                               const MetalRawBuffer& raw) {
   LITERT_ASSIGN_OR_RETURN(auto tensor_type, buffer.TensorType());
+  if (void* memory = AllocateSnapshotMemory(raw.length); memory != nullptr) {
+    memcpy(memory, raw.contents, raw.length);
+    auto litert_type = static_cast<LiteRtRankedTensorType>(tensor_type);
+    auto holder = env.GetHolder();
+    LiteRtTensorBuffer handle;
+    if (holder.runtime->CreateTensorBufferFromHostMemory(&litert_type, memory, raw.length,
+                                                         FreeSnapshotMemory,
+                                                         &handle) != kLiteRtStatusOk) {
+      FreeSnapshotMemory(memory);
+      return absl::InternalError("Failed to wrap a KV snapshot's host memory");
+    }
+    return TensorBuffer::WrapCObject(holder, handle, OwnHandle::kYes);
+  }
   LITERT_ASSIGN_OR_RETURN(
       auto copy,
       TensorBuffer::CreateManaged(env, TensorBufferType::kHostMemory, tensor_type, raw.length));

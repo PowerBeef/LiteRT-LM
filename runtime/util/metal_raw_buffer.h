@@ -32,6 +32,13 @@ struct MetalRawBuffer {
 // nullopt otherwise, and on platforms without Metal.
 std::optional<MetalRawBuffer> GetMetalRawBuffer(void* mtl_buffer);
 
+// Host memory for a raw snapshot of `length` bytes, in pages of its own that FreeSnapshotMemory
+// returns to the system at once (a freed malloc'd buffer this large stays resident in the
+// allocator's cache: +0.47 GB of footprint after a 16K snapshot). Page-aligned; nullptr on
+// failure and on platforms without Metal.
+void* AllocateSnapshotMemory(size_t length);
+void FreeSnapshotMemory(void* addr);
+
 }  // namespace litert::lm
 
 #endif  // THIRD_PARTY_ODML_LITERT_LM_RUNTIME_UTIL_METAL_RAW_BUFFER_H_

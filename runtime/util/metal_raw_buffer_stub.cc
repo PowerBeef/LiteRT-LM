@@ -20,4 +20,8 @@ namespace litert::lm {
 
 std::optional<MetalRawBuffer> GetMetalRawBuffer(void* mtl_buffer) { return std::nullopt; }
 
+void* AllocateSnapshotMemory(size_t length) { return nullptr; }
+
+void FreeSnapshotMemory(void* addr) {}
+
 }  // namespace litert::lm
