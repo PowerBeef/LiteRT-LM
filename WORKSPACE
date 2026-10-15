@@ -475,11 +475,11 @@ http_archive(
 
 # Agello: our LiteRT fork (PowerBeef/LiteRT, branch agello-next): LITERT_REF above plus the commits
 # that build it as an external repository, feed Agello telemetry (formerly patch_cmds here),
-# commit Metal command buffers as they're encoded under passive waits, and copy linear Metal
-# buffers to and from host memory directly.
-AGELLO_LITERT_COMMIT = "584f3461080228a11bd70ba0aa66539a256a2b81"
+# commit Metal command buffers as they're encoded under passive waits, copy linear Metal buffers
+# to and from host memory directly, and bound attention select and softmax to the filled length.
+AGELLO_LITERT_COMMIT = "aa05bd2d17acc15008b59602139b8ca4f4f56624"
 
-AGELLO_LITERT_SHA256 = "920424207cdc0458cb81cefef86b46d4df6c549edf3511de1615921cb6cc90cf"
+AGELLO_LITERT_SHA256 = "ffc800fe32b71ac5a9451dc114661095c4c5f2327d6a2b7269e6e8f8d5e24692"
 
 http_archive(
     name = "litert",
