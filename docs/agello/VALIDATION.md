@@ -62,15 +62,25 @@ at 8K (0.23 GB).
 
 ## Open issues
 
-1. **CPU backend: 5.5 GB of XNNPACK buffers.** On the Mac, our CPU engine for E4B at 8K sits at
-   6.3 GB of footprint against 0.84 GB for Google's v0.18.0 and 1.0 GB for Google's nightly,
-   with the same weight cache file and the same speed (11 tok/s). `malloc_history`: 5.56 GB in
-   130 `reshape_convert_operator` calls, XNNPACK's `convert_nc_qs8_qc8`. It allocates
-   channels × batch floats per operator to hold one repeated scale, for the INT8 KV caches.
-   Upstream XNNPACK still has that code; Google's internal build doesn't take this path. On the
-   iPhone, probe 6's CPU engine is killed (6.88 GB); Google's binary passes it. Agello offers CPU
-   in Settings → Advanced and falls back to it when the GPU load fails. Before Agello ships our
-   runtime: fix the CPU path or offer only the GPU with it.
+1. **CPU backend: 5.5 GB of XNNPACK buffers. Fixed the same day** (`agello-next` `b8f807ec`,
+   build `ab729fd0b59d`).
+   - **Symptom.** Our CPU engine for E4B at 8K sat at 6.3 GB of footprint on the Mac, against
+     0.84 GB for Google's v0.18.0 and 1.0 GB for Google's nightly. On the iPhone, iOS killed it.
+   - **Cause** (`malloc_history`): 5.56 GB in 130 `reshape_convert_operator` calls. XNNPACK's
+     dequant-BMM rewrite turns `dequant(INT8 KV cache) → batch matmul` into
+     `convert(qint8 → qcint8) → batch matmul`. The convert then sized its per-channel scales as
+     channels × every dim but the last, where the matmul reads batch dims × channels: n² × batches
+     for a transposed K cache, about 0.5 GB for one 8K cache.
+   - **Why only our build.** Upstream XNNPACK fixed this on 2026-09-23 (`c72e2a4ae0`).
+     TensorFlow's XNNPACK pin (`d89ef666`), which our source build uses, predates the fix;
+     Google's binaries include it.
+   - **Fix.** The fork's WORKSPACE declares XNNPACK at TensorFlow's pin with upstream's diff
+     applied (`agello/patches/xnnpack_qs8_qc8_scales.patch`). Drop it when TensorFlow's pin moves
+     past that commit.
+   - **Results.** Mac, E4B on CPU at 8K: 0.94–2.09 GB instead of 6.49–9.61 GB; three digit
+     copies exact and byte-identical to the unpatched build; decode 11.0 → 12.0 tok/s. iPhone:
+     probe 6 passes, CPU reply correct, 3.67 GB with 4.92 GB still available
+     (`probe06-ours-xnnpack-fix.json`); `inference` 21/21 (`inference-ours-xnnpack-fix.json`).
 2. **Kept conversations hold one KV copy until the next message**, not only while the helper
    runs. The chat's snapshot waits in its session until it's restored: +0.23 GB at 8K, about
    +0.9 GB at 32K, between messages. The policy budget is right (one copy); the T3 note and

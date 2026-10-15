@@ -9,3 +9,4 @@ unless named otherwise. Read with ../../VALIDATION.md. Home-directory paths repl
 | `agello/memory-ours-telemetry0.json` | The memory suite again with telemetry off |
 | `agello/memory-google.json`, `agello/probe06-google.json` | Google's v0.18.0 the same night: memory suite, probe 6 alone |
 | `agello/calibrate-cooled-{ours1,google,ours2}.json` | Calibrate after a warm-up and a 15-minute cool-down, ours / Google's / ours |
+| `agello/probe06-ours-xnnpack-fix.json`, `agello/inference-ours-xnnpack-fix.json` | After the XNNPACK fix: probe 6 alone (build `ab729fd0b59d`), inference (build `c397eca597bc`, the same sizing) |

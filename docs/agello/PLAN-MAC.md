@@ -13,9 +13,10 @@ fidelity, Agello's Mac suites for behavior); a track note with the numbers; raw 
 ## Status (2026-10-15)
 
 First iPhone run done the same night (VALIDATION.md): every suite passes except the CPU-engine
-probe (open issue: XNNPACK buffers for INT8 KV caches) and the 3.5 GB memory envelope, which
-Google's binary fails too; cooled, our build beats Google's at every window. `ui` still needs an
-attended run.
+probe and the 3.5 GB memory envelope, which Google's binary fails too; cooled, our build beats
+Google's at every window. The CPU probe's cause (XNNPACK's oversized qint8 -> qcint8 scales, fixed
+upstream after TensorFlow's pin) is patched and passes on the iPhone. `ui` still needs an attended
+run.
 
 
 | Phase | Status | Where |
