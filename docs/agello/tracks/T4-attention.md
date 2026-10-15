@@ -65,9 +65,45 @@ has the same embedding time as `off`. Agello's suites on this build: inference 2
 (3 lab-model probes skipped), thinking 2/2 (its margin test, which failed with both builds before,
 passes), files 3/3; no error anomalies. Unit tests: `bounded_attention_test` (3 cases).
 
+## Step 2 (b1b): local layers read only their window
+
+35 of the 42 layers (and 3 of the drafter's 4) keep keys in `(p − 512, p]`, but step 1 still had
+them read every filled key: at 30K filled, about 1 GB of K and V per decode step that the mask
+then zeroed.
+
+- ML Drift (`agello-next`): `ConvRuntimeCheckDesc` and `SoftmaxRuntimeCheckDesc` gain a window
+  start, `max(0, params[0] − W + 1)` rounded down to 32 keys, the same in every kernel. The fully
+  connected kernel (decode and verify) skips the reduction for keys below it in a QK product
+  (they then hold the epilogue of zero, which the fused mask masks) and starts reading there in a
+  PV product; the softmax reductions start there; the Apple matrix-unit convolution (prefill on
+  Apple10) does the same per K tile. Kernels without it compute every key, which stays correct.
+- Delegate (`agello-next`): the pass finds the window from the graph's mask
+  (`LOGICAL_AND(GREATER_EQUAL(p, keys), LESS(p, keys + W))`, int32 constants: W = 512) and applies
+  it to tails whose `runtime_bmm` says `is_global = false` (the parser now keeps it).
+  `AGELLO_BOUNDED_WINDOW=0` turns this part off; part of the program cache key. Unit tests: 7.
+- No ML Drift kernel test: its kernel test macro builds OpenCL, GL and WebGPU variants only. The
+  check is end to end: the digit-copy suites, whose 30K-token cases exercise the window.
+
+Results (M6, against step 1; raw records in `results/mac/2026-10-15/`):
+
+| Filled context | Decode | Prefill (with the prefill window) |
+| --- | --- | --- |
+| 658 tokens, 8K window (ABAB, same binary) | +0.8%, MTP +0.9% (within noise) | +0.6% (noise) |
+| 2K, 32K window (ABAB) | +1.4% | +1.2% (noise) |
+| 16K, 32K window (ABAB) | **+17.0%** (39.7 → 46.4 tok/s) | +3.9% decode-only; +11% with the convolution window |
+| 24K (digit copies) | +23% | +18% |
+| 30K (digit copies) | **+30%** (33.1 → 43.1 tok/s) | **+21%** (1,701 → 2,061 tok/s) |
+
+Fidelity: 88/88 digit copies exact, all 83 cases' replies identical to step 1's, for each of the
+two kernel changes. Agello on the Mac: inference 21/21 (both), probes 12/12; no error anomalies.
+
+Since before T4 (decode-step cost of a 30K context, prefill of a 30K prompt): decode 33.1 → 43.1
+tok/s and prefill 945 → 2,061 tok/s.
+
 ## Next
 
-- b1b: the local layers (35 of 42) need only the last 512 keys: a window start bound for the QK
-  product, the reduction and the PV product, from the position (no model change).
+- The INT8 K and V caches are converted to FP16 for the prefill convolutions every run
+  (`weights_convert_uint8_to_float16`), over the whole capacity: bound it to the filled part too.
 - b1c: FlashDecode for INT8 KV with GQA 4:1, and flash prefill for head dimensions 256/512.
+- T10 (ring-buffer local caches) would also shrink KV memory at 32K from 940 to about 300 MB.
 - iPhone run before shipping: `inference`, `probes` (10, 12), `calibrate`, `thinking`.
