@@ -15,6 +15,7 @@ replaced by `~`.
 | `t3-raw.jsonl` | `helper-turn-check` with raw snapshots (P3.3), MTP on and off |
 | `t3-check-{pre,post,post2}.jsonl` | `helper-turn-check`, 16K, MTP on: P3.3 (`3c34537772ce`), + no orphan snapshot, + mapped snapshots |
 | `t3-cycles-{pre,post,post2}.jsonl` | `helper-turn-cycles` (1, 25, 100 rounds on one conversation), same three builds |
+| `t11-{shared,perkv}.jsonl` | `short` digit copies at 8K, 4K, 16K and 8K in one cache folder, with the content key and with the upstream key (`AGELLO_SHARED_WEIGHT_CACHE=0`) |
 | `t2-think{,-mtp}-{pre,post,post2}.jsonl` | `thinking-mask` at 8K, MTP off and on, 1 warm-up and 3 repetitions: before T2, + mask skip and per-step changes, + `GetVocabSize` |
 
 ## `agello/`
@@ -24,3 +25,4 @@ replaced by `~`.
 | `inference-t4b.json`, `probes-t4b.json` | the decode window | 21/21; 12/12 (3 lab-model probes skipped) |
 | `inference-t4c.json` | the prefill window too | 21/21 |
 | `inference-p4.json`, `probes-p4.json` | `c2a5c0a3df2a` (T3 and T2 changes) | 21/21; 11/11 |
+| `probes-t11.json` | `d1c570842441` (one weight cache for every size) | 11/11, probe 14 included |
