@@ -10,3 +10,5 @@ unless named otherwise. Read with ../../VALIDATION.md. Home-directory paths repl
 | `agello/memory-google.json`, `agello/probe06-google.json` | Google's v0.18.0 the same night: memory suite, probe 6 alone |
 | `agello/calibrate-cooled-{ours1,google,ours2}.json` | Calibrate after a warm-up and a 15-minute cool-down, ours / Google's / ours |
 | `agello/probe06-ours-xnnpack-fix.json`, `agello/inference-ours-xnnpack-fix.json` | After the XNNPACK fix: probe 6 alone (build `ab729fd0b59d`), inference (build `c397eca597bc`, the same sizing) |
+| `agello/{inference,probes,memory,calibrate}-sim-a17.json` | `AGELLO_SIMULATE_APPLE_GPU="Apple A17 Pro"` (Apple9 kernel paths), build `d7fafdca9b7c` |
+| `agello/memory-sim-a17-test0{2,3}_*-fresh.json` | The 4.0 and 3.5 GB envelopes on Apple9 paths, each in a fresh launch |

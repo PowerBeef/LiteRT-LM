@@ -60,6 +60,32 @@ Memory left over between tests happens with Google's binary too; telemetry costs
 measurable. Ours is about 0.25 GB higher after the first message: the kept conversation's KV copy
 at 8K (0.23 GB).
 
+### A17/A18-class paths, simulated (no older device available)
+
+ML Drift picks kernels from the Apple GPU family it infers from the device name. With
+`AGELLO_SIMULATE_APPLE_GPU="Apple A17 Pro"` (ML Drift `ef08a67`, LiteRT `362759838`; Agello's
+harness passes it through), it picks the Apple9 kernels of an iPhone 15 Pro or 16 Pro on our
+hardware: simdgroup-matrix convolutions instead of the Neural Accelerator ones, and every other
+per-family choice. The simulated name keys its own program and weight caches. This covers the code
+paths; speed, thermals and the older hardware's own arithmetic stay this device's. Every scenario's
+telemetry reported "ML Drift family Apple9".
+
+| Check | Result |
+| --- | --- |
+| Mac, digit copies at a 32K window (`short`, `long`, `cross4096`) | 70/70 exact, replies identical to the Apple10 paths (65/65) |
+| Mac, prefill / decode with MTP (700 tokens, 8K) | 703 / 144.8 tok/s against 2,547 / 162.0 on the Apple10 paths |
+| iPhone 17 Pro, `inference` | 21/21 |
+| iPhone 17 Pro, `probes` (01–10, 14) | 11/11, digit fidelity and the position boundary included |
+| iPhone 17 Pro, `calibrate` | passes; prefill 249–288 tok/s (TTFT 4.6 / 8.0 / 16.4 / 34.6 s at 4K / 8K / 16K / 32K), decode 27.6–36.4 tok/s with MTP, thermal state 1–2 |
+| iPhone 17 Pro, `memory`, each envelope in a fresh launch | 4.0 GB: every step passes; 3.5 GB: killed after the first message, starting from 1.29 GB in use (as on the Apple10 paths and with Google's binary) |
+
+The Apple9 paths are correct. Prefill is 4–5× slower there because these GPUs have no Neural
+Accelerators. Google's binary would use the same kernels on these devices, and our bounded
+attention still runs. The local-window start (T4 step 2) is only in the Neural Accelerator
+convolution: adding it to `ConvWaveMatrix` would speed up long prompts on A17/A18-class phones.
+Run in sequence, the memory suite carries 0.8–1.4 GB from one test to the next, which made the
+4.0 GB envelope fail its audio step at the 400 MB stop. Fresh launches are the fair simulation.
+
 ## Open issues
 
 1. **CPU backend: 5.5 GB of XNNPACK buffers. Fixed the same day** (`agello-next` `b8f807ec`,
@@ -85,4 +111,9 @@ at 8K (0.23 GB).
    runs. The chat's snapshot waits in its session until it's restored: +0.23 GB at 8K, about
    +0.9 GB at 32K, between messages. The policy budget is right (one copy); the T3 note and
    Agello's docs said "nothing afterwards". Restoring right after the helper would release it.
-3. **The plan's A17/A18-class run** (Apple9 fallbacks, #3913 below 2,048) is still to do.
+3. **The plan's A17/A18-class run:** the Apple9 code paths pass in simulation (above). A real
+   device would still show speed, thermals, and the hardware arithmetic behind #3913 below 2,048
+   (our model fix is exact by construction there). A cloud device farm can provide one.
+4. **The 3.5 GB envelope** (the harshest 8 GB-phone case) fails with every build, Google's included.
+   Memory isn't fully returned after an engine unloads, and the base before loading varies from
+   0.5 to 1.5 GB.
