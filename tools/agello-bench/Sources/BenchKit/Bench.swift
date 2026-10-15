@@ -114,7 +114,11 @@ public struct Bench: Sendable {
       preconditionFailure("handled above")
     }
     let conversation = try await engine.createConversation(
-      with: ConversationConfig(samplerConfig: try SamplerConfig(topK: 1, topP: 1, temperature: 0)))
+      with: ConversationConfig(
+        samplerConfig: try SamplerConfig(topK: 1, topP: 1, temperature: 0),
+        thinkingConfig: item.thinking.map {
+          ThinkingConfig(enableThinking: true, thinkingTokenBudget: $0)
+        }))
     let started = ContinuousClock.now
     let reply = try await conversation.sendMessage(
       Message(prompt), maxOutputTokens: maxOutputTokens
@@ -149,28 +153,31 @@ public struct Bench: Sendable {
       + "\n\nRead these notes. Reply only with: noted."
     var main: Conversation? = try await engine.createConversation(with: try greedy())
     let noted = try await main!.sendMessage(Message(history), maxOutputTokens: 8).toString
-    if item.helper != false {
-      let helper = try await engine.createConversation(with: try greedy())
-      _ = try await helper.sendMessage(
-        Message("Give a three-word title for a chat about a lighthouse."), maxOutputTokens: 12)
-    }
     let followUp = Message("Name one thing these notes say the keeper checks.")
-    let conversation: Conversation
-    if item.keep == true {
-      conversation = main!
-    } else {
-      main = nil
-      conversation = try await engine.createConversation(
-        with: ConversationConfig(
-          initialMessages: [Message(history, role: .user), Message(noted, role: .model)],
-          samplerConfig: try SamplerConfig(topK: 1, topP: 1, temperature: 0)))
-    }
-    let started = ContinuousClock.now
+    var conversation = main!
+    var started = ContinuousClock.now
     var first: Double?
     var reply = ""
-    for try await chunk in conversation.sendMessageStream(followUp, maxOutputTokens: item.decode ?? 32) {
-      if first == nil { first = (ContinuousClock.now - started).seconds }
-      reply += chunk.toString
+    for _ in 0..<max(1, item.cycles ?? 1) {
+      if item.helper != false {
+        let helper = try await engine.createConversation(with: try greedy())
+        _ = try await helper.sendMessage(
+          Message("Give a three-word title for a chat about a lighthouse."), maxOutputTokens: 12)
+      }
+      if item.keep != true {
+        main = nil
+        conversation = try await engine.createConversation(
+          with: ConversationConfig(
+            initialMessages: [Message(history, role: .user), Message(noted, role: .model)],
+            samplerConfig: try SamplerConfig(topK: 1, topP: 1, temperature: 0)))
+      }
+      started = ContinuousClock.now
+      first = nil
+      reply = ""
+      for try await chunk in conversation.sendMessageStream(followUp, maxOutputTokens: item.decode ?? 32) {
+        if first == nil { first = (ContinuousClock.now - started).seconds }
+        reply += chunk.toString
+      }
     }
     let seconds = (ContinuousClock.now - started).seconds
     let info = try Timing(conversation, benchmarkMode: settings.benchmarkMode)

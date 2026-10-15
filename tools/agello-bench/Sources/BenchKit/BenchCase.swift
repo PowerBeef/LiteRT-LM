@@ -20,6 +20,7 @@ public struct BenchCase: Codable, Sendable, Equatable {
     /// conversation, then a short message. `keep` sends it on the main
     /// conversation (the runtime restores it); otherwise on a new conversation
     /// seeded with the history, as Agello does today. `ttft` is that message's.
+    /// `cycles` repeats the helper and the message (the last one is measured).
     case helperTurn = "helper-turn"
   }
 
@@ -37,6 +38,12 @@ public struct BenchCase: Codable, Sendable, Equatable {
   public var keep: Bool?
   /// Helper turn: run the helper (default); false is the control without one.
   public var helper: Bool?
+  /// Helper turn: rounds of helper and message (1); the footprint after many
+  /// shows whether kept conversations leak.
+  public var cycles: Int?
+  /// Speed case: think first, with this thinking budget in tokens (T2: the
+  /// budget's logit mask runs every step).
+  public var thinking: Int?
 
   public init(
     id: String, kind: Kind = .digitCopy, sentences: Int = 0, late: Bool = false, seed: Int = 1,
@@ -62,6 +69,8 @@ public struct BenchCase: Codable, Sendable, Equatable {
     prefill = try c.decodeIfPresent(Int.self, forKey: .prefill)
     keep = try c.decodeIfPresent(Bool.self, forKey: .keep)
     helper = try c.decodeIfPresent(Bool.self, forKey: .helper)
+    cycles = try c.decodeIfPresent(Int.self, forKey: .cycles)
+    thinking = try c.decodeIfPresent(Int.self, forKey: .thinking)
   }
 
   /// Load a suite: a JSON array of cases.

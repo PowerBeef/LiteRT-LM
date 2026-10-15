@@ -1,0 +1,4 @@
+[
+ {"id": "t700-plain", "kind": "speed", "sentences": 44, "decode": 256},
+ {"id": "t700-think", "kind": "speed", "sentences": 44, "decode": 256, "thinking": 4096}
+]

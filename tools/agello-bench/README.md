@@ -58,8 +58,9 @@ of the research cases:
 | Kind | Fields | Measures |
 | --- | --- | --- |
 | `digit-copy` (default) | `id`, `sentences`, `late`, `seed` | Copy a 48-digit number placed before the filler (after it with `late`); `exact`, and the position of the first wrong digit (#3913) |
-| `speed` | `id`, `sentences`, `decode` | Prefill the filler, then generate `decode` tokens (default 256) |
+| `speed` | `id`, `sentences`, `decode`, `thinking` | Prefill the filler, then generate `decode` tokens (default 256); with `thinking` (a budget in tokens), the model thinks first, under the thinking budget's logit mask |
 | `engine-benchmark` | `id`, `prefill`, `decode` | The engine's own benchmark, `LiteRTLM.benchmark` (what Agello's in-app benchmark runs): a fresh uncached engine of prefill + decode + 32 tokens, `prefill` synthetic prompt tokens (default 1,024), then `decode` tokens (default 256). A run of only these loads no chat engine |
+| `helper-turn` | `id`, `sentences`, `decode`, `keep`, `helper`, `cycles` | The first reply after a helper (T3): `sentences` of history in the main conversation, a title prompt in a second one, then a short message, on the main conversation with `keep` (the runtime restores it) or on a new one seeded with the history. `helper: false` is the control without the helper; `cycles` repeats helper and message (the last is measured; the footprint after many shows a leak) |
 
 Filler sentences average about 15.8 tokens. Every case runs in a fresh
 conversation with greedy sampling, so an arm's replies should be identical

@@ -1,0 +1,5 @@
+[
+ {"id": "c1", "kind": "helper-turn", "sentences": 129, "decode": 16, "keep": true, "cycles": 1},
+ {"id": "c25", "kind": "helper-turn", "sentences": 129, "decode": 16, "keep": true, "cycles": 25},
+ {"id": "c100", "kind": "helper-turn", "sentences": 129, "decode": 16, "keep": true, "cycles": 100}
+]
