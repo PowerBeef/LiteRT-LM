@@ -16,6 +16,8 @@ replaced by `~`.
 | `t3-check-{pre,post,post2}.jsonl` | `helper-turn-check`, 16K, MTP on: P3.3 (`3c34537772ce`), + no orphan snapshot, + mapped snapshots |
 | `t3-cycles-{pre,post,post2}.jsonl` | `helper-turn-cycles` (1, 25, 100 rounds on one conversation), same three builds |
 | `t11-{shared,perkv}.jsonl` | `short` digit copies at 8K, 4K, 16K and 8K in one cache folder, with the content key and with the upstream key (`AGELLO_SHARED_WEIGHT_CACHE=0`) |
+| `p6-{,mtp-}{p6pre,p6post}.jsonl` | `thinking-mask` at 8K, MTP off and on, 1 warm-up and 5 repetitions, before and after the FP16 greedy path |
+| `t6-{plain,mtp}.jsonl` | One 700-token speed case at telemetry level 2 (spans, GPU time per run), MTP off and on |
 | `t2-think{,-mtp}-{pre,post,post2}.jsonl` | `thinking-mask` at 8K, MTP off and on, 1 warm-up and 3 repetitions: before T2, + mask skip and per-step changes, + `GetVocabSize` |
 
 ## `agello/`
