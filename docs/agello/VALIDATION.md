@@ -181,6 +181,29 @@ Our run was at thermal state 0, Google's at 1; the prefill gap matches the coole
 Every device memory figure earlier in this file includes the host's engine (about 1.2 GB once
 loaded); differences between builds measured in the same way still hold.
 
+### #3913: 512-token rotary blocks (for M1-class GPUs)
+
+On the issue, an M1 Max (Apple7, the A14's family) lost float16 precision below position 2,048
+too: once the angle passes about 1,650, MUL / SIN / COS round wrongly, so our published file
+(2048-token blocks) can miss digits in the last ~400 positions of each block there. Blocks of 512
+were exact on the M1 Max, an M4 Max and a Pixel 8a (Mali, OpenCL), as reported there. Our
+`tools/model-surgery/patch_rope.py --split --block 512` (from Google's file, revision `2eee7ac3`)
+gives the same file they tested, sha256 `6353a233…f655c`; `--block 2048` reproduces the published
+`4a691f03…cb15f`. Same weights; 737,280 bytes larger.
+
+| Check | Block 2048 (published) | Block 512 |
+| --- | --- | --- |
+| Mac M6, digit copies at a 32K window (`short`, `long`, `cross4096`, `xl`) | 88/88 | 88/88, replies identical (83/83) |
+| Mac, A17 paths, the same without `xl` | 70/70 | 70/70, replies identical (65/65) |
+| iPhone 17 Pro, probe 12 (0.7K–30K tokens, FP16) | 3/3 | 14/14, plus 6/6 with MTP; replies identical where both ran |
+| Mac M6, prefill at 0.7K–30K (ABAB, 4 runs each) | | −0.1% to −1.4%; same-file spread 0.7–1.9% |
+| Mac M6, decode without / with MTP | | −0.2% to −0.9% / −2.6% to +4.0% |
+
+No measurable cost here, and nothing changes on the GPUs that were already exact. An M1 Mac is the
+only place to confirm the gain itself (the GPU-family simulation can't reproduce the hardware's
+arithmetic). Reports: `results/mac/2026-10-15/bench/rope512-*.jsonl`,
+`results/iphone/2026-10-15/agello/probe12-rope512.json`.
+
 ## Open issues
 
 1. **CPU backend: 5.5 GB of XNNPACK buffers. Fixed the same day** (`agello-next` `b8f807ec`,
