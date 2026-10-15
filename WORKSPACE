@@ -494,10 +494,11 @@ http_archive(
 # that build it as an external repository, feed Agello telemetry (formerly patch_cmds here),
 # commit Metal command buffers as they're encoded under passive waits, copy linear Metal buffers
 # to and from host memory directly, bound attention select and softmax to the filled length,
-# give local attention layers their window, and keep one weight cache entry for every KV size.
-AGELLO_LITERT_COMMIT = "97e06d36d7143995298d6bee396a0c25a22fa886"
+# give local attention layers their window, keep one weight cache entry for every KV size, and key
+# the caches of a simulated GPU (AGELLO_SIMULATE_APPLE_GPU) apart.
+AGELLO_LITERT_COMMIT = "362759838e34e1525f1cc27daddaf663a193c059"
 
-AGELLO_LITERT_SHA256 = "deed1966260e78b96593f9b5c29f4be6dd21b9285c148d9c76d0a65432099a6a"
+AGELLO_LITERT_SHA256 = "dd8d2dc491cbd7c294113747e2a068ff416c4a2bd181bfaa5c4f5c92d971c312"
 
 http_archive(
     name = "litert",
@@ -518,10 +519,11 @@ local_repository(
 # Bazel doesn't read @litert's WORKSPACE, so this repeats its declaration. Our fork
 # (PowerBeef/ml-drift, branch agello-next): the commit LiteRT pins (1b18771f) plus the commits that
 # build it as an external repository of LiteRT-LM, feed Agello telemetry (formerly patch_cmds), and
-# start attention reductions at a sliding window.
-ML_DRIFT_COMMIT = "2184a7f71b47941a0204f4f1c02753a886303d76"
+# start attention reductions at a sliding window, and can simulate another Apple GPU's kernel
+# choices (AGELLO_SIMULATE_APPLE_GPU).
+ML_DRIFT_COMMIT = "ef08a6785834a9ea248c62c67f1c692aa1cf1c35"
 
-ML_DRIFT_SHA256 = "515d92f882689614c437ee85e0f9f3b45ac48d1e66fede4cc11c36d572318372"
+ML_DRIFT_SHA256 = "40df226ca66c56f48bfa625775d0685d12ffe3a61348fa49727696823fa0fcdd"
 
 http_archive(
     name = "ml_drift",
