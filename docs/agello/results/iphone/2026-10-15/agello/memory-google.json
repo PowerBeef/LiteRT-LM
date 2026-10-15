@@ -1,0 +1,196 @@
+{
+  "device" : {
+    "gpu" : "Apple A19 Pro GPU",
+    "gpuAppleFamily" : 10,
+    "gpuWorkingSetGB" : 8.5899509760000008,
+    "hwMachine" : "iPhone18,1",
+    "hwModel" : "V53AP",
+    "isiOSAppOnMac" : false,
+    "memoryGB" : 12.291735552,
+    "model" : "iPhone",
+    "profile" : "12 GB RAM · app limit 6.4 GB",
+    "runtimeBuild" : {
+
+    },
+    "system" : "iOS 27.0.1"
+  },
+  "runID" : "run-1792050728",
+  "scenarios" : {
+    "memory_e4b_3.5GB" : {
+      "ballastGB" : 5.0899345919999996,
+      "memory.availableGB" : 0.93954340800000002,
+      "memory.footprintGB" : 7.6503911840000001,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T07:54:44Z",
+      "simulatedLimitGB" : 3.5,
+      "steps" : [
+        {
+          "availableGB" : 2.0243637200000002,
+          "footprintGB" : 6.5655708720000003,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 0.94495019999999996,
+          "footprintGB" : 7.6449843919999996,
+          "loaded" : true,
+          "loadLog" : [
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 4.3s (footprint 7.65 GB, available 0.94 GB)"
+          ],
+          "memoryWarnings" : 4,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 0.93954340800000002,
+          "decodeTokPerSec" : 27.410714053212693,
+          "footprintGB" : 7.6503911840000001,
+          "memoryWarnings" : 4,
+          "ok" : true,
+          "step" : "text"
+        }
+      ]
+    },
+    "memory_e4b_4.0GB" : {
+      "ballastGB" : 4.5899345919999996,
+      "memory.availableGB" : 0.49711011199999999,
+      "memory.footprintGB" : 8.0928244800000009,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T07:54:26Z",
+      "simulatedLimitGB" : 4,
+      "steps" : [
+        {
+          "availableGB" : 2.4170556479999998,
+          "footprintGB" : 6.1728789439999998,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 1.444367696,
+          "footprintGB" : 7.1455668960000001,
+          "loaded" : true,
+          "loadLog" : [
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 2.9s (footprint 7.15 GB, available 1.44 GB)"
+          ],
+          "memoryWarnings" : 1,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 1.4351926079999999,
+          "decodeTokPerSec" : 27.71810877403567,
+          "footprintGB" : 7.1547419840000002,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "step" : "text"
+        },
+        {
+          "availableGB" : 0.27797341599999997,
+          "footprintGB" : 8.3119611760000005,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "reply" : "Red",
+          "step" : "image"
+        },
+        {
+          "availableGB" : 0.229116232,
+          "footprintGB" : 8.3608183599999997,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "reply" : "The quick brown fox jumps over the lazy",
+          "step" : "audio"
+        },
+        {
+          "availableGB" : 0.22909984799999999,
+          "footprintGB" : 8.3608347439999999,
+          "inputTokens" : -1,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "step" : "long 8K",
+          "ttftSeconds" : -1
+        },
+        {
+          "availableGB" : 0.49711011199999999,
+          "footprintGB" : 8.0928244800000009,
+          "inputTokens" : 4396,
+          "loaded" : true,
+          "memoryWarnings" : 4,
+          "ok" : true,
+          "step" : "long 16K",
+          "ttftSeconds" : 8.944249911
+        }
+      ]
+    },
+    "memory_e4b_5.0GB" : {
+      "ballastGB" : 1.442450944,
+      "memory.availableGB" : 3.2816869679999998,
+      "memory.footprintGB" : 5.3082476239999998,
+      "realLimitGB" : 6.442450944,
+      "recordedAt" : "2026-10-15T07:53:28Z",
+      "simulatedLimitGB" : 5,
+      "steps" : [
+        {
+          "availableGB" : 4.685722224,
+          "footprintGB" : 1.7567287199999999,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 4.5250369680000002,
+          "footprintGB" : 4.0648976240000003,
+          "loaded" : true,
+          "loadLog" : [
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 11.0s (footprint 4.06 GB, available 4.53 GB)"
+          ],
+          "memoryWarnings" : 0,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 4.4933173039999996,
+          "decodeTokPerSec" : 27.716204816022433,
+          "footprintGB" : 4.096617288,
+          "memoryWarnings" : 0,
+          "ok" : true,
+          "step" : "text"
+        },
+        {
+          "availableGB" : 3.1728642960000002,
+          "footprintGB" : 5.4170702960000003,
+          "memoryWarnings" : 0,
+          "ok" : true,
+          "reply" : "Red",
+          "step" : "image"
+        },
+        {
+          "availableGB" : 3.1075902719999999,
+          "footprintGB" : 5.4823443200000002,
+          "memoryWarnings" : 0,
+          "ok" : true,
+          "reply" : "The quick brown fox jumps over the lazy dog.",
+          "step" : "audio"
+        },
+        {
+          "availableGB" : 3.2825550319999999,
+          "footprintGB" : 5.3073795600000002,
+          "inputTokens" : 2300,
+          "memoryWarnings" : 0,
+          "ok" : true,
+          "step" : "long 8K",
+          "ttftSeconds" : 3.5406483440000001
+        },
+        {
+          "availableGB" : 3.2816869679999998,
+          "footprintGB" : 5.3082476239999998,
+          "inputTokens" : 4396,
+          "loaded" : true,
+          "memoryWarnings" : 0,
+          "ok" : true,
+          "step" : "long 16K",
+          "ttftSeconds" : 8.232244337500001
+        }
+      ]
+    }
+  },
+  "startedAt" : "2026-10-15T07:52:22Z"
+}

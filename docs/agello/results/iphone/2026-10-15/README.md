@@ -1,0 +1,11 @@
+# iPhone results, 2026-10-15
+
+iPhone 17 Pro (A19 Pro, Apple10, 12 GB, app limit 6.4 GB, iOS 27.0.1), our build `2e54fbdb9ca9`
+unless named otherwise. Read with ../../VALIDATION.md. Home-directory paths replaced by `~`.
+
+| File | What |
+| --- | --- |
+| `agello/{inference,probes,files,thinking,memory,calibrate,web}-ours.json` | The overnight suites in order (calibrate ran hot, thermal state 2) |
+| `agello/memory-ours-telemetry0.json` | The memory suite again with telemetry off |
+| `agello/memory-google.json`, `agello/probe06-google.json` | Google's v0.18.0 the same night: memory suite, probe 6 alone |
+| `agello/calibrate-cooled-{ours1,google,ours2}.json` | Calibrate after a warm-up and a 15-minute cool-down, ours / Google's / ours |

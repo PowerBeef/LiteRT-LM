@@ -1,0 +1,449 @@
+{
+  "device" : {
+    "gpu" : "Apple A19 Pro GPU",
+    "gpuAppleFamily" : 10,
+    "gpuWorkingSetGB" : 8.5899509760000008,
+    "hwMachine" : "iPhone18,1",
+    "hwModel" : "V53AP",
+    "isiOSAppOnMac" : false,
+    "memoryGB" : 12.291735552,
+    "model" : "iPhone",
+    "profile" : "12 GB RAM · app limit 8.6 GB",
+    "runtimeBuild" : {
+      "build_id" : "2e54fbdb9ca9",
+      "flags" : "--config=agello -c opt",
+      "litert" : "97e06d36d7143995298d6bee396a0c25a22fa886",
+      "litert_lm" : "67d00f36c24402a2245518f59f68ba847a02aa91",
+      "ml_drift" : "2184a7f71b47941a0204f4f1c02753a886303d76"
+    },
+    "system" : "iOS 27.0.1"
+  },
+  "runID" : "run-1792050626",
+  "scenarios" : {
+    "memory_e4b_3.5GB" : {
+      "ballastGB" : 5.0899345919999996,
+      "memory.availableGB" : 0.70974185599999995,
+      "memory.footprintGB" : 7.8801927359999997,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T07:52:02Z",
+      "simulatedLimitGB" : 3.5,
+      "steps" : [
+        {
+          "availableGB" : 2.081773976,
+          "footprintGB" : 6.5081606159999996,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 0.93315439200000005,
+          "footprintGB" : 7.6567802,
+          "loaded" : true,
+          "loadLog" : [
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 2.4s (footprint 7.66 GB, available 0.93 GB)"
+          ],
+          "memoryWarnings" : 5,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 0.70974185599999995,
+          "decodeTokPerSec" : 25.409412287256792,
+          "footprintGB" : 7.8801927359999997,
+          "memoryWarnings" : 5,
+          "ok" : true,
+          "step" : "text"
+        }
+      ],
+      "telemetry" : {
+        "anomalies" : [
+
+        ],
+        "anomalies_total" : 0,
+        "counters" : {
+          "anomalies" : 0,
+          "command_buffers" : 0,
+          "compiled_models" : 0,
+          "context_switches" : 0,
+          "decode_allocations" : 0,
+          "embedding_lookups" : 0,
+          "errors" : 0,
+          "gpu_partitions" : 0,
+          "gpu_waits" : 0,
+          "graph_nodes" : 0,
+          "graph_nodes_cpu_delegate" : 0,
+          "graph_nodes_gpu" : 0,
+          "graph_nodes_undelegated" : 0,
+          "host_lock_copies" : 0,
+          "host_lock_copy_bytes" : 0,
+          "host_locks" : 0,
+          "host_shadow_allocs" : 0,
+          "host_unlock_copies" : 0,
+          "host_unlock_copy_bytes" : 0,
+          "kv_copies" : 0,
+          "kv_copy_bytes" : 0,
+          "logit_masks" : 0,
+          "logits_near_ties" : 0,
+          "logits_nonfinite" : 0,
+          "logits_rows_checked" : 0,
+          "mask_fill_bytes" : 0,
+          "mask_fills" : 0,
+          "mtp_accepted" : 0,
+          "mtp_drafted" : 0,
+          "mtp_rounds" : 0,
+          "program_cache_hits" : 0,
+          "program_cache_misses" : 0,
+          "run_option_parses" : 0,
+          "runs_decode" : 0,
+          "runs_drafter" : 0,
+          "runs_other" : 0,
+          "runs_prefill" : 0,
+          "runs_verify" : 0,
+          "sampler_cpu" : 0,
+          "sampler_gpu" : 0,
+          "stop_cancelled" : 0,
+          "stop_eos" : 0,
+          "stop_kv_full" : 0,
+          "stop_max_tokens" : 0,
+          "stream_chunk_bytes" : 0,
+          "stream_chunks" : 0,
+          "tasks_scheduled" : 0,
+          "token_history_copies" : 0,
+          "tokens_decoded" : 0,
+          "tokens_prefilled" : 0,
+          "weight_cache_hits" : 0,
+          "weight_cache_misses" : 0
+        },
+        "cpu" : {
+          "system_ms" : 1435.4000000000001,
+          "user_ms" : 11031.1
+        },
+        "facts" : {
+          "gpu" : "Apple A19 Pro GPU, ML Drift family Apple10",
+          "gpu_wait_requested" : "active (benchmark mode)",
+          "sampler" : "cpu (GPU sampler unavailable)"
+        },
+        "gauges" : {
+
+        },
+        "level" : 0,
+        "memory" : {
+          "available_mb" : 709.70000000000005,
+          "footprint_mb" : 7880.1999999999998,
+          "graphics_footprint_mb" : 511.5,
+          "peak_footprint_mb" : 8481.2999999999993
+        },
+        "schema" : 1,
+        "spans" : {
+
+        }
+      }
+    },
+    "memory_e4b_4.0GB" : {
+      "ballastGB" : 4.5899345919999996,
+      "memory.availableGB" : 0.50431979199999999,
+      "memory.footprintGB" : 8.0856148000000001,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T07:51:46Z",
+      "simulatedLimitGB" : 4,
+      "steps" : [
+        {
+          "availableGB" : 2.0506445200000001,
+          "footprintGB" : 6.539290072,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 1.39072708,
+          "footprintGB" : 7.1992075120000001,
+          "loaded" : true,
+          "loadLog" : [
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 2.4s (footprint 7.20 GB, available 1.39 GB)"
+          ],
+          "memoryWarnings" : 3,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 1.2045717359999999,
+          "decodeTokPerSec" : 37.319872677523954,
+          "footprintGB" : 7.3853628560000004,
+          "memoryWarnings" : 3,
+          "ok" : true,
+          "step" : "text"
+        },
+        {
+          "availableGB" : 0.28172575999999999,
+          "footprintGB" : 8.308208832,
+          "memoryWarnings" : 3,
+          "ok" : true,
+          "reply" : "Red",
+          "step" : "image"
+        },
+        {
+          "availableGB" : 0.26588238400000003,
+          "footprintGB" : 8.3240522079999995,
+          "memoryWarnings" : 3,
+          "ok" : true,
+          "reply" : "The quick brown fox jumps over the lazy",
+          "step" : "audio"
+        },
+        {
+          "availableGB" : 0.26399824799999999,
+          "footprintGB" : 8.3259199600000002,
+          "inputTokens" : -1,
+          "memoryWarnings" : 3,
+          "ok" : true,
+          "step" : "long 8K",
+          "ttftSeconds" : -1
+        },
+        {
+          "availableGB" : 0.50431979199999999,
+          "footprintGB" : 8.0856148000000001,
+          "inputTokens" : 4396,
+          "loaded" : true,
+          "memoryWarnings" : 4,
+          "ok" : true,
+          "step" : "long 16K",
+          "ttftSeconds" : 5.3279807512500001
+        }
+      ],
+      "telemetry" : {
+        "anomalies" : [
+
+        ],
+        "anomalies_total" : 0,
+        "counters" : {
+          "anomalies" : 0,
+          "command_buffers" : 0,
+          "compiled_models" : 0,
+          "context_switches" : 0,
+          "decode_allocations" : 0,
+          "embedding_lookups" : 0,
+          "errors" : 0,
+          "gpu_partitions" : 0,
+          "gpu_waits" : 0,
+          "graph_nodes" : 0,
+          "graph_nodes_cpu_delegate" : 0,
+          "graph_nodes_gpu" : 0,
+          "graph_nodes_undelegated" : 0,
+          "host_lock_copies" : 0,
+          "host_lock_copy_bytes" : 0,
+          "host_locks" : 0,
+          "host_shadow_allocs" : 0,
+          "host_unlock_copies" : 0,
+          "host_unlock_copy_bytes" : 0,
+          "kv_copies" : 0,
+          "kv_copy_bytes" : 0,
+          "logit_masks" : 0,
+          "logits_near_ties" : 0,
+          "logits_nonfinite" : 0,
+          "logits_rows_checked" : 0,
+          "mask_fill_bytes" : 0,
+          "mask_fills" : 0,
+          "mtp_accepted" : 0,
+          "mtp_drafted" : 0,
+          "mtp_rounds" : 0,
+          "program_cache_hits" : 0,
+          "program_cache_misses" : 0,
+          "run_option_parses" : 0,
+          "runs_decode" : 0,
+          "runs_drafter" : 0,
+          "runs_other" : 0,
+          "runs_prefill" : 0,
+          "runs_verify" : 0,
+          "sampler_cpu" : 0,
+          "sampler_gpu" : 0,
+          "stop_cancelled" : 0,
+          "stop_eos" : 0,
+          "stop_kv_full" : 0,
+          "stop_max_tokens" : 0,
+          "stream_chunk_bytes" : 0,
+          "stream_chunks" : 0,
+          "tasks_scheduled" : 0,
+          "token_history_copies" : 0,
+          "tokens_decoded" : 0,
+          "tokens_prefilled" : 0,
+          "weight_cache_hits" : 0,
+          "weight_cache_misses" : 0
+        },
+        "cpu" : {
+          "system_ms" : 4959.3999999999996,
+          "user_ms" : 39070.599999999999
+        },
+        "facts" : {
+          "gpu" : "Apple A19 Pro GPU, ML Drift family Apple10",
+          "gpu_wait_requested" : "active (benchmark mode)",
+          "sampler" : "cpu (GPU sampler unavailable)"
+        },
+        "gauges" : {
+
+        },
+        "level" : 0,
+        "memory" : {
+          "available_mb" : 504.30000000000001,
+          "footprint_mb" : 8085.6000000000004,
+          "graphics_footprint_mb" : 1266.5,
+          "peak_footprint_mb" : 8481.2999999999993
+        },
+        "schema" : 1,
+        "spans" : {
+
+        }
+      }
+    },
+    "memory_e4b_5.0GB" : {
+      "ballastGB" : 3.5899345920000001,
+      "memory.availableGB" : 0.94465629600000001,
+      "memory.footprintGB" : 7.6452782959999999,
+      "realLimitGB" : 8.5899345920000005,
+      "recordedAt" : "2026-10-15T07:51:06Z",
+      "simulatedLimitGB" : 5,
+      "steps" : [
+        {
+          "availableGB" : 4.4159237280000001,
+          "footprintGB" : 4.1740108640000004,
+          "memoryWarnings" : 0,
+          "step" : "ballast"
+        },
+        {
+          "availableGB" : 2.4453162719999999,
+          "footprintGB" : 6.1446183200000002,
+          "loaded" : true,
+          "loadLog" : [
+            "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+            "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 3.5s (footprint 6.14 GB, available 2.45 GB)"
+          ],
+          "memoryWarnings" : 0,
+          "step" : "load 8K"
+        },
+        {
+          "availableGB" : 2.0345852240000002,
+          "decodeTokPerSec" : 39.953905505723085,
+          "footprintGB" : 6.5553493679999999,
+          "memoryWarnings" : 0,
+          "ok" : true,
+          "step" : "text"
+        },
+        {
+          "availableGB" : 1.0528714400000001,
+          "footprintGB" : 7.537063152,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "reply" : "Red",
+          "step" : "image"
+        },
+        {
+          "availableGB" : 1.033276128,
+          "footprintGB" : 7.5566420799999996,
+          "memoryWarnings" : 2,
+          "ok" : true,
+          "reply" : "The quick brown fox jumps over the lazy dog.",
+          "step" : "audio"
+        },
+        {
+          "availableGB" : 1.0317196719999999,
+          "footprintGB" : 7.5582149200000002,
+          "inputTokens" : 2300,
+          "memoryWarnings" : 3,
+          "ok" : true,
+          "step" : "long 8K",
+          "ttftSeconds" : 1.9828712689999999
+        },
+        {
+          "availableGB" : 0.94465629600000001,
+          "footprintGB" : 7.6452782959999999,
+          "inputTokens" : 4396,
+          "loaded" : true,
+          "memoryWarnings" : 5,
+          "ok" : true,
+          "step" : "long 16K",
+          "ttftSeconds" : 3.5424782822499998
+        }
+      ],
+      "telemetry" : {
+        "anomalies" : [
+
+        ],
+        "anomalies_total" : 0,
+        "counters" : {
+          "anomalies" : 0,
+          "command_buffers" : 0,
+          "compiled_models" : 0,
+          "context_switches" : 0,
+          "decode_allocations" : 0,
+          "embedding_lookups" : 0,
+          "errors" : 0,
+          "gpu_partitions" : 0,
+          "gpu_waits" : 0,
+          "graph_nodes" : 0,
+          "graph_nodes_cpu_delegate" : 0,
+          "graph_nodes_gpu" : 0,
+          "graph_nodes_undelegated" : 0,
+          "host_lock_copies" : 0,
+          "host_lock_copy_bytes" : 0,
+          "host_locks" : 0,
+          "host_shadow_allocs" : 0,
+          "host_unlock_copies" : 0,
+          "host_unlock_copy_bytes" : 0,
+          "kv_copies" : 0,
+          "kv_copy_bytes" : 0,
+          "logit_masks" : 0,
+          "logits_near_ties" : 0,
+          "logits_nonfinite" : 0,
+          "logits_rows_checked" : 0,
+          "mask_fill_bytes" : 0,
+          "mask_fills" : 0,
+          "mtp_accepted" : 0,
+          "mtp_drafted" : 0,
+          "mtp_rounds" : 0,
+          "program_cache_hits" : 0,
+          "program_cache_misses" : 0,
+          "run_option_parses" : 0,
+          "runs_decode" : 0,
+          "runs_drafter" : 0,
+          "runs_other" : 0,
+          "runs_prefill" : 0,
+          "runs_verify" : 0,
+          "sampler_cpu" : 0,
+          "sampler_gpu" : 0,
+          "stop_cancelled" : 0,
+          "stop_eos" : 0,
+          "stop_kv_full" : 0,
+          "stop_max_tokens" : 0,
+          "stream_chunk_bytes" : 0,
+          "stream_chunks" : 0,
+          "tasks_scheduled" : 0,
+          "token_history_copies" : 0,
+          "tokens_decoded" : 0,
+          "tokens_prefilled" : 0,
+          "weight_cache_hits" : 0,
+          "weight_cache_misses" : 0
+        },
+        "cpu" : {
+          "system_ms" : 4020,
+          "user_ms" : 35455.099999999999
+        },
+        "facts" : {
+          "gpu" : "Apple A19 Pro GPU, ML Drift family Apple10",
+          "gpu_wait_requested" : "active (benchmark mode)",
+          "sampler" : "cpu (GPU sampler unavailable)"
+        },
+        "gauges" : {
+
+        },
+        "level" : 0,
+        "memory" : {
+          "available_mb" : 944.70000000000005,
+          "footprint_mb" : 7645.3000000000002,
+          "graphics_footprint_mb" : 1390.8,
+          "peak_footprint_mb" : 7651
+        },
+        "schema" : 1,
+        "spans" : {
+
+        }
+      }
+    }
+  },
+  "startedAt" : "2026-10-15T07:50:32Z"
+}

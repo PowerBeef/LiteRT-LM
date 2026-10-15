@@ -1,0 +1,125 @@
+{
+  "device" : {
+    "gpu" : "Apple A19 Pro GPU",
+    "gpuAppleFamily" : 10,
+    "gpuWorkingSetGB" : 8.5899509760000008,
+    "hwMachine" : "iPhone18,1",
+    "hwModel" : "V53AP",
+    "isiOSAppOnMac" : false,
+    "memoryGB" : 12.291735552,
+    "model" : "iPhone",
+    "profile" : "12 GB RAM · app limit 8.6 GB",
+    "runtimeBuild" : {
+
+    },
+    "system" : "iOS 27.0.1"
+  },
+  "runID" : "run-1792053062",
+  "scenarios" : {
+    "calibration_e4b_4096" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 6.0413108480000002,
+      "decodeTokPerSec" : 37.249335567441847,
+      "effectiveWindow" : 4096,
+      "footprintAfterLoadGB" : 2.2523350080000002,
+      "footprintPeakGB" : 2.5486237439999999,
+      "inputTokens" : 1285,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=4096 thinking=off in 11.5s (footprint 2.25 GB, available 6.34 GB)"
+      ],
+      "memory.availableGB" : 6.0413108480000002,
+      "memory.footprintGB" : 2.5486237439999999,
+      "model" : "e4b",
+      "outputTokens" : 34,
+      "prefillTokPerSec" : 849.98025435510613,
+      "recordedAt" : "2026-10-15T08:31:25Z",
+      "replyPrefix" : "The text describes the daily life, maintenance, and technological changes at a lighthouse over time, from weather loggin",
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 1.51179982525,
+      "window" : 4096
+    },
+    "calibration_e4b_8192" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 6.0143428080000003,
+      "decodeTokPerSec" : 38.460147130104787,
+      "effectiveWindow" : 8192,
+      "footprintAfterLoadGB" : 2.63793276,
+      "footprintPeakGB" : 2.5755917840000002,
+      "inputTokens" : 2302,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=8192 thinking=off in 1.2s (footprint 2.64 GB, available 5.95 GB)"
+      ],
+      "memory.availableGB" : 6.0143428080000003,
+      "memory.footprintGB" : 2.5755917840000002,
+      "model" : "e4b",
+      "outputTokens" : 54,
+      "prefillTokPerSec" : 1134.8410088054775,
+      "recordedAt" : "2026-10-15T08:31:32Z",
+      "replyPrefix" : "The text is a repetitive list of 95 numbered sentences describing various aspects of life and events at a lighthouse, in",
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 2.0284779825000001,
+      "window" : 8192
+    },
+    "calibration_e4b_16384" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 5.2584175520000001,
+      "decodeTokPerSec" : 30.820669806695218,
+      "effectiveWindow" : 16384,
+      "footprintAfterLoadGB" : 2.8758613519999998,
+      "footprintPeakGB" : 3.33151704,
+      "inputTokens" : 4398,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=16384 thinking=off in 8.9s (footprint 2.88 GB, available 5.71 GB)"
+      ],
+      "memory.availableGB" : 5.2584175520000001,
+      "memory.footprintGB" : 3.33151704,
+      "model" : "e4b",
+      "outputTokens" : 56,
+      "prefillTokPerSec" : 779.28338146372721,
+      "recordedAt" : "2026-10-15T08:31:51Z",
+      "replyPrefix" : "The text is a repetitive list of 188 sentences describing the daily life, events, and changes at a lighthouse over time,",
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 5.6436465919999996,
+      "window" : 16384
+    },
+    "calibration_e4b_32768" : {
+      "accepted" : true,
+      "appLimitGB" : 8.5899345920000005,
+      "availableGB" : 3.5345584159999999,
+      "decodeTokPerSec" : 20.25159607891597,
+      "effectiveWindow" : 32768,
+      "footprintAfterLoadGB" : 4.3490615760000004,
+      "footprintPeakGB" : 5.0553761760000002,
+      "inputTokens" : 8607,
+      "loaded" : true,
+      "loadLog" : [
+        "caps: mtp=true thinking=false tools=false vision=true audio=true maxContext=0 maxVisionBudget=280",
+        "ok GPU vision=true audio=true mtp=true kv=32768 thinking=off in 9.9s (footprint 4.35 GB, available 4.24 GB)"
+      ],
+      "memory.availableGB" : 3.5345584159999999,
+      "memory.footprintGB" : 5.0553761760000002,
+      "model" : "e4b",
+      "outputTokens" : 27,
+      "prefillTokPerSec" : 467.42256644582523,
+      "recordedAt" : "2026-10-15T08:32:24Z",
+      "replyPrefix" : "The text is a repetitive list of 374 sentences describing the daily life, historical events, and eventual automation of ",
+      "thermalStateAfterLoad" : 0,
+      "thermalStateAfterReply" : 0,
+      "ttftSeconds" : 18.413745116000001,
+      "window" : 32768
+    }
+  },
+  "startedAt" : "2026-10-15T08:31:08Z"
+}

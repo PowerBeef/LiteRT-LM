@@ -1,0 +1,58 @@
+{
+  "device" : {
+    "gpu" : "Apple A19 Pro GPU",
+    "gpuAppleFamily" : 10,
+    "gpuWorkingSetGB" : 8.5899509760000008,
+    "hwMachine" : "iPhone18,1",
+    "hwModel" : "V53AP",
+    "isiOSAppOnMac" : false,
+    "memoryGB" : 12.291735552,
+    "model" : "iPhone",
+    "profile" : "12 GB RAM · app limit 6.4 GB",
+    "runtimeBuild" : {
+
+    },
+    "system" : "iOS 27.0.1"
+  },
+  "runID" : "run-1792050892",
+  "scenarios" : {
+    "probe06_digitConditions" : {
+      "memory.availableGB" : 5.0632491120000003,
+      "memory.footprintGB" : 3.5266854799999998,
+      "recordedAt" : "2026-10-15T07:55:40Z",
+      "results" : [
+        {
+          "case" : "gpu_full",
+          "corrupted" : "no",
+          "promptTokensApprox" : "3752",
+          "reply" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, pp. 22–24)."
+        },
+        {
+          "case" : "gpu_top3",
+          "corrupted" : "no",
+          "promptTokensApprox" : "1662",
+          "reply" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, p. 22)."
+        },
+        {
+          "case" : "gpu_top1",
+          "corrupted" : "no",
+          "promptTokensApprox" : "646",
+          "reply" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, p. 23)."
+        },
+        {
+          "case" : "gpu_fullNumberedLabels",
+          "corrupted" : "no",
+          "promptTokensApprox" : "3701",
+          "reply" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (Excerpt 1)."
+        },
+        {
+          "case" : "cpu_full",
+          "corrupted" : "no",
+          "promptTokensApprox" : "3752",
+          "reply" : "The harbour renovation budget was 4.2 million dollars, and it was approved by the council in March 2026 (coastal-report.pdf, pp. 22–24)."
+        }
+      ]
+    }
+  },
+  "startedAt" : "2026-10-15T07:55:00Z"
+}

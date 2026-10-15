@@ -88,7 +88,11 @@ doesn't grow with the round count (P3.3: 2,796, 2,909, 2,910 MB, settling after 
 now 2,348, 2,348, 2,349 MB), so kept conversations don't leak. In `t3-check-*.jsonl` the reply
 after the helper is identical to the control's in every build.
 
-So keeping the chat costs one more copy of its KV cache while a helper runs and nothing after.
+So keeping the chat costs one more copy of its KV cache. Correction from the iPhone run
+(VALIDATION.md, 2026-10-15): the copy stays until the chat's next message restores it, not only
+while the helper runs. The bench measured after that message, so it showed nothing left. In the app
+the copy sits between messages: +0.23 GB at 8K, about +0.9 GB at 32K. Restoring right after the
+helper would release it sooner.
 Agello's policy budgets exactly that (`DeviceProfile.kvBytesPerToken` × window, above the 400 MB
 stop): 0.23 GB at the default 8K window, 0.94 GB at 32K.
 
