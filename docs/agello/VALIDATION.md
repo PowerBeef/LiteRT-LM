@@ -18,7 +18,7 @@ A19 Pro (Apple10), 12 GB, app limit 6.4 GB, iOS 27.0.1. Runtime: LiteRT-LM `67d0
 | web | 3/3 |
 | memory | 2/3: the 3.5 GB envelope killed after its first message; Google's v0.18.0 does the same the same night |
 | calibrate | passes; numbers below |
-| ui | not run: XCUITest needs the passcode entered on the phone to enable automation mode, so it needs someone there |
+| ui | 22/22 later that morning (build `ab729fd0b59d`, the screenshot tour skipped as opt-in), in 13.4 min. It needs Settings → Developer → Enable UI Automation turned on first: otherwise the runner waits 60 s for a passcode prompt and fails |
 
 Highlights:
 
@@ -85,5 +85,4 @@ at 8K (0.23 GB).
    runs. The chat's snapshot waits in its session until it's restored: +0.23 GB at 8K, about
    +0.9 GB at 32K, between messages. The policy budget is right (one copy); the T3 note and
    Agello's docs said "nothing afterwards". Restoring right after the helper would release it.
-3. **`ui` suite:** run it attended.
-4. **The plan's A17/A18-class run** (Apple9 fallbacks, #3913 below 2,048) is still to do.
+3. **The plan's A17/A18-class run** (Apple9 fallbacks, #3913 below 2,048) is still to do.
