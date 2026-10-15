@@ -36,12 +36,29 @@ Shared by both builds, so not ours to fix in parity:
 Without MTP, decode matches: the engine benchmark (1,024 prefill / 256 decode) gives 49.4 tok/s
 for ours natively and 49.8 for Google's v0.18.0 binary in Agello on the same Mac.
 
+## After T5's first step (2026-10-14)
+
+Our build with direct host copies on Metal (LiteRT `584f3461`, tracks/T5-unified-memory.md),
+same calibration (`build/mac-harness-t5/`), against the same Google results:
+
+| Window | Decode tok/s, Google / ours before / ours now | Now vs Google | Prefill tok/s, Google / now | TTFT s | Peak footprint GB |
+| --- | --- | --- | --- | --- | --- |
+| 4,096 | 73.6 / 65.9 / 76.5 | +4.0% | 2,047 / 2,040 | 0.63 / 0.63 | 2.50 / 2.62 |
+| 8,192 | 69.0 / 63.5 / 73.4 | +6.3% | 2,162 / 2,236 | 1.06 / 1.03 | 2.79 / 2.83 |
+| 16,384 | 73.9 / 66.3 / 75.1 | +1.6% | 1,619 / 1,625 | 2.72 / 2.71 | 3.77 / 3.82 |
+| 32,768 | 61.9 / 51.3 / 63.0 | +1.7% | 1,092 / 1,101 | 7.88 / 7.82 | 5.61 / 5.92 |
+
+The MTP gap is closed, still with the CPU sampler: the readbacks it needs no longer go through ML
+Drift's per-element conversion. Single runs per window, so read the margins as within a few
+percent. Peak footprint is 1–6% above Google's (unchanged by this step).
+
 ## Verdict
 
 - Correctness: parity. Same suites pass, digit copies exact, replies identical to Google's on the
   short suite.
-- Prefill, TTFT, memory: parity (within ±5%; footprint +1–5%).
-- Decode with MTP: **not at parity** (−8% to −17%). Gate G1 applies: telemetry shows our build
-  samples on the CPU (`sampler = cpu`, the GPU sampler being closed source), and MTP samples four
-  to five times per round, each a 262,144-logit readback. Next: T7, an open Metal sampler; then
-  T12 (drafting on the GPU).
+- Prefill, TTFT, memory: parity (within ±5%; footprint +1–6%).
+- Decode with MTP: at parity since T5's first step (above). Before it, −8% to −17%: our build
+  samples on the CPU (`sampler = cpu`, the GPU sampler being closed source), MTP samples four to
+  five times per round, and each 262,144-logit readback went through ML Drift's per-element
+  conversion. Gate G1 is met without T7; an open Metal sampler (T7) and drafting on the GPU (T12)
+  remain speed work, not parity work.
