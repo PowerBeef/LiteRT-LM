@@ -160,6 +160,10 @@ public actor EmbeddingEngine {
         optionsHandle, Int32(visionTokensPerImage)
       )
     }
+    if let inputOverflowStrategy = options.inputOverflowStrategy {
+      litert_lm_embedding_options_set_input_overflow_strategy(
+        optionsHandle, inputOverflowStrategy.cValue)
+    }
 
     let responseHandle = inputPointers.withUnsafeBufferPointer { buffer in
       litert_lm_embedding_engine_compute_embedding(
@@ -254,6 +258,10 @@ public actor EmbeddingEngine {
       litert_lm_embedding_options_set_vision_tokens_per_image(
         optionsHandle, Int32(visionTokensPerImage)
       )
+    }
+    if let inputOverflowStrategy = options.inputOverflowStrategy {
+      litert_lm_embedding_options_set_input_overflow_strategy(
+        optionsHandle, inputOverflowStrategy.cValue)
     }
 
     // Prepare arrays of pointers for the C API batch call using pinned flat buffer
@@ -396,6 +404,16 @@ public actor EmbeddingEngine {
     case .toolResponse:
       throw LiteRTLMError.embeddingEngine(
         .failedToCreateInputData("Tool responses are not supported for embeddings"))
+    }
+  }
+}
+
+extension InputOverflowStrategy {
+  var cValue: LiteRtLmInputOverflowStrategy {
+    switch self {
+    case .chunkAndAverage: return kLiteRtLmInputOverflowStrategyChunkAndAverage
+    case .truncate: return kLiteRtLmInputOverflowStrategyTruncate
+    case .error: return kLiteRtLmInputOverflowStrategyError
     }
   }
 }

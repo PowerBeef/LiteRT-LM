@@ -334,6 +334,30 @@ public actor Engine {
     }
   }
 
+  /// The token IDs the engine's tokenizer gives `text`, as the tokenizer encodes it: no
+  /// begin-of-sequence or chat-template tokens are added. To count what a message will
+  /// prefill, render it first (`Conversation.renderMessageIntoString`).
+  ///
+  /// - Throws: A `LiteRTLMError` if the engine isn't initialized or tokenizing fails.
+  public func tokenize(_ text: String) throws -> [Int] {
+    guard let handle else {
+      throw LiteRTLMError.engine(.notInitialized)
+    }
+    guard let result = litert_lm_engine_tokenize(handle, text) else {
+      let errorMsg = LiteRTLMError.consumeLastError() ?? ""
+      throw LiteRTLMError.engine(.failedToTokenize(errorMsg))
+    }
+    defer { litert_lm_tokenize_result_delete(result) }
+    let count = litert_lm_tokenize_result_get_num_tokens(result)
+    guard count > 0, let tokens = litert_lm_tokenize_result_get_tokens(result) else { return [] }
+    return (0..<count).map { Int(tokens[$0]) }
+  }
+
+  /// The number of tokens `text` encodes to (see ``tokenize(_:)``).
+  public func countTokens(_ text: String) throws -> Int {
+    try tokenize(text).count
+  }
+
   deinit {
     if let handle = handle {
       self.handle = nil

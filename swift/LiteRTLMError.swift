@@ -94,6 +94,7 @@ public enum LiteRTLMError: Error, LocalizedError, Equatable {
     case failedToSetSupportedAudioLoraRanks(String)
     case notOptedIntoExperimentalAPIs
     case failedToUpdateGPUEnableMetalResidencySet(String)
+    case failedToTokenize(String)
 
     public static let failedToCreateSettings = EngineError.failedToCreateSettings("")
     public static let failedToCreateEngine = EngineError.failedToCreateEngine("")
@@ -160,6 +161,8 @@ public enum LiteRTLMError: Error, LocalizedError, Equatable {
         return details.isEmpty
           ? "Failed to update GPU enable Metal residency set."
           : "Failed to update GPU enable Metal residency set: \(details)"
+      case .failedToTokenize(let details):
+        return details.isEmpty ? "Failed to tokenize." : "Failed to tokenize: \(details)"
       }
     }
 
@@ -186,7 +189,8 @@ public enum LiteRTLMError: Error, LocalizedError, Equatable {
         (
           .failedToUpdateGPUEnableMetalResidencySet(let a),
           .failedToUpdateGPUEnableMetalResidencySet(let b)
-        ):
+        ),
+        (.failedToTokenize(let a), .failedToTokenize(let b)):
         return a == b || a.isEmpty || b.isEmpty
       default:
         return false
