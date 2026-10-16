@@ -14,10 +14,13 @@
 //
 // Modified by Patrice Déry for Agello (PowerBeef/agello-litert-lm, branch agello):
 // a tool call that fails is answered with an error response the model can
-// read, instead of throwing and ending the turn (see handleToolCalls); and a
+// read, instead of throwing and ending the turn (see handleToolCalls); a
 // stream holds its conversation weakly, so the last reference is never
 // released inside LiteRT-LM's callback, where deleting the conversation
-// deadlocked (see StreamContext).
+// deadlocked (see StreamContext); and streams are found by ID instead of a
+// retained pointer, end once however many final chunks LiteRT-LM sends,
+// stop their native work when cancelled (between tool rounds too), and cap
+// their tool rounds (see ConversationStream.swift).
 
 import Foundation
 import OSLog
@@ -73,6 +76,8 @@ public final class Conversation: Sendable {
   private let engine: Engine
   private let enableResponseFormat: Bool
   private let visualTokenBudget: Int32?
+  /// Identifies this conversation's streams in ``StreamTable``, after it's gone too.
+  let streamOwner = StreamTable.shared.makeOwner()
 
   /// Whether the conversation is alive and ready to be used.
   public var isAlive: Bool {
@@ -94,6 +99,10 @@ public final class Conversation: Sendable {
   deinit {
     if let handle = handle {
       litert_lm_conversation_delete(handle)
+    }
+    // Deleting waits for running sends; any stream still registered gets no more chunks.
+    for context in StreamTable.shared.retireAll(owner: streamOwner) {
+      context.finish(throwing: LiteRTLMError.conversation(.notAlive))
     }
   }
 
@@ -474,7 +483,12 @@ public final class Conversation: Sendable {
   /// - Parameter maxOutputTokens: Optional maximum number of tokens to generate per response. For thinking models, both thinking (reasoning) tokens and the final response tokens count towards this limit.
   /// - Parameter thinkingConfig: Optional configuration for thinking/reasoning generation.
   /// - Parameter responseFormat: Optional response format for constrained decoding.
-  /// - Returns: An async throwing stream of `Message` chunks.
+  /// - Parameter followUpMaxOutputTokens: Optional output cap for each generation after a tool
+  ///   response; `maxOutputTokens` when nil.
+  /// - Parameter maxToolRounds: Optional limit on automatic tool rounds; past it the stream ends
+  ///   with `recurringToolCallLimitExceeded`. 25 when nil.
+  /// - Returns: An async throwing stream of `Message` chunks. Cancelling the task that iterates
+  ///   it stops the native work, which leaves the conversation cancelled, like `cancel()`.
   public func sendMessageStream(
     _ message: Message,
     extraContext: [String: Any]? = nil,
@@ -483,25 +497,39 @@ public final class Conversation: Sendable {
     suppressTokensConfig: SuppressTokensConfig? = nil,
     maxOutputTokens: Int? = nil,
     thinkingConfig: ThinkingConfig? = nil,
-    responseFormat: ResponseFormat? = nil
+    responseFormat: ResponseFormat? = nil,
+    followUpMaxOutputTokens: Int? = nil,
+    maxToolRounds: Int? = nil
   ) -> AsyncThrowingStream<Message, Error> {
     return AsyncThrowingStream { continuation in
+      let options = StreamOptions(
+        repetitionPenaltyConfig: repetitionPenaltyConfig,
+        noRepeatNgramConfig: noRepeatNgramConfig,
+        suppressTokensConfig: suppressTokensConfig,
+        maxOutputTokens: maxOutputTokens,
+        followUpMaxOutputTokens: followUpMaxOutputTokens,
+        responseFormat: responseFormat,
+        maxToolRounds: maxToolRounds ?? recurringToolCallLimit
+      )
+      let effects = StreamEffects(
+        cancelNative: { [weak self] in try? self?.cancel() },
+        startToolRound: { context, batch in
+          guard let conversation = context.conversation else {
+            throw LiteRTLMError.conversation(.notAlive)
+          }
+          try await conversation.runToolRound(batch.calls, context: context)
+        }
+      )
+      let context = StreamContext(
+        continuation: continuation, conversation: self, owner: streamOwner, options: options,
+        effects: effects)
+      context.cancelNativeWorkWhenAbandoned()
       do {
         if responseFormat != nil && !enableResponseFormat {
           throw LiteRTLMError.conversation(.responseFormatNotEnabled)
         }
         let handle = try self.checkIsAlive()
         let messageJson: [String: Any] = message.toJson
-        let context = StreamContext(
-          continuation: continuation,
-          conversation: self,
-          repetitionPenaltyConfig: repetitionPenaltyConfig,
-          noRepeatNgramConfig: noRepeatNgramConfig,
-          suppressTokensConfig: suppressTokensConfig,
-          maxOutputTokens: maxOutputTokens,
-          responseFormat: responseFormat
-        )
-
         try self.sendToStream(
           handle: handle,
           messageJson: messageJson,
@@ -515,9 +543,27 @@ public final class Conversation: Sendable {
           context: context
         )
       } catch {
-        continuation.finish(throwing: error)
+        context.finish(throwing: error)
       }
     }
+  }
+
+  /// Runs a round's tool calls and sends their responses, as the stream's next round.
+  fileprivate func runToolRound(_ toolCalls: [[String: Any]], context: StreamContext) async throws
+  {
+    let toolResponseJson = try await handleToolCalls(toolCalls)
+    // A Stop while the tools ran found no native task to cancel.
+    if context.isCancelled { throw CancellationError() }
+    try sendToStream(
+      handle: checkIsAlive(),
+      messageJson: toolResponseJson,
+      repetitionPenaltyConfig: context.options.repetitionPenaltyConfig,
+      noRepeatNgramConfig: context.options.noRepeatNgramConfig,
+      suppressTokensConfig: context.options.suppressTokensConfig,
+      maxOutputTokens: context.options.followUpMaxOutputTokens ?? context.options.maxOutputTokens,
+      responseFormat: context.options.responseFormat,
+      context: context
+    )
   }
 
   /// Sends a message to the model and handles the response via a streaming callback.
@@ -571,28 +617,35 @@ public final class Conversation: Sendable {
     )
     defer { litert_lm_conversation_optional_args_delete(optionalArgs) }
 
-    let contextPtr = Unmanaged.passRetained(context).toOpaque()
-
+    // Registered before the call: LiteRT-LM can call back before it returns.
+    let id = StreamTable.shared.register(context)
     let status = litert_lm_conversation_send_message_stream(
       handle,
       messageString,
       extraContextString,
       optionalArgs,
       streamCallback,
-      contextPtr
+      UnsafeMutableRawPointer(bitPattern: id)
     )
 
     guard status == kLiteRtLmStatusOk else {
-      Unmanaged<StreamContext>.fromOpaque(contextPtr).release()
+      StreamTable.shared.retire(id)
       let errorMsg = LiteRTLMError.consumeLastError() ?? ""
       throw LiteRTLMError.conversation(
         .failedToStartStream(status: Int(status.rawValue), message: errorMsg))
     }
+    // A Stop that came while this round was being set up had no native task to cancel yet.
+    if context.isCancelled {
+      _ = litert_lm_conversation_cancel_process(handle)
+    }
   }
 
-  /// Cancels the ongoing asynchronous inference process.
+  /// Cancels the ongoing asynchronous inference process, and any stream between tool rounds.
   public func cancel() throws {
     let handle = try checkIsAlive()
+    for context in StreamTable.shared.contexts(owner: streamOwner) {
+      context.markCancelled()
+    }
     try LiteRTLMError.check(
       litert_lm_conversation_cancel_process(handle), "litert_lm_conversation_cancel_process",
       { .conversation(.invalidResponse($0)) })
@@ -821,152 +874,5 @@ public final class Conversation: Sendable {
       channels: channels,
       toolCalls: toolCalls
     )
-  }
-
-  /// Context object to bridge the C callback to the Swift AsyncThrowingStream.
-  ///
-  /// It holds its conversation weakly. With a strong reference, a caller that dropped the
-  /// conversation before the stream's final chunk (by abandoning the stream, or by replacing a
-  /// conversation whose cancelled stream was still finishing) left the context holding the last
-  /// reference; releasing it in the final callback ran `deinit` on LiteRT-LM's callback thread,
-  /// and deleting the native conversation there waited for the very task running the callback,
-  /// stalling the engine until LiteRT-LM's 10-minute timeout. Now the conversation is deleted
-  /// where the caller drops it, and the deletion waits for the stream's work to finish.
-  class StreamContext {
-    let continuation: AsyncThrowingStream<Message, Error>.Continuation
-    weak var conversation: Conversation?
-    var toolCallCount: Int = 0
-    var pendingToolCalls: [[String: Any]] = []
-    let repetitionPenaltyConfig: RepetitionPenaltyConfig?
-    let noRepeatNgramConfig: NoRepeatNgramConfig?
-    let suppressTokensConfig: SuppressTokensConfig?
-    let maxOutputTokens: Int?
-    let responseFormat: ResponseFormat?
-
-    init(
-      continuation: AsyncThrowingStream<Message, Error>.Continuation,
-      conversation: Conversation,
-      repetitionPenaltyConfig: RepetitionPenaltyConfig? = nil,
-      noRepeatNgramConfig: NoRepeatNgramConfig? = nil,
-      suppressTokensConfig: SuppressTokensConfig? = nil,
-      maxOutputTokens: Int? = nil,
-      responseFormat: ResponseFormat? = nil
-    ) {
-      self.continuation = continuation
-      self.conversation = conversation
-      self.repetitionPenaltyConfig = repetitionPenaltyConfig
-      self.noRepeatNgramConfig = noRepeatNgramConfig
-      self.suppressTokensConfig = suppressTokensConfig
-      self.maxOutputTokens = maxOutputTokens
-      self.responseFormat = responseFormat
-    }
-  }
-}
-
-/// A callback function to bridge the C callback to the Swift AsyncThrowingStream.
-private func streamCallback(
-  userData: UnsafeMutableRawPointer?,
-  chunk: OpaquePointer?
-) {
-  guard let userData = userData else { return }
-
-  let context = Unmanaged<Conversation.StreamContext>.fromOpaque(userData).takeUnretainedValue()
-
-  let isFinal: Bool
-  let errorMessage: UnsafePointer<CChar>?
-  let responseJson: UnsafePointer<CChar>?
-  do {
-    let makeError: (String) -> LiteRTLMError = { .conversation(.invalidResponse($0)) }
-    isFinal = try LiteRTLMError.get(false, "litert_lm_stream_chunk_is_final", makeError) {
-      litert_lm_stream_chunk_is_final(chunk, $0)
-    }
-    // A chunk without an error or text yields a nil result.
-    errorMessage = try LiteRTLMError.get(nil, "litert_lm_stream_chunk_get_error", makeError) {
-      litert_lm_stream_chunk_get_error(chunk, $0)
-    }
-    responseJson = try LiteRTLMError.get(nil, "litert_lm_stream_chunk_get_text", makeError) {
-      litert_lm_stream_chunk_get_text(chunk, $0)
-    }
-  } catch {
-    context.continuation.finish(throwing: error)
-    Unmanaged<Conversation.StreamContext>.fromOpaque(userData).release()
-    return
-  }
-
-  if let errorMessage = errorMessage {
-    let errorString = String(cString: errorMessage)
-    let error = LiteRTLMError.conversation(.invalidResponse(errorString))
-    context.continuation.finish(throwing: error)
-
-    Unmanaged<Conversation.StreamContext>.fromOpaque(userData).release()
-    return
-  }
-
-  if let responseJson = responseJson {
-    let responseString = String(cString: responseJson)
-    do {
-      guard let responseData = responseString.data(using: .utf8),
-        let jsonObject = try JSONSerialization.jsonObject(with: responseData) as? [String: Any]
-      else {
-        throw LiteRTLMError.conversation(.invalidJson("Invalid JSON chunk"))
-      }
-
-      if let toolCalls = jsonObject["tool_calls"] as? [[String: Any]] {
-        context.pendingToolCalls.append(contentsOf: toolCalls)
-      }
-
-      if jsonObject["content"] != nil || jsonObject["channels"] != nil {
-        let message = try Conversation.jsonToMessage(responseString)
-        context.continuation.yield(message)
-      }
-    } catch {
-      logger.error("Failed to parse response JSON: \(error.localizedDescription)")
-      context.continuation.finish(throwing: error)
-      Unmanaged<Conversation.StreamContext>.fromOpaque(userData).release()
-      return
-    }
-  }
-
-  if isFinal {
-    if !context.pendingToolCalls.isEmpty {
-      if context.toolCallCount >= recurringToolCallLimit {
-        context.continuation.finish(
-          throwing: LiteRTLMError.conversation(
-            .recurringToolCallLimitExceeded(limit: recurringToolCallLimit)))
-        Unmanaged<Conversation.StreamContext>.fromOpaque(userData).release()
-        return
-      }
-
-      context.toolCallCount += 1
-      let toolCalls = context.pendingToolCalls
-      context.pendingToolCalls = []
-
-      Task {
-        do {
-          guard let conversation = context.conversation else {
-            throw LiteRTLMError.conversation(.notAlive)
-          }
-          let toolResponseJson = try await conversation.handleToolCalls(toolCalls)
-          try conversation.sendToStream(
-            handle: conversation.checkIsAlive(),
-            messageJson: toolResponseJson,
-            repetitionPenaltyConfig: context.repetitionPenaltyConfig,
-            noRepeatNgramConfig: context.noRepeatNgramConfig,
-            suppressTokensConfig: context.suppressTokensConfig,
-            maxOutputTokens: context.maxOutputTokens,
-            responseFormat: context.responseFormat,
-            context: context
-          )
-        } catch {
-          context.continuation.finish(throwing: error)
-        }
-        // Release the reference for the current (finished) call.
-        // The new call from sendToStream created its own retained reference.
-        Unmanaged<Conversation.StreamContext>.fromOpaque(userData).release()
-      }
-    } else {
-      context.continuation.finish()
-      Unmanaged<Conversation.StreamContext>.fromOpaque(userData).release()
-    }
   }
 }

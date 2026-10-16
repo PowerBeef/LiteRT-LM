@@ -419,6 +419,35 @@ public actor Engine {
     }
   }
 
+  /// The token IDs the engine's tokenizer gives `text`, as the tokenizer encodes it: no
+  /// begin-of-sequence or chat-template tokens are added. To count what a message will
+  /// prefill, render it first (`Conversation.renderMessageIntoString`).
+  ///
+  /// - Throws: A `LiteRTLMError` if the engine isn't initialized or tokenizing fails.
+  public func tokenize(_ text: String) throws -> [Int] {
+    guard let handle else {
+      throw LiteRTLMError.engine(.notInitialized)
+    }
+    let tokenizeError: (String) -> LiteRTLMError = { .engine(.failedToTokenize($0)) }
+    let result = try LiteRTLMError.create("litert_lm_engine_tokenize", tokenizeError) { out in
+      litert_lm_engine_tokenize(handle, text, out)
+    }
+    defer { litert_lm_tokenize_result_delete(result) }
+    let count: Int = try LiteRTLMError.get(
+      0, "litert_lm_tokenize_result_get_num_tokens", tokenizeError
+    ) { litert_lm_tokenize_result_get_num_tokens(result, $0) }
+    let tokens: UnsafePointer<Int32>? = try LiteRTLMError.get(
+      nil, "litert_lm_tokenize_result_get_tokens", tokenizeError
+    ) { litert_lm_tokenize_result_get_tokens(result, $0) }
+    guard count > 0, let tokens else { return [] }
+    return (0..<count).map { Int(tokens[$0]) }
+  }
+
+  /// The number of tokens `text` encodes to (see ``tokenize(_:)``).
+  public func countTokens(_ text: String) throws -> Int {
+    try tokenize(text).count
+  }
+
   deinit {
     if let handle = handle {
       self.handle = nil

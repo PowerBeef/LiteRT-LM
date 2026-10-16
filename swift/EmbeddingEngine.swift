@@ -324,6 +324,12 @@ public actor EmbeddingEngine {
           ),
           "litert_lm_embedding_options_set_vision_tokens_per_image", optionsError)
       }
+      if let inputOverflowStrategy = options.inputOverflowStrategy {
+        try LiteRTLMError.check(
+          litert_lm_embedding_options_set_input_overflow_strategy(
+            optionsHandle, inputOverflowStrategy.cValue),
+          "litert_lm_embedding_options_set_input_overflow_strategy", optionsError)
+      }
     } catch {
       litert_lm_embedding_options_delete(optionsHandle)
       throw error
@@ -412,6 +418,16 @@ public actor EmbeddingEngine {
     case .toolResponse:
       throw LiteRTLMError.embeddingEngine(
         .failedToCreateInputData("Tool responses are not supported for embeddings"))
+    }
+  }
+}
+
+extension InputOverflowStrategy {
+  var cValue: LiteRtLmInputOverflowStrategy {
+    switch self {
+    case .chunkAndAverage: return kLiteRtLmInputOverflowStrategyChunkAndAverage
+    case .truncate: return kLiteRtLmInputOverflowStrategyTruncate
+    case .error: return kLiteRtLmInputOverflowStrategyError
     }
   }
 }

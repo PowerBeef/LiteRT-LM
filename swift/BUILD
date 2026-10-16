@@ -29,6 +29,7 @@ swift_library(
         "Benchmark.swift",
         "Config.swift",
         "Conversation.swift",
+        "ConversationStream.swift",
         "EmbeddingEngine.swift",
         "EmbeddingEngineConfig.swift",
         "Engine.swift",

@@ -74,23 +74,41 @@ public struct EmbeddingOptions: Hashable, Sendable {
   /// If `nil`, uses the C++ engine default.
   public let visionTokensPerImage: Int?
 
+  /// What to do with an input longer than the loaded signatures. If `nil`, uses the C++ engine
+  /// default (`.error`).
+  public let inputOverflowStrategy: InputOverflowStrategy?
+
   /// - Parameters:
   ///   - normalize: Whether to L2-normalize the output embedding vector. If `nil`, uses the C++ engine default.
   ///   - insertSpecialTokens: Whether to automatically insert special tokens. If `nil`, uses the C++ engine default.
   ///   - outputSize: The output embedding size to truncate to. If `nil`, uses the C++ engine default.
   ///   - visionTokensPerImage: The number of vision soft tokens to generate per image. If `nil`,
   ///     uses the C++ engine default.
+  ///   - inputOverflowStrategy: What to do with an input longer than the loaded signatures. If
+  ///     `nil`, uses the C++ engine default (`.error`).
   public init(
     normalize: Bool? = nil,
     insertSpecialTokens: Bool? = nil,
     outputSize: Int? = nil,
-    visionTokensPerImage: Int? = nil
+    visionTokensPerImage: Int? = nil,
+    inputOverflowStrategy: InputOverflowStrategy? = nil
   ) {
     self.normalize = normalize
     self.insertSpecialTokens = insertSpecialTokens
     self.outputSize = outputSize
     self.visionTokensPerImage = visionTokensPerImage
+    self.inputOverflowStrategy = inputOverflowStrategy
   }
+}
+
+/// What the embedding engine does with an input longer than its loaded signatures.
+public enum InputOverflowStrategy: Hashable, Sendable {
+  /// Embeds overlapping chunks and averages them.
+  case chunkAndAverage
+  /// Keeps the beginning of the input (and its end-of-sequence token).
+  case truncate
+  /// Fails the request.
+  case error
 }
 
 /// Represents the embedding result for an input item.
