@@ -1,5 +1,9 @@
 # T11: one weight copy for every context size
 
+> The 2.2 / 4.4 / 6.6 GB sizes below have no raw record. Probe 14's records give the cache folder
+> sizes: about 2.47 GB per KV size with the per-size key, one 2.47-2.56 GB folder with ours
+> (reference/facts.md F-081).
+
 ML Drift's serialization cache keeps the GPU-format weights of a model in one file
 (`<model>_…_mldrift_weight_cache.bin`), one entry per delegated subgraph, and the compiled
 programs in another (`…_mldrift_program_cache.bin`), one entry per program fingerprint. Agello's

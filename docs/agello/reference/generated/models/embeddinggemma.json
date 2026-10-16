@@ -1,0 +1,527 @@
+{
+ "file": "embeddinggemma-2-text-270m.litertlm",
+ "bytes": 164626432,
+ "sha256": "2d079ee2f6f066b1f368e8d7c819f55214eaef1d0513b312321901f30ab286fb",
+ "source": "huggingface.co/litert-community/embeddinggemma-2-text-270m-litert-lm @ 9be6e8b90982095dc05c2bd162e4b954ee4dbac7",
+ "header": {
+  "version": "1.7.0",
+  "header_bytes": 880,
+  "system": {
+   "author": "The ODML Authors",
+   "uuid": "a9b53e53-46c2-4bf3-a5b1-aa5043bdc029",
+   "creation_timestamp": "2026-09-30T18:56:28.714497+00:00"
+  },
+  "sections": [
+   {
+    "index": 0,
+    "begin": 16384,
+    "end": 16508,
+    "size": 124,
+    "data_type": "EmbeddingMetadataProto",
+    "items": {}
+   },
+   {
+    "index": 1,
+    "begin": 32768,
+    "end": 4721781,
+    "size": 4689013,
+    "data_type": "SP_Tokenizer",
+    "items": {}
+   },
+   {
+    "index": 2,
+    "begin": 4734976,
+    "end": 7884056,
+    "size": 3149080,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_embedder"
+    }
+   },
+   {
+    "index": 3,
+    "begin": 7897088,
+    "end": 29147808,
+    "size": 21250720,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_text_encoder"
+    }
+   },
+   {
+    "index": 4,
+    "begin": 29163520,
+    "end": 96272384,
+    "size": 67108864,
+    "data_type": "TFLiteWeights",
+    "items": {
+     "model_type": "tf_lite_embedder"
+    }
+   },
+   {
+    "index": 5,
+    "begin": 96272384,
+    "end": 164626432,
+    "size": 68354048,
+    "data_type": "TFLiteWeights",
+    "items": {
+     "model_type": "tf_lite_text_encoder"
+    }
+   }
+  ]
+ },
+ "tflite": {
+  "2": {
+   "graph_bytes": 3149080,
+   "external_bytes": 0,
+   "weights_section_bytes": 67108864,
+   "weights_by_type": {
+    "INT32": {
+     "inline": 28,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 5,
+     "per_channel": 0
+    },
+    "INT4": {
+     "inline": 0,
+     "external": 0,
+     "weights_section": 67108864,
+     "tensors": 1,
+     "per_channel": 1
+    },
+    "FLOAT32": {
+     "inline": 4,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 0
+    }
+   },
+   "signatures": [
+    {
+     "key": "embedder_1x1",
+     "subgraph": 0,
+     "ops": 8,
+     "tensors": 16,
+     "inputs": [
+      [
+       "token_ids",
+       "INT32[1, 1]"
+      ]
+     ],
+     "outputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 1, 512]"
+      ]
+     ],
+     "op_histogram": {
+      "RESHAPE": 2,
+      "GREATER_EQUAL": 1,
+      "LESS": 1,
+      "LOGICAL_AND": 1,
+      "SELECT_V2": 1,
+      "EMBEDDING_LOOKUP": 1,
+      "MUL": 1
+     },
+     "composites": {}
+    }
+   ],
+   "layer_table": ""
+  },
+  "3": {
+   "graph_bytes": 21250720,
+   "external_bytes": 0,
+   "weights_section_bytes": 68354048,
+   "weights_by_type": {
+    "INT32": {
+     "inline": 50608,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 135,
+     "per_channel": 0
+    },
+    "FLOAT32": {
+     "inline": 393852,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 209,
+     "per_channel": 0
+    },
+    "INT4": {
+     "inline": 0,
+     "external": 0,
+     "weights_section": 68354048,
+     "tensors": 218,
+     "per_channel": 218
+    }
+   },
+   "signatures": [
+    {
+     "key": "encoder_1x1024",
+     "subgraph": 0,
+     "ops": 1011,
+     "tensors": 1475,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 1024, 512]"
+      ],
+      [
+       "input_mask",
+       "FLOAT32[1, 1024]"
+      ]
+     ],
+     "outputs": [
+      [
+       "encodings",
+       "FLOAT32[1, 768]"
+      ]
+     ],
+     "op_histogram": {
+      "FULLY_CONNECTED": 218,
+      "COMPOSITE:odml.rms_norm": 194,
+      "RESHAPE": 155,
+      "ADD": 98,
+      "TRANSPOSE": 92,
+      "MUL": 75,
+      "COMPOSITE:odml.rope": 48,
+      "BATCH_MATMUL": 48,
+      "GELU": 48,
+      "SOFTMAX": 24,
+      "CONCATENATION": 3,
+      "SUM": 2,
+      "NOT_EQUAL": 1,
+      "LOGICAL_NOT": 1,
+      "CAST": 1,
+      "UNPACK": 1,
+      "ABS": 1,
+      "DIV": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 194,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 194
+       },
+       "distinct": 1
+      },
+      "odml.rope": {
+       "count": 48,
+       "attribute_sets": {
+        "{\"max_timescale\": 10000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 40,
+        "{\"max_timescale\": 1000000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 8
+       },
+       "distinct": 2
+      }
+     }
+    },
+    {
+     "key": "encoder_1x128",
+     "subgraph": 1,
+     "ops": 1011,
+     "tensors": 1475,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 128, 512]"
+      ],
+      [
+       "input_mask",
+       "FLOAT32[1, 128]"
+      ]
+     ],
+     "outputs": [
+      [
+       "encodings",
+       "FLOAT32[1, 768]"
+      ]
+     ],
+     "op_histogram": {
+      "FULLY_CONNECTED": 218,
+      "COMPOSITE:odml.rms_norm": 194,
+      "RESHAPE": 155,
+      "ADD": 98,
+      "TRANSPOSE": 92,
+      "MUL": 75,
+      "COMPOSITE:odml.rope": 48,
+      "BATCH_MATMUL": 48,
+      "GELU": 48,
+      "SOFTMAX": 24,
+      "CONCATENATION": 3,
+      "SUM": 2,
+      "NOT_EQUAL": 1,
+      "LOGICAL_NOT": 1,
+      "CAST": 1,
+      "UNPACK": 1,
+      "ABS": 1,
+      "DIV": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 194,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 194
+       },
+       "distinct": 1
+      },
+      "odml.rope": {
+       "count": 48,
+       "attribute_sets": {
+        "{\"max_timescale\": 10000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 40,
+        "{\"max_timescale\": 1000000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 8
+       },
+       "distinct": 2
+      }
+     }
+    },
+    {
+     "key": "encoder_1x2048",
+     "subgraph": 2,
+     "ops": 1031,
+     "tensors": 1500,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 2048, 512]"
+      ],
+      [
+       "input_mask",
+       "FLOAT32[1, 2048]"
+      ]
+     ],
+     "outputs": [
+      [
+       "encodings",
+       "FLOAT32[1, 768]"
+      ]
+     ],
+     "op_histogram": {
+      "FULLY_CONNECTED": 218,
+      "COMPOSITE:odml.rms_norm": 194,
+      "RESHAPE": 157,
+      "ADD": 98,
+      "TRANSPOSE": 92,
+      "MUL": 79,
+      "COMPOSITE:odml.rope": 48,
+      "BATCH_MATMUL": 48,
+      "GELU": 48,
+      "SOFTMAX": 24,
+      "CAST": 6,
+      "GREATER": 3,
+      "CONCATENATION": 3,
+      "SUB": 2,
+      "NOT_EQUAL": 2,
+      "LOGICAL_NOT": 2,
+      "SUM": 2,
+      "GREATER_EQUAL": 1,
+      "MAXIMUM": 1,
+      "UNPACK": 1,
+      "ABS": 1,
+      "DIV": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 194,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 194
+       },
+       "distinct": 1
+      },
+      "odml.rope": {
+       "count": 48,
+       "attribute_sets": {
+        "{\"max_timescale\": 10000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 40,
+        "{\"max_timescale\": 1000000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 8
+       },
+       "distinct": 2
+      }
+     }
+    },
+    {
+     "key": "encoder_1x256",
+     "subgraph": 3,
+     "ops": 1011,
+     "tensors": 1474,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 256, 512]"
+      ],
+      [
+       "input_mask",
+       "FLOAT32[1, 256]"
+      ]
+     ],
+     "outputs": [
+      [
+       "encodings",
+       "FLOAT32[1, 768]"
+      ]
+     ],
+     "op_histogram": {
+      "FULLY_CONNECTED": 218,
+      "COMPOSITE:odml.rms_norm": 194,
+      "RESHAPE": 155,
+      "ADD": 98,
+      "TRANSPOSE": 92,
+      "MUL": 75,
+      "COMPOSITE:odml.rope": 48,
+      "BATCH_MATMUL": 48,
+      "GELU": 48,
+      "SOFTMAX": 24,
+      "CONCATENATION": 3,
+      "SUM": 2,
+      "NOT_EQUAL": 1,
+      "LOGICAL_NOT": 1,
+      "CAST": 1,
+      "UNPACK": 1,
+      "ABS": 1,
+      "DIV": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 194,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 194
+       },
+       "distinct": 1
+      },
+      "odml.rope": {
+       "count": 48,
+       "attribute_sets": {
+        "{\"max_timescale\": 10000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 40,
+        "{\"max_timescale\": 1000000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 8
+       },
+       "distinct": 2
+      }
+     }
+    },
+    {
+     "key": "encoder_1x512",
+     "subgraph": 4,
+     "ops": 1011,
+     "tensors": 1472,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 512, 512]"
+      ],
+      [
+       "input_mask",
+       "FLOAT32[1, 512]"
+      ]
+     ],
+     "outputs": [
+      [
+       "encodings",
+       "FLOAT32[1, 768]"
+      ]
+     ],
+     "op_histogram": {
+      "FULLY_CONNECTED": 218,
+      "COMPOSITE:odml.rms_norm": 194,
+      "RESHAPE": 155,
+      "ADD": 98,
+      "TRANSPOSE": 92,
+      "MUL": 75,
+      "COMPOSITE:odml.rope": 48,
+      "BATCH_MATMUL": 48,
+      "GELU": 48,
+      "SOFTMAX": 24,
+      "CONCATENATION": 3,
+      "SUM": 2,
+      "NOT_EQUAL": 1,
+      "LOGICAL_NOT": 1,
+      "CAST": 1,
+      "UNPACK": 1,
+      "ABS": 1,
+      "DIV": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 194,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 194
+       },
+       "distinct": 1
+      },
+      "odml.rope": {
+       "count": 48,
+       "attribute_sets": {
+        "{\"max_timescale\": 10000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 40,
+        "{\"max_timescale\": 1000000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 8
+       },
+       "distinct": 2
+      }
+     }
+    },
+    {
+     "key": "encoder_1x8192",
+     "subgraph": 5,
+     "ops": 1031,
+     "tensors": 1500,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 8192, 512]"
+      ],
+      [
+       "input_mask",
+       "FLOAT32[1, 8192]"
+      ]
+     ],
+     "outputs": [
+      [
+       "encodings",
+       "FLOAT32[1, 768]"
+      ]
+     ],
+     "op_histogram": {
+      "FULLY_CONNECTED": 218,
+      "COMPOSITE:odml.rms_norm": 194,
+      "RESHAPE": 157,
+      "ADD": 98,
+      "TRANSPOSE": 92,
+      "MUL": 79,
+      "COMPOSITE:odml.rope": 48,
+      "BATCH_MATMUL": 48,
+      "GELU": 48,
+      "SOFTMAX": 24,
+      "CAST": 6,
+      "GREATER": 3,
+      "CONCATENATION": 3,
+      "SUB": 2,
+      "NOT_EQUAL": 2,
+      "LOGICAL_NOT": 2,
+      "SUM": 2,
+      "GREATER_EQUAL": 1,
+      "MAXIMUM": 1,
+      "UNPACK": 1,
+      "ABS": 1,
+      "DIV": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 194,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 194
+       },
+       "distinct": 1
+      },
+      "odml.rope": {
+       "count": 48,
+       "attribute_sets": {
+        "{\"max_timescale\": 10000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 40,
+        "{\"max_timescale\": 1000000.0, \"min_timescale\": 1.0, \"proportion\": 1.0}": 8
+       },
+       "distinct": 2
+      }
+     }
+    }
+   ],
+   "layer_table": ""
+  }
+ }
+}

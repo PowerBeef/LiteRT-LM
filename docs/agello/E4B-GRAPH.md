@@ -69,8 +69,8 @@ ring-buffer attribute in this export.
 
 So 24 caches are written, 20 local (head dim 256, 1 KB per token for K and
 V) and 4 global (head dim 512, 2 KB per token): 28,672 bytes per token of
-capacity. Layers 24–41 only read. Prefill runs layers 0–23 because only they
-write KV.
+capacity. Layers 24–41 only read. Prefill runs layers 0–22 and the key/value
+projection of layer 23, because only they write KV.
 
 ## The MTP drafter
 
@@ -83,8 +83,10 @@ write KV.
 - Outputs: `logits [1,1,262144]` and `projected_activations [1,1,2560]` for
   the next draft.
 - Its local blocks dequantize cache 22's keys with 0.005961, layer 4's
-  scale, not layer 22's 0.005955 (0.1% off): an export quirk that only
-  affects drafts, which `verify` checks.
+  scale, not layer 22's 0.005955 (0.1% off), and its global block uses layer
+  5's 0.0010908608 instead of cache 23's 0.0010912281 (0.03% low): an export
+  quirk that only affects drafts, which `verify` checks. E2B's drafter has no
+  such mismatch; the effect on acceptance is unmeasured.
 
 ## What this means for the tracks
 
@@ -101,7 +103,8 @@ write KV.
   ring buffers of 512 + chunk positions; global caches stay full size.
   At T = 32,768 the local caches shrink from 671 MB to 31 MB (1,536
   positions for a 1,024-token prefill chunk), leaving the 4 global caches'
-  8 KB per token: about 300 MB instead of 940 MB.
+  8 KB per token: about 280 MB instead of 918 MB (32,000 allocated
+  positions; a 32K setting never allocates 32,768).
   `odml.cache_update` already supports `is_ring_buffer`; the export doesn't
   use it, so this needs a model variant, and the local mask then has to
   follow the ring's slot order.

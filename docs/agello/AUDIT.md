@@ -3,13 +3,20 @@
 Date: 2026-10-14. Audit by Agello for its fork `PowerBeef/agello-litert-lm`, scope Apple platforms
 only (iOS 27, macOS 27, Metal 4). Model: Gemma 4 E4B (`.litertlm`).
 
+> **Dated audit.** Line numbers and code descriptions are LiteRT-LM v0.18.0 (`agello` branch), the
+> source of what Agello ships. For the documented build (`agello-next` `7b872544`) see
+> [reference/](reference/README.md); statements that changed since are listed in
+> `reference/_work/contradictions.md` (C9, C13, C17, N11, N24-N26, N28, N31, N36). What it says of
+> our E4B file describes the 2048-token-block revision `13d5aa4c`; Agello now uses `a1693e22`
+> (512-token blocks, same weights).
+
 ## Sources and versions
 
 | What | Version |
 | --- | --- |
 | LiteRT-LM | v0.18.0 (branch `agello`; the version Agello ships); upstream `main` as of 2026-10-14 |
 | LiteRT | `26895c9f` (v0.18.0's `LITERT_REF`, 2026-09-25); `9b8c7f77` (upstream main's, 2026-10-13) |
-| ML Drift | `google-ai-edge/ml-drift` (open source since 2026-10-08, Apache 2.0), commit pinned by LiteRT `9b8c7f77` |
+| ML Drift | `google-ai-edge/ml-drift` (open source since early October 2026, forks from 2026-10-09; Apache 2.0), commit pinned by LiteRT `9b8c7f77` |
 | Release binaries | `CLiteRTLM.xcframework` (iOS) and `CLiteRTLM_mac.xcframework` from the v0.18.0 GitHub release, inspected with `otool`, `nm` and `strings` |
 | Model | `litert-community/gemma-4-E4B-it-litert-lm` rev `2eee7ac3` (sha256 `0b2a8980…`) and our split-RoPE copy `PowerBeef02/gemma-4-E4B-it-litert-lm-fp16-rope` rev `13d5aa4c` (sha256 `4a691f03…`) |
 | Hardware | iPhone 17 Pro (A19 Pro, Apple10, 12 GB); Mac mini M6 (Apple11 as Metal reports it: 12-core GPU with Neural Accelerators, 16 GB, ~153 GB/s, 12.7 GB Metal working set) |
@@ -23,7 +30,7 @@ Line numbers below are from `git show agello:<path>` unless noted.
    statically link LiteRT core, XNNPACK and KleidiAI, ML Drift (Metal on iOS, WebGPU over Dawn on
    macOS), the TopK GPU samplers, the Gemma constraint provider, and engines absent from open
    source (`GPU_ARTISAN`, `TENSOR_LLM`).
-2. **ML Drift, the GPU engine, became open source on 2026-10-08.** LiteRT `main` fetches it by
+2. **ML Drift, the GPU engine, became open source in early October 2026.** LiteRT `main` fetches it by
    commit and sha256, and its Metal backend, kernels (including `ConvAppleMPP`, which reaches the
    GPU Neural Accelerators through Metal 4 TensorOps on Apple10), and LiteRT's Metal accelerator
    are all public. v0.18.0's LiteRT pin declares `ml_drift` without a URL, so only upstream
@@ -78,9 +85,10 @@ Line numbers below are from `git show agello:<path>` unless noted.
   (`hint_kernel_batch_size=4`, `hint_waiting_for_completion`, 434-479); a file with an artisan
   section switches the backend to `GPU_ARTISAN` (187-211), an engine present only in Google's
   binaries.
-- The tokenizer is built concurrently with the executor (`engine_advanced_impl.cc:345-393`).
+- The tokenizer is built concurrently with the executor (`engine_advanced_impl.cc:345-393`), for files
+  with an `llm_model_type` and with `parallel_file_section_loading` true (the default).
 - The LiteRT environment receives only magic-number options and log severity
-  (`runtime/util/litert_util.cc:130-170`): no Metal device or command queue, no library dir.
+  (`runtime/util/litert_util.cc:130-170`): no Metal device or command queue, no library dir (CPU and GPU backends).
 
 ### 2.3 Prefill and decode
 
@@ -108,9 +116,10 @@ Line numbers below are from `git show agello:<path>` unless noted.
 ### 2.4 Sampling
 
 - The sampler backend defaults to the main backend. The Metal TopK sampler is used only when the
-  environment carries a Metal device; otherwise WebGPU, OpenCL, then the CPU with a warning
+  environment carries a Metal device and no WebGPU device option is set; otherwise WebGPU, OpenCL, then the CPU with a warning
   (`sampler_factory.cc:642-781`). The GPU samplers are closed (dlopen or static pointers).
-- FP16 logits only with FP16 precision and the GPU sampler (executor 1982-1998).
+- FP16 logits only with FP16 precision and the sampler backend set to GPU (the default on a GPU
+  engine, whether or not the GPU sampler loads) (executor 1982-1998).
 - "Sampler handles input" (the sampler writes the next token, position and mask and launches the
   next decode, 1538-1550) needs in-graph embeddings and no local mask: Gemma 4 E-models can't use
   it.
@@ -156,7 +165,7 @@ Line numbers below are from `git show agello:<path>` unless noted.
 | Library | iOS / macOS size | What it is | Source |
 | --- | --- | --- | --- |
 | `libLiteRt.dylib` | 8.2 / 11.5 MB | LiteRT C API | Open |
-| `libLiteRtMetalAccelerator.dylib` | 12.7 / 16.5 MB | "GPU Metal" accelerator | Open since 2026-10-08 (ML Drift) |
+| `libLiteRtMetalAccelerator.dylib` | 12.7 / 16.5 MB | "GPU Metal" accelerator | Open since early October 2026 (ML Drift) |
 | `libLiteRtWebGpuAccelerator.dylib`, `libwebgpu_dawn.dylib` | – / 16.7, 15.3 MB | ML Drift WebGPU, Dawn | ML Drift open; Dawn open |
 | `libLiteRtTopKMetalSampler.dylib` | 6.8 / 9.4 MB | GPU TopK sampler | **Closed** |
 | `libGemmaModelConstraintProvider.dylib` | 21.1 / 9.4 MB | Gemma function-call constraints | **Closed** |
@@ -182,6 +191,7 @@ With `LITERT_LM_FST_CONSTRAINTS_DISABLED`, `Gemma4DataProcessor::Create` returns
 `FailedPrecondition` whenever constrained decoding is requested
 (`runtime/conversation/model_data_processor/gemma4_data_processor.cc:62-70`). Agello's JSON helpers
 request it, so a source build needs a patch that keeps llguidance working without the provider.
+(v0.18.0; fixed in `agello-next` by `d1488ce7`.)
 
 ## 4. Build
 
@@ -232,8 +242,8 @@ request it, so a source build needs a patch that keeps llguidance working withou
   `mask` input, which only the 7 global layers read, so results are exact; the cost is that
   QKᵀ, the select and the softmax still cover every filled key. Details, the per-layer cache map
   and the drafter: `E4B-GRAPH.md`.
-- Prefill runs layers 0–23 (the KV producers) and skips the shared layers and the LM head; the
-  first token comes from `decode`.
+- Prefill runs layers 0–22 and the key/value projection of layer 23 (the KV producers), and skips
+  the shared layers and the LM head; the first token comes from `decode`.
 
 ## 6. Performance
 
@@ -268,7 +278,7 @@ Prefill compute ceilings at 2K: ~4,600 tok/s on the Neural Accelerators at FP16,
 | Synchronous Metal | executor 1825-1833 (prefill); `gpu_backend_metal.mm` `waitUntilCompleted`; Metal events unimplemented | No CPU/GPU overlap |
 | Host shadows | `buffer_handler_metal.mm`: `Lock` always allocates a host buffer and copies, even for shared storage | Unified memory never used zero-copy |
 | Per-step allocation | executor 959-1123, 1196-1344, 1655-1664; `GetCopyOfTokens()` per step; full mask re-init | O(layers + context) work per token |
-| Per-turn work | `tasks.cc:640` builds 262,144 strings to get the vocabulary size; `conversation.cc:257-340` renders the full history twice; `minijinja_template.rs:220-232` rebuilds the environment per apply | Grows with chat length |
+| Per-turn work | `tasks.cc:640` builds 262,144 strings to get the vocabulary size (fixed in `agello-next` `5e946049`); `conversation.cc:257-340` renders the full history twice; `minijinja_template.rs:220-232` rebuilds the environment per apply | Grows with chat length |
 | Streaming | `c/conversation.cc:62` JSON per chunk; `swift/Conversation.swift:839-855, 704-709` parses it twice | Per token, on the decode thread |
 | KV copies | `tensor_buffer_util.cc:54-62` | Full KV to host memory on clones and session switches |
 | Cache keys | `llm_executor_settings_utils.cc:125-156`: `<basename>_<mtime>_<size>` | Ignores precision, context size, build, OS and GPU family; 2.2 GB weight copy per context size |

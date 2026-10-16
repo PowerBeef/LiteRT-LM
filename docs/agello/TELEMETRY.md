@@ -31,7 +31,7 @@ Every probe is an inline check of one atomic level before any work.
 | 1 | counters (default in our builds) | fixed set of counters and anomaly events | one relaxed atomic add |
 | 2 | spans | per-kind aggregates (count, total, max, log2 histogram), DynamicTracing signposts | ~40 ns per span |
 | 3 | trace | spans also go to per-thread ring buffers, written as a Chrome/Perfetto trace | +~20 ns |
-| 4 | deep | per-kernel GPU timing (one encoder per kernel), numerical probes, graph dumps | changes timing; for diagnosis only |
+| 4 | deep | per-kernel GPU timing (one encoder per kernel), numerical probes | changes timing; for diagnosis only |
 
 - **Counters** (fixed enum, no strings): prompt and generated tokens; runs per signature (prefill
   128/1024, decode, verify, drafter); host buffer locks, copies and bytes; command buffers
@@ -113,7 +113,7 @@ prefill and decode, replies identical.
 | --- | --- | --- |
 | Step | 21.7 ms per token, of which the model run 21.0 ms (it doesn't return early: async falls back to sync on Metal) | 7.5 ms per token |
 | GPU | 20.7 ms per decode run in ~9 command buffers; 95% busy over the turn; 106 GB/s effective weight bandwidth | verify 22.6 ms per run; drafter 0.66 ms per run; 83% busy; 98 GB/s |
-| Host per token | sampling 0.50 ms (CPU sampler: the GPU sampler is closed source), parameter fill 0.24 ms, embedding lookups 0.14 ms | drafter steps' host work between GPU runs (CPU sampling, readbacks, lookups) leaves the GPU idle 17% |
+| Host per token | sampling 0.50 ms (CPU sampler: the GPU sampler is closed source; measured 2026-10-14 before direct logits reads, 0.044 ms since, see T7), parameter fill 0.24 ms, embedding lookups 0.14 ms | drafter steps' host work between GPU runs (CPU sampling, readbacks, lookups) leaves the GPU idle 17% |
 | Prefill | 2,049 tokens in 3 chunks, 932 ms, 98% GPU | same |
 | Other | 2 CPU model runs per prompt token (embedder, per-layer embedder): 4,483 inferences per case; one tensor buffer allocated per decode step; token history copied for every mask fill | |
 | Load (warm cache) | delegate graph conversion ~950 ms of a 1.1 s load | |
@@ -167,7 +167,9 @@ positions whose top two logits differ by less than FP16's resolution.
 The Metal delegate busy-spins a CPU core for every GPU wait by default; benchmark mode isn't the
 cause. Asking for passive waits, with command buffers still committed as they're encoded (LiteRT
 fork 77ed9cab), measured −0.3% decode and +0.4% prefill against busy-waiting (within noise), and
-2.0 ms of process CPU per generated token instead of 29.3.
+2.0 ms of process CPU per generated token instead of 29.3. This applies only with benchmark mode
+off: in benchmark mode LiteRT-LM requests the active wait, and Agello turns benchmark mode on
+(`ExperimentalFlags.enableBenchmark`), so the app still busy-waits (reference/facts.md F-019).
 
 These point at T2 (parameter fill, per-step allocation, history copies), T5 (async and buffer
 locks), T7 (an open GPU sampler, which also closes most of the MTP gap to Google's build), T11

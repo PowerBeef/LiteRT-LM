@@ -1,0 +1,46 @@
+{
+ "file": "gemma-4-E2B-it-gpu.litertlm",
+ "bytes": 2008432640,
+ "source": "huggingface.co/litert-community/gemma-4-E2B-it-litert-lm @ b3ca0d2f076785a8f4b2219ddbd2bdb99954eae1",
+ "header": {
+  "version": "1.6.0",
+  "header_bytes": 704,
+  "system": {
+   "author": "The ODML Authors",
+   "uuid": "66f2eb4b-d3b1-4c83-b735-968199e430c4",
+   "creation_timestamp": "2026-08-06T00:44:27.808807+00:00"
+  },
+  "sections": [
+   {
+    "index": 0,
+    "begin": 16384,
+    "end": 28740,
+    "size": 12356,
+    "data_type": "LlmMetadataProto",
+    "items": {}
+   },
+   {
+    "index": 1,
+    "begin": 32768,
+    "end": 4721781,
+    "size": 4689013,
+    "data_type": "SP_Tokenizer",
+    "items": {}
+   },
+   {
+    "index": 2,
+    "begin": 4734976,
+    "end": 2008432640,
+    "size": 2003697664,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_artisan_text_decoder",
+     "backend_constraint": "gpu_artisan",
+     "gpu_artisan_weights_version": "0.0"
+    }
+   }
+  ]
+ },
+ "tflite": {},
+ "remote_bytes_read": 13092
+}

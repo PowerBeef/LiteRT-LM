@@ -1,0 +1,89 @@
+{
+  "comment": "What docs/agello/reference documents. Update on every re-pin, then run regen.sh and check_refs.py --repin (maintenance.md).",
+  "repos": {
+    "litert-lm": {
+      "path": "/Users/patricedery/Coding projects/agello-arms/next/LiteRT-LM",
+      "fork": "PowerBeef/agello-litert-lm",
+      "branch": "agello-next",
+      "pin": "7b872544fdbd81308f98b1e2acf8c5798a549df6",
+      "upstream": "google-ai-edge/LiteRT-LM",
+      "base": "df6df5b84d5845b49889f631ed4cac80b4325dd3",
+      "base_label": "0.19.0-nightly.20261013"
+    },
+    "litert": {
+      "path": "/Users/patricedery/Coding projects/LiteRT",
+      "fork": "PowerBeef/LiteRT",
+      "branch": "agello-next",
+      "pin": "362759838e34e1525f1cc27daddaf663a193c059",
+      "upstream": "google-ai-edge/LiteRT",
+      "base": "ca21dc99de51c76bdcc572afeea1dd937d3c9e5c",
+      "base_label": "main 2026-10-09"
+    },
+    "ml-drift": {
+      "path": "/Users/patricedery/Coding projects/ml-drift",
+      "fork": "PowerBeef/ml-drift",
+      "branch": "agello-next",
+      "pin": "15fa9e2ba632145992299e3f04786dc1f575373c",
+      "upstream": "google-ai-edge/ml-drift",
+      "base": "1b18771f44c0be3d972847b31a80f6dc3d6964b5",
+      "base_label": "main 2026-10-07"
+    },
+    "litert-lm-shipped": {
+      "comment": "What Agello ships today: the Swift wrapper at this commit (v0.18.0 plus two Swift patches) and Google's prebuilt v0.18.0 CLiteRTLM.xcframework.",
+      "path": "/Users/patricedery/Coding projects/LiteRT-LM",
+      "fork": "PowerBeef/agello-litert-lm",
+      "branch": "agello",
+      "pin": "85b1a77695bc90fc8b34a1f455bbe5b2c7fdceff",
+      "upstream": "google-ai-edge/LiteRT-LM",
+      "base": "b2f686e2ed4718fb84ec398a61dd59ca0f0aff27",
+      "base_label": "v0.18.0"
+    }
+  },
+  "models": {
+    "e4b-ours": {
+      "path": "/Users/patricedery/Models/agello/gemma-4-E4B-it-fp16-rope.litertlm",
+      "sha256": "6353a23321e46624e0fa1b038d23370e8e0af84032d24d30ef53be3b116f655c",
+      "source": "huggingface.co/PowerBeef02/gemma-4-E4B-it-litert-lm-fp16-rope @ a1693e22a3439b0d36570cc7844d7b572336a85d",
+      "note": "What Agello downloads: Google's file with 512-token rotary blocks (patch_rope.py --split --block 512)."
+    },
+    "e4b-google": {
+      "path": "/Users/patricedery/Models/agello/gemma-4-E4B-it.litertlm",
+      "sha256": "0b2a8980ce155fd97673d8e820b4d29d9c7d99b8fa6806f425d969b145bd52e0",
+      "source": "huggingface.co/litert-community/gemma-4-E4B-it-litert-lm @ 2eee7ac325f20eb8c9ac1d0e972f7c84663062da"
+    },
+    "embeddinggemma": {
+      "path": "/Users/patricedery/Models/agello/embeddinggemma-2-text-270m.litertlm",
+      "sha256": "2d079ee2f6f066b1f368e8d7c819f55214eaef1d0513b312321901f30ab286fb",
+      "source": "huggingface.co/litert-community/embeddinggemma-2-text-270m-litert-lm @ 9be6e8b90982095dc05c2bd162e4b954ee4dbac7"
+    }
+  },
+  "remote_models": {
+    "e2b-google": {
+      "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/b3ca0d2f076785a8f4b2219ddbd2bdb99954eae1/gemma-4-E2B-it.litertlm",
+      "source": "huggingface.co/litert-community/gemma-4-E2B-it-litert-lm @ b3ca0d2f076785a8f4b2219ddbd2bdb99954eae1",
+      "graphs": true
+    },
+    "e2b-gpu": {
+      "url": "https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm/resolve/b3ca0d2f076785a8f4b2219ddbd2bdb99954eae1/gemma-4-E2B-it-gpu.litertlm",
+      "source": "huggingface.co/litert-community/gemma-4-E2B-it-litert-lm @ b3ca0d2f076785a8f4b2219ddbd2bdb99954eae1",
+      "graphs": false
+    },
+    "e4b-gpu": {
+      "url": "https://huggingface.co/litert-community/gemma-4-E4B-it-litert-lm/resolve/2eee7ac325f20eb8c9ac1d0e972f7c84663062da/gemma-4-E4B-it-gpu.litertlm",
+      "source": "huggingface.co/litert-community/gemma-4-E4B-it-litert-lm @ 2eee7ac325f20eb8c9ac1d0e972f7c84663062da",
+      "graphs": false
+    }
+  },
+  "remote_models_comment": "Read by HTTP range (header and graphs only, never the weights) on every gen_model_tables.py run.",
+  "hf_repos": {
+    "google/gemma-4-E2B-it": "3e22461f65e89153144f8adb70e3b8c2cc9845a7",
+    "google/gemma-4-E4B-it": "ee0ef6023621cff504d758262d4e04895a5af4a2",
+    "google/gemma-4-12B-it": "707f0a3b8a3c7ad586ed01e27eafbad8a27dd0f7",
+    "google/gemma-4-26B-A4B-it": "4d7ae4984b7db7de8f8457170b3f1a419ee76d52",
+    "google/gemma-4-31B-it": "842da3794eaa0b77d5f08bae87a17459d91ff475",
+    "google/gemma-4-12B-it-assistant": "46d4c6f13f0ac0ad827b915669b8df9b81c64c51",
+    "google/gemma-4-31B-it-assistant": "627c5ec1458b9086b841a91e0512fd31fd2fbbf1",
+    "google/embeddinggemma-2": "914f7f89142e33e77833254d9c9b90c3cef7303b"
+  },
+  "hf_repos_comment": "Official configs read by gen_hf_configs.py; --update moves each to the repo's current revision."
+}

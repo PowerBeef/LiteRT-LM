@@ -4,7 +4,8 @@ One section per iPhone run of our build. Raw reports in `results/iphone/<date>/`
 
 ## 2026-10-15: iPhone 17 Pro, build `2e54fbdb9ca9`
 
-A19 Pro (Apple10), 12 GB, app limit 6.4 GB, iOS 27.0.1. Runtime: LiteRT-LM `67d00f36`, LiteRT
+A19 Pro (Apple10), 12 GB, app limit 8.6 GB (8 GiB; the harness header read 6.4 GB, an early
+reading: reference/facts.md F-071), iOS 27.0.1. Runtime: LiteRT-LM `67d00f36`, LiteRT
 `97e06d36`, ML Drift `2184a7f` (everything through P6 and the T11 re-pin). Agello `main` at
 `ecd8dc6`. The phone ran unattended overnight.
 

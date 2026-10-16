@@ -1,5 +1,8 @@
 # Baselines (M0.6) and first parity (M1.6)
 
+> Measured with the 2048-token-block revision `13d5aa4c` of our E4B file; Agello now uses
+> `a1693e22` (512-token blocks, same weights). See reference/facts.md F-022.
+
 Mac mini M6 (`Mac18,5`, GPU family Apple11, 12.7 GB Metal working set, 16 GB), macOS 27.0.1,
 Xcode 27.0, plugged in, thermal state nominal throughout. Models from `~/Models/agello/`:
 our split-RoPE E4B (`gemma-4-E4B-it-fp16-rope.litertlm`, rev `13d5aa4c`) unless noted.

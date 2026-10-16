@@ -77,6 +77,9 @@ then zeroed.
   (they then hold the epilogue of zero, which the fused mask masks) and starts reading there in a
   PV product; the softmax reductions start there; the Apple matrix-unit convolution (prefill on
   Apple10) does the same per K tile. Kernels without it compute every key, which stays correct.
+  (Written before ML Drift `15fa9e2`, which adds the window to `ConvWaveMatrix`. On Apple10, E4B's
+  prefill query-key products run `ConvAppleMPP` without manual K tiling, so they don't use the
+  window: reference/ml-drift/kernels.md.)
 - Delegate (`agello-next`): the pass finds the window from the graph's mask
   (`LOGICAL_AND(GREATER_EQUAL(p, keys), LESS(p, keys + W))`, int32 constants: W = 512) and applies
   it to tails whose `runtime_bmm` says `is_global = false` (the parser now keeps it).
@@ -103,7 +106,8 @@ Since before T4, for a 30K-token prompt at a 32K window: decode 30.6 → 42–43
 ## Next
 
 - The INT8 K and V caches are converted to FP16 for the prefill convolutions every run
-  (`weights_convert_uint8_to_float16`), over the whole capacity: bound it to the filled part too.
+  (`weights_convert_uint8_to_float16`), up to the filled length, including keys below the window:
+  skip those too.
 - b1c: FlashDecode for INT8 KV with GQA 4:1, and flash prefill for head dimensions 256/512.
-- T10 (ring-buffer local caches) would also shrink KV memory at 32K from 940 to about 300 MB.
+- T10 (ring-buffer local caches) would also shrink KV memory at 32K from 918 to about 280 MB.
 - iPhone run before shipping: `inference`, `probes` (10, 12), `calibrate`, `thinking`.

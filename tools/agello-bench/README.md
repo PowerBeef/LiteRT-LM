@@ -3,7 +3,7 @@
 Measures a LiteRT-LM build on Apple silicon with fixed cases, so two builds
 (arms) can be compared: Google's release binaries, a nightly, or our own
 builds. It grew out of the #3913 research runner
-(`research/issue-3913/runner` on the `research/3913` branch) and reproduces its
+(`research/issue-3913/runner` at the `research/3913` tag) and reproduces its
 results exactly.
 
 - `BenchKit` (library, macOS and iOS 27): the cases, their prompts and scoring,
@@ -13,7 +13,9 @@ results exactly.
 - `compare.py` (Python standard library): compares arms.
 - `suites/`: case files. `short`, `long`, `cross4096`, `xl`, `mtp`, `speed`,
   `baseline` and `long3` are the research suites; `sweep-8k` and `sweep-32k`
-  measure speed at 0.7K–4K and 0.7K–30K tokens.
+  measure speed at 0.7K–4K and 0.7K–30K tokens; `helper-turn`,
+  `helper-turn-check` and `helper-turn-cycles` measure the first reply after a
+  helper (T3); `thinking-mask` measures the thinking budget's logit mask.
 
 ## Build and run
 
@@ -30,11 +32,14 @@ swift test                      # BenchKit's unit tests (no model needed)
 
 `run` options: `--backend gpu|cpu`, `--fp32`, `--kv N` (maxNumTokens, default
 8,192), `--mtp`, `--cache DIR` (`--cold` empties it first), `--repeat N`,
-`--warmup N`, `--label NAME`, `--out FILE` (appends), `--hash-model`, and
-`--case '<json>'` for a single case. Progress goes to stderr.
+`--warmup N`, `--label NAME`, `--out FILE` (appends), `--hash-model`,
+`--no-benchmark-mode` (no busy-waiting on Metal; speeds then come from the
+engine's telemetry, our builds), `--telemetry N` (0–4, our builds), `--trace
+FILE` (a Chrome/Perfetto span trace; implies level 3), and `--case '<json>'`
+for a single case. Progress goes to stderr.
 
 With our builds, `--cache DIR` uses `DIR/<build id>` and deletes other builds'
-folders there (each holds a 2.2 GB weight copy for E4B). Two environment
+folders there (each holds about 2.5 GB for E4B). Two environment
 variables help with memory work: `AGELLO_BENCH_HOLD=<s>` keeps the process
 alive after the last case (for `footprint`, `vmmap` or `malloc_history`), and
 `AGELLO_BENCH_RELEASE_TRACE=<s>` follows the footprint for that long after each
@@ -54,8 +59,8 @@ LITERTLM_PACKAGE=~/arms/nightly/LiteRT-LM swift build -c release --scratch-path 
 
 On macOS, Google's release binaries run on WebGPU (`CLiteRTLM_mac`). The Metal
 path that ships on the iPhone runs on a Mac through Agello as an iPhone app
-(`PLATFORM=mac scripts/device-harness.sh` in the Agello repository) until our
-own builds add a macOS Metal slice.
+(`PLATFORM=mac scripts/device-harness.sh` in the Agello repository), and through
+our `agello-next` framework, which has a macOS Metal slice (since `3b2327cf`).
 
 ## Cases
 

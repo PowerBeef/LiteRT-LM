@@ -8,8 +8,9 @@
 `Serialization::GetFingerprint`, which mixes in the byte sizes of the subgraph's first 100 tensors
 and of the delegated partition's inputs and outputs. For an LLM those include the KV caches, so
 every `maxNumTokens` an engine is created with gets a new key and writes another copy of the same
-converted weights into the model's cache file, which is never trimmed. For Gemma 4 E4B that is
-2.2 GB per context size: 6.6 GB after loading 8K, 4K and 16K. An app that sizes the window per
+converted weights into the model's cache file, which is never trimmed. For Gemma 4 E4B, a cache
+folder per context size held about 2.47 GB each: 7.41 GB after loading 8K, 4K and 16K (Agello's
+probe 14). An app that sizes the window per
 request fills the device.
 
 This PR adds `GenerateContentModelIdentifier`. It keys a subgraph on the model token, the same
@@ -19,11 +20,12 @@ masks and activations don't enter the key. The delegate uses it unless
 `AGELLO_SHARED_WEIGHT_CACHE=0` (a name to change for upstream; or make it an option). The program
 cache is unchanged: it already keeps one entry per program in one file.
 
-Results (Gemma 4 E4B, FP16, M6 Mac, one cache folder, 8K → 4K → 16K → 8K):
+Results (Gemma 4 E4B, FP16, 8K → 4K → 16K → 8K; load times on an M6 Mac, cache sizes from
+Agello's probe 14):
 
 | | Today | This PR |
 | --- | --- | --- |
-| Weight cache file | 2.2 → 4.4 → 6.6 → 6.6 GB | 2.2 GB throughout |
+| Cache on disk | about 2.47 GB per size (one folder each): 7.41 GB after 16K | one folder, 2.47–2.56 GB throughout |
 | Load at a size not seen before | 3.6–14 s | 1.2–1.4 s |
 | Digit-copy suite at every size | exact | exact |
 

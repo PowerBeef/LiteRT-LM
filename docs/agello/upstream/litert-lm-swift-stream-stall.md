@@ -22,8 +22,9 @@ its next first token.
 **Fix we use:** the stream context holds the conversation weakly, so the conversation is deleted
 where the caller drops it, after its stream's work finishes. (Releasing the context on another
 queue also ends the deadlock, but lets the deletion overlap the next conversation, which stalled
-v0.18.0 the same way in a later turn.) With it, the app's probe suite runs in 367 s instead of
-966 s, and the affected probe takes 6 s instead of 600 s.
+v0.18.0 the same way in a later turn.) With it, the first token of a fresh conversation after
+dropping another mid-stream takes 0.111 s instead of 600.2 s (Agello's probe 9 on an M6 Mac,
+2026-10-14 and 2026-10-15; Google's 0.19.0 nightly: 600.18 s).
 
 Patch: https://github.com/PowerBeef/agello-litert-lm/commit/85b1a77695bc90fc8b34a1f455bbe5b2c7fdceff
 (branch `agello`, 24 lines in swift/Conversation.swift).

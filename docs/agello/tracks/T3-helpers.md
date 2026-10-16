@@ -4,7 +4,8 @@ Agello runs short helper prompts beside the chat: a title after the first exchan
 a personal message, search queries for a follow-up, document summaries, and dictation. Each runs
 in a second `Conversation` on the same engine.
 
-- **Google's v0.18.0** wipes the chat's conversation when the second one runs (Agello probe 1:
+- **Google's v0.18.0** loses the chat's conversation when the second one runs: its restore leaves
+  the helper's cache in the GPU buffers, fixed upstream by `76594366` (Agello probe 1:
   `mainKeptContext` false). So Agello replaced it with an empty one and reseeded the chat from its
   history on the next message, which re-read every token.
 - **Our build** (upstream `main` plus our patches) keeps it: the resource manager snapshots the
@@ -88,7 +89,8 @@ doesn't grow with the round count (P3.3: 2,796, 2,909, 2,910 MB, settling after 
 now 2,348, 2,348, 2,349 MB), so kept conversations don't leak. In `t3-check-*.jsonl` the reply
 after the helper is identical to the control's in every build.
 
-So keeping the chat costs one more copy of its KV cache. Correction from the iPhone run
+So keeping the chat costs one more copy of its KV cache. (Agello before `6d389e6`; since then the
+copy is freed right after the helper, VALIDATION.md 2026-10-15.) Correction from the iPhone run
 (VALIDATION.md, 2026-10-15): the copy stays until the chat's next message restores it, not only
 while the helper runs. The bench measured after that message, so it showed nothing left. In the app
 the copy sits between messages: +0.23 GB at 8K, about +0.9 GB at 32K. Restoring right after the

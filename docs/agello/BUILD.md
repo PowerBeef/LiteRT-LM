@@ -15,7 +15,7 @@ agello/build-xcframework.sh          # dist/CLiteRTLM.xcframework (iPhone and Ma
   comment the overrides out and rebuild. The binary isn't byte-identical (the build info compiled
   into it names the build), so check behavior: agello-bench `suites/short.json` at 8K must give
   the override build's replies (2026-10-15, LiteRT `97e06d36`, ML Drift `2184a7f`: 15/15 identical,
-  build `2e54fbdb9ca9`).
+  build `2e54fbdb9ca9`; no results file records that run).
 - Push `agello-next` from the main checkout (`../LiteRT-LM`); from the worktree, Git LFS's
   pre-push lock check fails.
 

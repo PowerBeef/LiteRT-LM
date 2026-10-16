@@ -9,8 +9,13 @@ iPhone app. It isn't affiliated with or endorsed by Google.
 | Branch | What it is |
 | --- | --- |
 | `agello` (default) | LiteRT-LM **v0.18.0** plus the patches below. Agello vendors its Swift package surface, pinned to a commit. |
+| `agello-next` | Our source build of LiteRT-LM, LiteRT and ML Drift for Apple GPUs (Google's 0.19.0 nightly plus our commits). Not what Agello ships. |
 | `main` | A mirror of upstream `main`. |
-| `research/3913` | The investigation and model-side fix for [LiteRT-LM #3913](https://github.com/google-ai-edge/LiteRT-LM/issues/3913) (float16 rotary positions on the GPU). |
+
+Tag `research/3913`: the investigation and model-side fix for [LiteRT-LM #3913](https://github.com/google-ai-edge/LiteRT-LM/issues/3913) (float16 rotary positions on the GPU).
+
+The reference for the runtime, the models and our changes is
+[`docs/agello/reference/`](../docs/agello/reference/README.md).
 
 ## Patches on `agello`
 
@@ -19,13 +24,16 @@ iPhone app. It isn't affiliated with or endorsed by Google.
    arguments that don't decode, a tool that throws) as `toolExecutionError`,
    and the turn ends. Here each failed call is answered with an `error` tool
    response the model can read, so it can fix the call or answer without it.
+2. **A stream holds its conversation weakly** (`swift/Conversation.swift`).
+   A conversation dropped while its reply streams no longer holds up the next
+   conversation's first token (600 s before the fix, 0.1 s after, on a Mac).
 
 ## What isn't changed
 
-The native runtime. Agello links Google's checksummed `CLiteRTLM.xcframework`
-release binary, as `Package.swift` does upstream, and the Metal GPU
-accelerator is a prebuilt binary even upstream. The patches here are to the
-Swift wrapper.
+The native runtime, on this branch. Agello links Google's checksummed
+`CLiteRTLM.xcframework` v0.18.0 release binary, as `Package.swift` does
+upstream; the patches here are to the Swift wrapper. `agello-next` builds the
+runtime from source instead, LiteRT's Metal accelerator and ML Drift included.
 
 ## Updating
 

@@ -1,0 +1,2880 @@
+{
+ "file": "gemma-4-E4B-it-fp16-rope.litertlm",
+ "bytes": 3660726272,
+ "sha256": "6353a23321e46624e0fa1b038d23370e8e0af84032d24d30ef53be3b116f655c",
+ "source": "huggingface.co/PowerBeef02/gemma-4-E4B-it-litert-lm-fp16-rope @ a1693e22a3439b0d36570cc7844d7b572336a85d",
+ "header": {
+  "version": "1.5.0",
+  "header_bytes": 1872,
+  "system": {
+   "author": "The ODML Authors",
+   "uuid": "4ba8d429-7bac-4cc1-8e3a-cc7f3d952c00",
+   "creation_timestamp": "2026-04-28T21:59:49.770172+00:00"
+  },
+  "sections": [
+   {
+    "index": 0,
+    "begin": 16384,
+    "end": 28576,
+    "size": 12192,
+    "data_type": "LlmMetadataProto",
+    "items": {}
+   },
+   {
+    "index": 1,
+    "begin": 32768,
+    "end": 4721781,
+    "size": 4689013,
+    "data_type": "SP_Tokenizer",
+    "items": {}
+   },
+   {
+    "index": 2,
+    "begin": 4734976,
+    "end": 175655560,
+    "size": 170920584,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_embedder"
+    }
+   },
+   {
+    "index": 3,
+    "begin": 175669248,
+    "end": 1012447760,
+    "size": 836778512,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_per_layer_embedder"
+    }
+   },
+   {
+    "index": 4,
+    "begin": 1012449280,
+    "end": 1106501560,
+    "size": 94052280,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_audio_encoder_hw",
+     "backend_constraint": "cpu"
+    }
+   },
+   {
+    "index": 5,
+    "begin": 1106509824,
+    "end": 1122242524,
+    "size": 15732700,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_audio_adapter",
+     "backend_constraint": "cpu"
+    }
+   },
+   {
+    "index": 6,
+    "begin": 1122254848,
+    "end": 1122265716,
+    "size": 10868,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_end_of_audio"
+    }
+   },
+   {
+    "index": 7,
+    "begin": 1122271232,
+    "end": 1346409168,
+    "size": 224137936,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_vision_encoder",
+     "prefer_activation_type": "fp16"
+    }
+   },
+   {
+    "index": 8,
+    "begin": 1346420736,
+    "end": 1354309392,
+    "size": 7888656,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_vision_adapter",
+     "backend_constraint": "cpu"
+    }
+   },
+   {
+    "index": 9,
+    "begin": 1354317824,
+    "end": 1354328692,
+    "size": 10868,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_end_of_vision"
+    }
+   },
+   {
+    "index": 10,
+    "begin": 1354334208,
+    "end": 3615360624,
+    "size": 2261026416,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_prefill_decode",
+     "prefer_activation_type": "fp16"
+    }
+   },
+   {
+    "index": 11,
+    "begin": 3615375360,
+    "end": 3660714512,
+    "size": 45339152,
+    "data_type": "TFLiteModel",
+    "items": {
+     "model_type": "tf_lite_mtp_drafter"
+    }
+   }
+  ]
+ },
+ "tflite": {
+  "2": {
+   "graph_bytes": 170920584,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "INT32": {
+     "inline": 24,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 4,
+     "per_channel": 0
+    },
+    "FLOAT32": {
+     "inline": 4,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 0
+    },
+    "INT2": {
+     "inline": 167772160,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 1
+    }
+   },
+   "signatures": [
+    {
+     "key": "embedder",
+     "subgraph": 0,
+     "ops": 8,
+     "tensors": 16,
+     "inputs": [
+      [
+       "token_ids",
+       "INT32[1, 1]"
+      ]
+     ],
+     "outputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 1, 2560]"
+      ]
+     ],
+     "op_histogram": {
+      "RESHAPE": 2,
+      "GREATER_EQUAL": 1,
+      "LESS": 1,
+      "LOGICAL_AND": 1,
+      "SELECT_V2": 1,
+      "EMBEDDING_LOOKUP": 1,
+      "MUL": 1
+     },
+     "composites": {}
+    }
+   ],
+   "layer_table": ""
+  },
+  "3": {
+   "error": "error: unpack_from requires a buffer of at least 704644672 bytes for unpacking 4 bytes at offset 704644668 (actual buffer size is 268435456)"
+  },
+  "4": {
+   "graph_bytes": 94052280,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "INT32": {
+     "inline": 776,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 54,
+     "per_channel": 0
+    },
+    "BOOL": {
+     "inline": 4896,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 0
+    },
+    "INT64": {
+     "inline": 32,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 0
+    },
+    "FLOAT32": {
+     "inline": 11999040,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 167,
+     "per_channel": 0
+    },
+    "INT2": {
+     "inline": 66060288,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 108,
+     "per_channel": 108
+    },
+    "INT4": {
+     "inline": 12582912,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 12,
+     "per_channel": 12
+    }
+   },
+   "signatures": [
+    {
+     "key": "serving_default",
+     "subgraph": 0,
+     "ops": 2182,
+     "tensors": 2530,
+     "inputs": [
+      [
+       "mask",
+       "BOOL[1, 1, 816]"
+      ],
+      [
+       "src_inputs",
+       "FLOAT32[1, 1, 816, 128]"
+      ]
+     ],
+     "outputs": [
+      [
+       "features",
+       "FLOAT32[1, 204, 1536]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 204]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 579,
+      "RESHAPE": 439,
+      "ADD": 170,
+      "DEQUANTIZE": 132,
+      "FULLY_CONNECTED": 122,
+      "SUM": 112,
+      "RSQRT": 110,
+      "QUANTIZE": 96,
+      "TRANSPOSE": 96,
+      "SLICE": 86,
+      "LOGISTIC": 48,
+      "PAD": 41,
+      "CONCATENATION": 37,
+      "BATCH_MATMUL": 36,
+      "DEPTHWISE_CONV_2D": 17,
+      "CAST": 14,
+      "SELECT_V2": 13,
+      "TANH": 12,
+      "SOFTMAX": 12,
+      "NOT_EQUAL": 4,
+      "SUB": 2,
+      "TILE": 1,
+      "LOGICAL_AND": 1,
+      "CONV_2D": 1,
+      "LOGICAL_NOT": 1
+     },
+     "composites": {}
+    }
+   ],
+   "layer_table": ""
+  },
+  "5": {
+   "graph_bytes": 15732700,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "FLOAT32": {
+     "inline": 15728648,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 3,
+     "per_channel": 0
+    },
+    "INT32": {
+     "inline": 16,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 2,
+     "per_channel": 0
+    }
+   },
+   "signatures": [
+    {
+     "key": "audio_adapter",
+     "subgraph": 0,
+     "ops": 11,
+     "tensors": 18,
+     "inputs": [
+      [
+       "features",
+       "FLOAT32[1, 204, 1536]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 204]"
+      ]
+     ],
+     "outputs": [
+      [
+       "output_0",
+       "FLOAT32[1, 204, 2560]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 4,
+      "RESHAPE": 2,
+      "SUM": 1,
+      "ADD": 1,
+      "RSQRT": 1,
+      "FULLY_CONNECTED": 1,
+      "CAST": 1
+     },
+     "composites": {}
+    }
+   ],
+   "layer_table": ""
+  },
+  "6": {
+   "graph_bytes": 10868,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "FLOAT32": {
+     "inline": 10240,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 0
+    }
+   },
+   "signatures": [
+    {
+     "key": "eoa",
+     "subgraph": 0,
+     "ops": 0,
+     "tensors": 1,
+     "inputs": [],
+     "outputs": [
+      [
+       "eoa_embedding",
+       "FLOAT32[1, 1, 2560]"
+      ]
+     ],
+     "op_histogram": {},
+     "composites": {}
+    }
+   ],
+   "layer_table": ""
+  },
+  "7": {
+   "graph_bytes": 224137936,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "FLOAT32": {
+     "inline": 65482080,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 110,
+     "per_channel": 0
+    },
+    "INT32": {
+     "inline": 724,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 57,
+     "per_channel": 0
+    },
+    "INT8": {
+     "inline": 150994944,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 112,
+     "per_channel": 112
+    }
+   },
+   "signatures": [
+    {
+     "key": "vision_140",
+     "subgraph": 0,
+     "ops": 1477,
+     "tensors": 1729,
+     "inputs": [
+      [
+       "images",
+       "FLOAT32[1, 1260, 768]"
+      ],
+      [
+       "positions_xy",
+       "INT32[1, 1260, 2]"
+      ]
+     ],
+     "outputs": [
+      [
+       "features",
+       "FLOAT32[1, 140, 768]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 140]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 277,
+      "SLICE": 196,
+      "RESHAPE": 170,
+      "FULLY_CONNECTED": 115,
+      "COMPOSITE:odml.rms_norm": 112,
+      "DEQUANTIZE": 112,
+      "ADD": 99,
+      "CONCATENATION": 97,
+      "SUB": 66,
+      "QUANTIZE": 64,
+      "TRANSPOSE": 64,
+      "BATCH_MATMUL": 33,
+      "SOFTMAX": 16,
+      "GELU": 16,
+      "NOT_EQUAL": 6,
+      "LOGICAL_AND": 4,
+      "ONE_HOT": 3,
+      "LESS": 2,
+      "GREATER_EQUAL": 2,
+      "LOGICAL_OR": 2,
+      "SELECT_V2": 2,
+      "CAST": 2,
+      "SIN": 2,
+      "COS": 2,
+      "DIV": 2,
+      "SIGN": 2,
+      "FLOOR_MOD": 2,
+      "SELECT": 2,
+      "SUM": 1,
+      "REDUCE_MAX": 1,
+      "EQUAL": 1,
+      "REDUCE_ALL": 1,
+      "LOGICAL_NOT": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 112,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 112
+       },
+       "distinct": 1
+      }
+     }
+    },
+    {
+     "key": "vision_280",
+     "subgraph": 1,
+     "ops": 1477,
+     "tensors": 1729,
+     "inputs": [
+      [
+       "images",
+       "FLOAT32[1, 2520, 768]"
+      ],
+      [
+       "positions_xy",
+       "INT32[1, 2520, 2]"
+      ]
+     ],
+     "outputs": [
+      [
+       "features",
+       "FLOAT32[1, 280, 768]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 280]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 277,
+      "SLICE": 196,
+      "RESHAPE": 170,
+      "FULLY_CONNECTED": 115,
+      "COMPOSITE:odml.rms_norm": 112,
+      "DEQUANTIZE": 112,
+      "ADD": 99,
+      "CONCATENATION": 97,
+      "SUB": 66,
+      "QUANTIZE": 64,
+      "TRANSPOSE": 64,
+      "BATCH_MATMUL": 33,
+      "SOFTMAX": 16,
+      "GELU": 16,
+      "NOT_EQUAL": 6,
+      "LOGICAL_AND": 4,
+      "ONE_HOT": 3,
+      "LESS": 2,
+      "GREATER_EQUAL": 2,
+      "LOGICAL_OR": 2,
+      "SELECT_V2": 2,
+      "CAST": 2,
+      "SIN": 2,
+      "COS": 2,
+      "DIV": 2,
+      "SIGN": 2,
+      "FLOOR_MOD": 2,
+      "SELECT": 2,
+      "SUM": 1,
+      "REDUCE_MAX": 1,
+      "EQUAL": 1,
+      "REDUCE_ALL": 1,
+      "LOGICAL_NOT": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 112,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 112
+       },
+       "distinct": 1
+      }
+     }
+    },
+    {
+     "key": "vision_70",
+     "subgraph": 2,
+     "ops": 1477,
+     "tensors": 1729,
+     "inputs": [
+      [
+       "images",
+       "FLOAT32[1, 630, 768]"
+      ],
+      [
+       "positions_xy",
+       "INT32[1, 630, 2]"
+      ]
+     ],
+     "outputs": [
+      [
+       "features",
+       "FLOAT32[1, 70, 768]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 70]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 277,
+      "SLICE": 196,
+      "RESHAPE": 170,
+      "FULLY_CONNECTED": 115,
+      "COMPOSITE:odml.rms_norm": 112,
+      "DEQUANTIZE": 112,
+      "ADD": 99,
+      "CONCATENATION": 97,
+      "SUB": 66,
+      "QUANTIZE": 64,
+      "TRANSPOSE": 64,
+      "BATCH_MATMUL": 33,
+      "SOFTMAX": 16,
+      "GELU": 16,
+      "NOT_EQUAL": 6,
+      "LOGICAL_AND": 4,
+      "ONE_HOT": 3,
+      "LESS": 2,
+      "GREATER_EQUAL": 2,
+      "LOGICAL_OR": 2,
+      "SELECT_V2": 2,
+      "CAST": 2,
+      "SIN": 2,
+      "COS": 2,
+      "DIV": 2,
+      "SIGN": 2,
+      "FLOOR_MOD": 2,
+      "SELECT": 2,
+      "SUM": 1,
+      "REDUCE_MAX": 1,
+      "EQUAL": 1,
+      "REDUCE_ALL": 1,
+      "LOGICAL_NOT": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 112,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 112
+       },
+       "distinct": 1
+      }
+     }
+    }
+   ],
+   "layer_table": ""
+  },
+  "8": {
+   "graph_bytes": 7888656,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "FLOAT32": {
+     "inline": 7864328,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 3,
+     "per_channel": 0
+    },
+    "INT32": {
+     "inline": 40,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 4,
+     "per_channel": 0
+    }
+   },
+   "signatures": [
+    {
+     "key": "vision_adapter_140",
+     "subgraph": 0,
+     "ops": 15,
+     "tensors": 21,
+     "inputs": [
+      [
+       "soft_tokens",
+       "FLOAT32[1, 140, 768]"
+      ]
+     ],
+     "outputs": [
+      [
+       "mm_embedding",
+       "FLOAT32[1, 140, 2560]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 6,
+      "SUM": 2,
+      "ADD": 2,
+      "RESHAPE": 2,
+      "RSQRT": 2,
+      "FULLY_CONNECTED": 1
+     },
+     "composites": {}
+    },
+    {
+     "key": "vision_adapter_280",
+     "subgraph": 1,
+     "ops": 15,
+     "tensors": 21,
+     "inputs": [
+      [
+       "soft_tokens",
+       "FLOAT32[1, 280, 768]"
+      ]
+     ],
+     "outputs": [
+      [
+       "mm_embedding",
+       "FLOAT32[1, 280, 2560]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 6,
+      "SUM": 2,
+      "ADD": 2,
+      "RESHAPE": 2,
+      "RSQRT": 2,
+      "FULLY_CONNECTED": 1
+     },
+     "composites": {}
+    },
+    {
+     "key": "vision_adapter_70",
+     "subgraph": 2,
+     "ops": 15,
+     "tensors": 21,
+     "inputs": [
+      [
+       "soft_tokens",
+       "FLOAT32[1, 70, 768]"
+      ]
+     ],
+     "outputs": [
+      [
+       "mm_embedding",
+       "FLOAT32[1, 70, 2560]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 6,
+      "SUM": 2,
+      "ADD": 2,
+      "RESHAPE": 2,
+      "RSQRT": 2,
+      "FULLY_CONNECTED": 1
+     },
+     "composites": {}
+    }
+   ],
+   "layer_table": ""
+  },
+  "9": {
+   "graph_bytes": 10868,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "FLOAT32": {
+     "inline": 10240,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 0
+    }
+   },
+   "signatures": [
+    {
+     "key": "eoi",
+     "subgraph": 0,
+     "ops": 0,
+     "tensors": 1,
+     "inputs": [],
+     "outputs": [
+      [
+       "eoi_embedding",
+       "FLOAT32[1, 1, 2560]"
+      ]
+     ],
+     "op_histogram": {},
+     "composites": {}
+    }
+   ],
+   "layer_table": ""
+  },
+  "10": {
+   "graph_bytes": 63088720,
+   "external_bytes": 2197937652,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "FLOAT32": {
+     "inline": 786480,
+     "external": 2223844,
+     "weights_section": 0,
+     "tensors": 349,
+     "per_channel": 0
+    },
+    "INT32": {
+     "inline": 1312,
+     "external": 257808,
+     "weights_section": 0,
+     "tensors": 157,
+     "per_channel": 0
+    },
+    "INT8": {
+     "inline": 0,
+     "external": 82575360,
+     "weights_section": 0,
+     "tensors": 85,
+     "per_channel": 85
+    },
+    "INT4": {
+     "inline": 0,
+     "external": 1945108480,
+     "weights_section": 0,
+     "tensors": 258,
+     "per_channel": 258
+    },
+    "INT2": {
+     "inline": 0,
+     "external": 167772160,
+     "weights_section": 0,
+     "tensors": 1,
+     "per_channel": 1
+    }
+   },
+   "signatures": [
+    {
+     "key": "decode",
+     "subgraph": 0,
+     "ops": 2749,
+     "tensors": 3567,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 1, 2560]"
+      ],
+      [
+       "input_pos",
+       "INT32[1]"
+      ],
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 1, 1, 32003]"
+      ],
+      [
+       "param_tensor",
+       "INT32[1, 1, 1, 7]"
+      ],
+      [
+       "per_layer_embeddings",
+       "FLOAT32[1, 1, 42, 256]"
+      ]
+     ],
+     "outputs": [
+      [
+       "activations",
+       "FLOAT32[1, 1, 2560]"
+      ],
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "logits",
+       "FLOAT32[1, 1, 262144]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 408,
+      "FULLY_CONNECTED": 344,
+      "DEQUANTIZE": 343,
+      "COMPOSITE:odml.rms_norm": 302,
+      "RESHAPE": 280,
+      "QUANTIZE": 253,
+      "ADD": 200,
+      "SLICE": 132,
+      "SELECT_V2": 85,
+      "COMPOSITE:odml.runtime_bmm": 84,
+      "GELU": 84,
+      "CONCATENATION": 70,
+      "SUB": 68,
+      "SOFTMAX": 42,
+      "COMPOSITE:odml.cache_update": 24,
+      "CAST": 7,
+      "REDUCE_MAX": 7,
+      "NOT_EQUAL": 4,
+      "GREATER_EQUAL": 2,
+      "LESS": 2,
+      "LOGICAL_AND": 2,
+      "SIN": 2,
+      "COS": 2,
+      "UNPACK": 1,
+      "TANH": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 302,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 302
+       },
+       "distinct": 1
+      },
+      "odml.cache_update": {
+       "count": 24,
+       "attribute_sets": {
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005997600965201855, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006118622608482838, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006215503439307213, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005788442213088274, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.00596147496253252, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 512, \"kv_cache_batch_size\": 2, \"scale_k\": 0.001090860809199512, \"scale_v\": 0.01785714365541935}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005761673673987389, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006011798977851868, \"scale_v\": 0.047244105488061905}": 1
+       },
+       "distinct": 24
+      },
+      "odml.runtime_bmm": {
+       "count": 84,
+       "attribute_sets": {
+        "{\"is_global\": false, \"is_src\": true, \"scale\": 0.047244105488061905}": 35,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.0059552486054599285}": 16,
+        "{\"is_global\": true, \"is_src\": true, \"scale\": 0.01785714365541935}": 7,
+        "{\"is_global\": true, \"is_src\": false, \"scale\": 0.001091228099539876}": 4,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005997600965201855}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006118622608482838}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006215503439307213}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005788442213088274}": 1
+       },
+       "distinct": 26
+      }
+     }
+    },
+    {
+     "key": "prefill_1024",
+     "subgraph": 1,
+     "ops": 1810,
+     "tensors": 2362,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 1024, 2560]"
+      ],
+      [
+       "input_pos",
+       "INT32[1024]"
+      ],
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 1, 1024, 32003]"
+      ],
+      [
+       "param_tensor",
+       "INT32[1, 1, 1, 7]"
+      ],
+      [
+       "per_layer_embeddings",
+       "FLOAT32[1, 1024, 42, 256]"
+      ]
+     ],
+     "outputs": [
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 273,
+      "FULLY_CONNECTED": 210,
+      "DEQUANTIZE": 210,
+      "COMPOSITE:odml.rms_norm": 188,
+      "RESHAPE": 158,
+      "QUANTIZE": 140,
+      "ADD": 124,
+      "SLICE": 96,
+      "TRANSPOSE": 94,
+      "CONCATENATION": 51,
+      "SUB": 49,
+      "SELECT_V2": 47,
+      "COMPOSITE:odml.runtime_bmm": 46,
+      "GELU": 46,
+      "COMPOSITE:odml.cache_update": 24,
+      "SOFTMAX": 23,
+      "CAST": 9,
+      "REDUCE_MAX": 7,
+      "NOT_EQUAL": 4,
+      "GREATER_EQUAL": 2,
+      "LESS": 2,
+      "LOGICAL_AND": 2,
+      "SIN": 2,
+      "COS": 2,
+      "UNPACK": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 188,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 188
+       },
+       "distinct": 1
+      },
+      "odml.cache_update": {
+       "count": 24,
+       "attribute_sets": {
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005997600965201855, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006118622608482838, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006215503439307213, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005788442213088274, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.00596147496253252, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 512, \"kv_cache_batch_size\": 2, \"scale_k\": 0.001090860809199512, \"scale_v\": 0.01785714365541935}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005761673673987389, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006011798977851868, \"scale_v\": 0.047244105488061905}": 1
+       },
+       "distinct": 24
+      },
+      "odml.runtime_bmm": {
+       "count": 46,
+       "attribute_sets": {
+        "{\"is_global\": false, \"is_src\": true, \"scale\": 0.047244105488061905}": 20,
+        "{\"is_global\": true, \"is_src\": true, \"scale\": 0.01785714365541935}": 3,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005997600965201855}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006118622608482838}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006215503439307213}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005788442213088274}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.00596147496253252}": 1,
+        "{\"is_global\": true, \"is_src\": false, \"scale\": 0.001090860809199512}": 1
+       },
+       "distinct": 25
+      }
+     }
+    },
+    {
+     "key": "prefill_128",
+     "subgraph": 2,
+     "ops": 1810,
+     "tensors": 2362,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 128, 2560]"
+      ],
+      [
+       "input_pos",
+       "INT32[128]"
+      ],
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 1, 128, 32003]"
+      ],
+      [
+       "param_tensor",
+       "INT32[1, 1, 1, 7]"
+      ],
+      [
+       "per_layer_embeddings",
+       "FLOAT32[1, 128, 42, 256]"
+      ]
+     ],
+     "outputs": [
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 273,
+      "FULLY_CONNECTED": 210,
+      "DEQUANTIZE": 210,
+      "COMPOSITE:odml.rms_norm": 188,
+      "RESHAPE": 158,
+      "QUANTIZE": 140,
+      "ADD": 124,
+      "SLICE": 96,
+      "TRANSPOSE": 94,
+      "CONCATENATION": 51,
+      "SUB": 49,
+      "SELECT_V2": 47,
+      "COMPOSITE:odml.runtime_bmm": 46,
+      "GELU": 46,
+      "COMPOSITE:odml.cache_update": 24,
+      "SOFTMAX": 23,
+      "CAST": 9,
+      "REDUCE_MAX": 7,
+      "NOT_EQUAL": 4,
+      "GREATER_EQUAL": 2,
+      "LESS": 2,
+      "LOGICAL_AND": 2,
+      "SIN": 2,
+      "COS": 2,
+      "UNPACK": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 188,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 188
+       },
+       "distinct": 1
+      },
+      "odml.cache_update": {
+       "count": 24,
+       "attribute_sets": {
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005997600965201855, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006118622608482838, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006215503439307213, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005788442213088274, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.00596147496253252, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 512, \"kv_cache_batch_size\": 2, \"scale_k\": 0.001090860809199512, \"scale_v\": 0.01785714365541935}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005761673673987389, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006011798977851868, \"scale_v\": 0.047244105488061905}": 1
+       },
+       "distinct": 24
+      },
+      "odml.runtime_bmm": {
+       "count": 46,
+       "attribute_sets": {
+        "{\"is_global\": false, \"is_src\": true, \"scale\": 0.047244105488061905}": 20,
+        "{\"is_global\": true, \"is_src\": true, \"scale\": 0.01785714365541935}": 3,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005997600965201855}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006118622608482838}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006215503439307213}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005788442213088274}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.00596147496253252}": 1,
+        "{\"is_global\": true, \"is_src\": false, \"scale\": 0.001090860809199512}": 1
+       },
+       "distinct": 25
+      }
+     }
+    },
+    {
+     "key": "verify",
+     "subgraph": 3,
+     "ops": 2838,
+     "tensors": 3659,
+     "inputs": [
+      [
+       "embeddings",
+       "FLOAT32[1, 4, 2560]"
+      ],
+      [
+       "input_pos",
+       "INT32[4]"
+      ],
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 1, 4, 32003]"
+      ],
+      [
+       "param_tensor",
+       "INT32[1, 1, 1, 7]"
+      ],
+      [
+       "per_layer_embeddings",
+       "FLOAT32[1, 4, 42, 256]"
+      ]
+     ],
+     "outputs": [
+      [
+       "activations",
+       "FLOAT32[1, 4, 2560]"
+      ],
+      [
+       "kv_cache_k_0",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_1",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_10",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_11",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_12",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_13",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_14",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_15",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_16",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_17",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_18",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_19",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_2",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_20",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_21",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_3",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_4",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_5",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_k_6",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_7",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_8",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_9",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_v_0",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_1",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_10",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_11",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_12",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_13",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_14",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_15",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_16",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_17",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_18",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_19",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_2",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_20",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_21",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_3",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_4",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_5",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "kv_cache_v_6",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_7",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_8",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_9",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "logits",
+       "FLOAT32[1, 4, 262144]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 408,
+      "FULLY_CONNECTED": 344,
+      "DEQUANTIZE": 343,
+      "COMPOSITE:odml.rms_norm": 302,
+      "QUANTIZE": 253,
+      "RESHAPE": 234,
+      "ADD": 200,
+      "SLICE": 133,
+      "TRANSPOSE": 132,
+      "SELECT_V2": 85,
+      "COMPOSITE:odml.runtime_bmm": 84,
+      "GELU": 84,
+      "CONCATENATION": 70,
+      "SUB": 68,
+      "SOFTMAX": 42,
+      "COMPOSITE:odml.cache_update": 24,
+      "CAST": 9,
+      "REDUCE_MAX": 7,
+      "NOT_EQUAL": 4,
+      "GREATER_EQUAL": 2,
+      "LESS": 2,
+      "LOGICAL_AND": 2,
+      "SIN": 2,
+      "COS": 2,
+      "UNPACK": 1,
+      "TANH": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 302,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 302
+       },
+       "distinct": 1
+      },
+      "odml.cache_update": {
+       "count": 24,
+       "attribute_sets": {
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005997600965201855, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006118622608482838, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006215503439307213, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005788442213088274, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.00596147496253252, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 512, \"kv_cache_batch_size\": 2, \"scale_k\": 0.001090860809199512, \"scale_v\": 0.01785714365541935}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.005761673673987389, \"scale_v\": 0.047244105488061905}": 1,
+        "{\"cache_size\": 32003, \"head_size\": 256, \"kv_cache_batch_size\": 2, \"scale_k\": 0.006011798977851868, \"scale_v\": 0.047244105488061905}": 1
+       },
+       "distinct": 24
+      },
+      "odml.runtime_bmm": {
+       "count": 84,
+       "attribute_sets": {
+        "{\"is_global\": false, \"is_src\": true, \"scale\": 0.047244105488061905}": 35,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.0059552486054599285}": 16,
+        "{\"is_global\": true, \"is_src\": true, \"scale\": 0.01785714365541935}": 7,
+        "{\"is_global\": true, \"is_src\": false, \"scale\": 0.001091228099539876}": 4,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005997600965201855}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006118622608482838}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.006215503439307213}": 1,
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.005788442213088274}": 1
+       },
+       "distinct": 26
+      }
+     }
+    }
+   ],
+   "layer_table": "\n== attention per layer: layer, kind, K, V, K scale, V scale, mask, softmax shape\n    0 local  kv_cache_k_0   kv_cache_v_0   0.005998 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    1 local  kv_cache_k_1   kv_cache_v_1   0.006119 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    2 local  kv_cache_k_2   kv_cache_v_2   0.006216 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    3 local  kv_cache_k_3   kv_cache_v_3   0.005788 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    4 local  kv_cache_k_4   kv_cache_v_4   0.005961 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    5 global kv_cache_k_5   kv_cache_v_5   0.001091 0.017857 mask                     [1, 2, 4, 32003]\n    6 local  kv_cache_k_6   kv_cache_v_6   0.005762 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    7 local  kv_cache_k_7   kv_cache_v_7   0.006012 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    8 local  kv_cache_k_8   kv_cache_v_8   0.005680 0.047244 window(input_pos)        [1, 2, 4, 32003]\n    9 local  kv_cache_k_9   kv_cache_v_9   0.005719 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   10 local  kv_cache_k_10  kv_cache_v_10  0.005765 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   11 global kv_cache_k_11  kv_cache_v_11  0.001147 0.017857 mask                     [1, 2, 4, 32003]\n   12 local  kv_cache_k_12  kv_cache_v_12  0.005685 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   13 local  kv_cache_k_13  kv_cache_v_13  0.005771 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   14 local  kv_cache_k_14  kv_cache_v_14  0.005713 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   15 local  kv_cache_k_15  kv_cache_v_15  0.005989 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   16 local  kv_cache_k_16  kv_cache_v_16  0.005929 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   17 global kv_cache_k_17  kv_cache_v_17  0.001110 0.017857 mask                     [1, 2, 4, 32003]\n   18 local  kv_cache_k_18  kv_cache_v_18  0.005737 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   19 local  kv_cache_k_19  kv_cache_v_19  0.005869 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   20 local  kv_cache_k_20  kv_cache_v_20  0.005907 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   21 local  kv_cache_k_21  kv_cache_v_21  0.006027 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   22 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   23 global kv_cache_k_23  kv_cache_v_23  0.001091 0.017857 mask                     [1, 2, 4, 32003]\n   24 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   25 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   26 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   27 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   28 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   29 global kv_cache_k_23  kv_cache_v_23  0.001091 0.017857 mask                     [1, 2, 4, 32003]\n   30 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   31 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   32 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   33 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   34 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   35 global kv_cache_k_23  kv_cache_v_23  0.001091 0.017857 mask                     [1, 2, 4, 32003]\n   36 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   37 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   38 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   39 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   40 local  kv_cache_k_22  kv_cache_v_22  0.005955 0.047244 window(input_pos)        [1, 2, 4, 32003]\n   41 global kv_cache_k_23  kv_cache_v_23  0.001091 0.017857 mask                     [1, 2, 4, 32003]\n"
+  },
+  "11": {
+   "graph_bytes": 45339152,
+   "external_bytes": 0,
+   "weights_section_bytes": 0,
+   "weights_by_type": {
+    "FLOAT32": {
+     "inline": 218680,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 39,
+     "per_channel": 0
+    },
+    "INT32": {
+     "inline": 256604,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 28,
+     "per_channel": 0
+    },
+    "INT8": {
+     "inline": 4587520,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 10,
+     "per_channel": 10
+    },
+    "INT4": {
+     "inline": 36700160,
+     "external": 0,
+     "weights_section": 0,
+     "tensors": 13,
+     "per_channel": 13
+    }
+   },
+   "signatures": [
+    {
+     "key": "mtp_drafter",
+     "subgraph": 0,
+     "ops": 242,
+     "tensors": 338,
+     "inputs": [
+      [
+       "activations",
+       "FLOAT32[1, 1, 5120]"
+      ],
+      [
+       "input_pos",
+       "INT32[1]"
+      ],
+      [
+       "kv_cache_k_22",
+       "INT8[1, 2, 32003, 256]"
+      ],
+      [
+       "kv_cache_k_23",
+       "INT8[1, 2, 32003, 512]"
+      ],
+      [
+       "kv_cache_v_22",
+       "INT8[1, 2, 256, 32003]"
+      ],
+      [
+       "kv_cache_v_23",
+       "INT8[1, 2, 512, 32003]"
+      ],
+      [
+       "mask",
+       "BOOL[1, 1, 1, 32003]"
+      ],
+      [
+       "param_tensor",
+       "INT32[1, 1, 1, 7]"
+      ]
+     ],
+     "outputs": [
+      [
+       "logits",
+       "FLOAT32[1, 1, 262144]"
+      ],
+      [
+       "projected_activations",
+       "FLOAT32[1, 1, 2560]"
+      ]
+     ],
+     "op_histogram": {
+      "MUL": 40,
+      "RESHAPE": 28,
+      "FULLY_CONNECTED": 23,
+      "DEQUANTIZE": 22,
+      "COMPOSITE:odml.rms_norm": 21,
+      "ADD": 19,
+      "QUANTIZE": 18,
+      "SELECT_V2": 9,
+      "SLICE": 8,
+      "COMPOSITE:odml.runtime_bmm": 8,
+      "REDUCE_MAX": 7,
+      "SUB": 6,
+      "CONCATENATION": 6,
+      "CAST": 4,
+      "NOT_EQUAL": 4,
+      "SOFTMAX": 4,
+      "GELU": 4,
+      "GREATER_EQUAL": 2,
+      "LESS": 2,
+      "LOGICAL_AND": 2,
+      "SIN": 2,
+      "COS": 2,
+      "TANH": 1
+     },
+     "composites": {
+      "odml.rms_norm": {
+       "count": 21,
+       "attribute_sets": {
+        "{\"epsilon\": 9.999999974752427e-07}": 21
+       },
+       "distinct": 1
+      },
+      "odml.runtime_bmm": {
+       "count": 8,
+       "attribute_sets": {
+        "{\"is_global\": false, \"is_src\": false, \"scale\": 0.00596147496253252}": 3,
+        "{\"is_global\": false, \"is_src\": true, \"scale\": 0.047244105488061905}": 3,
+        "{\"is_global\": true, \"is_src\": false, \"scale\": 0.001090860809199512}": 1,
+        "{\"is_global\": true, \"is_src\": true, \"scale\": 0.01785714365541935}": 1
+       },
+       "distinct": 4
+      }
+     }
+    }
+   ],
+   "layer_table": ""
+  }
+ }
+}

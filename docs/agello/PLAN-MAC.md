@@ -27,7 +27,7 @@ upstream after TensorFlow's pin) is patched and passes on the iPhone. `ui` passe
 | P5 T11 caches | Done: one weight copy for every size, a new size loads in 1.2–1.4 s; Agello uses one folder | tracks/T11-caches.md |
 | P6 T7 sampler | FP16 greedy path landed (within noise); open Metal sampler parked: sampling is 0.2% of a step | tracks/T7-sampler.md |
 | P7 T6 dispatch | Measured: 1.2% run overhead without MTP, GPU 98.5% busy; parked | tracks/T6-dispatch.md |
-| P8 Upstream | Drafts for 3 LiteRT-LM issues and 3 LiteRT/ML Drift PRs; none posted | upstream/ |
+| P8 Upstream | Drafts for 4 LiteRT-LM issues, 3 LiteRT pull requests and 1 ML Drift pull request; none posted | upstream/ |
 
 ## P1. Ship readiness (make the iPhone run the last step)
 

@@ -1,6 +1,7 @@
 # iPhone results, 2026-10-15
 
-iPhone 17 Pro (A19 Pro, Apple10, 12 GB, app limit 6.4 GB, iOS 27.0.1), our build `2e54fbdb9ca9`
+iPhone 17 Pro (A19 Pro, Apple10, 12 GB, app limit 8.6 GB, iOS 27.0.1; some report headers read
+6.4 GB, an early reading, see ../../../reference/facts.md#f-071), our build `2e54fbdb9ca9`
 unless named otherwise. Read with ../../VALIDATION.md. Home-directory paths replaced by `~`.
 
 | File | What |

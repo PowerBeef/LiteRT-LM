@@ -59,4 +59,5 @@ The window needs a start next to the existing end bound:
 - `conv_apple_mpp` does the same for prefill: the PV K-loop starts at the window, with the weight
   offset advanced, and QK runs zero K iterations for tiles below it.
 
-Commits on `agello-next` of https://github.com/PowerBeef/ml-drift: `6ae7c68`, `2184a7f`.
+Commits on `agello-next` of https://github.com/PowerBeef/ml-drift: `6ae7c68`, `2184a7f`, `15fa9e2`
+(the window in `ConvWaveMatrix`).

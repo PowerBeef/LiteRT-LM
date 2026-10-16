@@ -1,0 +1,291 @@
+{
+  "comment": "Research groups: who writes which pages with which claim-ID prefixes. Read by tools/agello-docs/claims.py.",
+  "groups": {
+    "lm-engine": {
+      "run": "A",
+      "area": "A1",
+      "pages": [
+        "litert-lm/engine-and-sessions.md"
+      ],
+      "prefixes": [
+        "LM-ENG"
+      ]
+    },
+    "lm-executors": {
+      "run": "A",
+      "area": "A1",
+      "pages": [
+        "litert-lm/executors.md"
+      ],
+      "prefixes": [
+        "LM-EXE"
+      ]
+    },
+    "lm-conversation": {
+      "run": "A",
+      "area": "A2",
+      "pages": [
+        "litert-lm/conversation.md"
+      ],
+      "prefixes": [
+        "LM-CNV"
+      ]
+    },
+    "lm-components": {
+      "run": "A",
+      "area": "A2",
+      "pages": [
+        "litert-lm/components.md",
+        "litert-lm/file-format.md"
+      ],
+      "prefixes": [
+        "LM-CMP",
+        "LM-FMT"
+      ]
+    },
+    "lm-api": {
+      "run": "A",
+      "area": "A3",
+      "pages": [
+        "litert-lm/c-api.md",
+        "litert-lm/swift-api.md"
+      ],
+      "prefixes": [
+        "LM-CAPI",
+        "LM-SWIFT"
+      ]
+    },
+    "lm-build": {
+      "run": "A",
+      "area": "A3",
+      "pages": [
+        "litert-lm/build-and-release.md",
+        "versions.md",
+        "other-platforms.md"
+      ],
+      "prefixes": [
+        "LM-BLD",
+        "LM-VER",
+        "LM-OTH"
+      ]
+    },
+    "rt-runtime": {
+      "run": "A",
+      "area": "A4",
+      "pages": [
+        "litert/runtime.md",
+        "litert/cpu-xnnpack.md",
+        "other-platforms.md"
+      ],
+      "prefixes": [
+        "RT-RUN",
+        "RT-CPU",
+        "RT-OTH"
+      ]
+    },
+    "rt-delegate": {
+      "run": "A",
+      "area": "A4",
+      "pages": [
+        "litert/ml-drift-delegate.md"
+      ],
+      "prefixes": [
+        "RT-DLG"
+      ]
+    },
+    "md-architecture": {
+      "run": "A",
+      "area": "A5",
+      "pages": [
+        "ml-drift/architecture.md",
+        "ml-drift/metal-backend.md",
+        "other-platforms.md"
+      ],
+      "prefixes": [
+        "MD-ARC",
+        "MD-MTL",
+        "MD-OTH"
+      ]
+    },
+    "md-kernels": {
+      "run": "A",
+      "area": "A5",
+      "pages": [
+        "ml-drift/kernels.md"
+      ],
+      "prefixes": [
+        "MD-KRN"
+      ]
+    },
+    "mod-e4b": {
+      "run": "B",
+      "area": "B1",
+      "pages": [
+        "models/gemma4-e4b.md"
+      ],
+      "prefixes": [
+        "MOD-E4B"
+      ]
+    },
+    "mod-e2b": {
+      "run": "B",
+      "area": "B1",
+      "pages": [
+        "models/gemma4-e2b.md"
+      ],
+      "prefixes": [
+        "MOD-E2B"
+      ]
+    },
+    "mod-family": {
+      "run": "B",
+      "area": "B2",
+      "pages": [
+        "models/gemma4-family.md",
+        "models/tokenizer-and-chat-format.md"
+      ],
+      "prefixes": [
+        "MOD-FAM",
+        "MOD-TOK"
+      ]
+    },
+    "mod-embedding": {
+      "run": "B",
+      "area": "B2",
+      "pages": [
+        "models/embeddinggemma.md"
+      ],
+      "prefixes": [
+        "MOD-EMB"
+      ]
+    },
+    "apple": {
+      "run": "B",
+      "area": "B3",
+      "pages": [
+        "apple-platform.md"
+      ],
+      "prefixes": [
+        "APL"
+      ]
+    },
+    "ours": {
+      "run": "B",
+      "area": "B4",
+      "pages": [
+        "patches.md",
+        "contributing.md"
+      ],
+      "prefixes": [
+        "OUR",
+        "PRC"
+      ]
+    },
+    "x-stack": {
+      "run": "C",
+      "area": "C1",
+      "pages": [
+        "stack.md",
+        "tools.md",
+        "maintenance.md"
+      ],
+      "prefixes": [
+        "X-STK",
+        "X-TLS",
+        "X-MNT"
+      ]
+    },
+    "x-memory": {
+      "run": "C",
+      "area": "C1",
+      "pages": [
+        "memory.md",
+        "troubleshooting.md"
+      ],
+      "prefixes": [
+        "X-MEM",
+        "X-TRB"
+      ]
+    },
+    "x-config": {
+      "run": "C",
+      "area": "C1",
+      "pages": [
+        "configuration.md"
+      ],
+      "prefixes": [
+        "X-CFG"
+      ]
+    },
+    "x-facts": {
+      "run": "C",
+      "area": "C2",
+      "pages": [
+        "facts.md",
+        "glossary.md",
+        "_work/contradictions.md"
+      ],
+      "prefixes": [
+        "X-FCT",
+        "X-CON"
+      ]
+    },
+    "x-gaps": {
+      "run": "C",
+      "area": "C4",
+      "pages": [
+        "README.md",
+        "apple-platform.md",
+        "configuration.md",
+        "contributing.md",
+        "facts.md",
+        "glossary.md",
+        "litert-lm/build-and-release.md",
+        "litert-lm/c-api.md",
+        "litert-lm/components.md",
+        "litert-lm/conversation.md",
+        "litert-lm/engine-and-sessions.md",
+        "litert-lm/executors.md",
+        "litert-lm/file-format.md",
+        "litert-lm/swift-api.md",
+        "litert/cpu-xnnpack.md",
+        "litert/ml-drift-delegate.md",
+        "litert/runtime.md",
+        "maintenance.md",
+        "memory.md",
+        "ml-drift/architecture.md",
+        "ml-drift/kernels.md",
+        "ml-drift/metal-backend.md",
+        "models/embeddinggemma.md",
+        "models/gemma4-e2b.md",
+        "models/gemma4-e4b.md",
+        "models/gemma4-family.md",
+        "models/tokenizer-and-chat-format.md",
+        "other-platforms.md",
+        "patches.md",
+        "stack.md",
+        "tools.md",
+        "troubleshooting.md",
+        "versions.md"
+      ],
+      "prefixes": [
+        "X-GAP"
+      ]
+    },
+    "x-gemma-ai": {
+      "run": "C",
+      "area": "C6",
+      "pages": [
+        "models/gemma4-family.md",
+        "models/tokenizer-and-chat-format.md",
+        "litert-lm/executors.md",
+        "facts.md",
+        "README.md",
+        "_work/contradictions.md"
+      ],
+      "prefixes": [
+        "X-GAI"
+      ]
+    }
+  }
+}

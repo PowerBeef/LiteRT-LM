@@ -1,5 +1,9 @@
 # Draft pull request (LiteRT): direct host copies for linear Metal buffers
 
+> **Before posting:** Google's LiteRT `bd326784` (2026-10-14) now writes converted data in place on
+> unlock for shared Metal buffers. Rework the write rows to show what ours adds: no conversion
+> (reference/patches.md, OUR-011).
+
 **Title:** Metal buffer handler: copy linear-buffer tensors straight to and from shared storage
 
 **Body:**
