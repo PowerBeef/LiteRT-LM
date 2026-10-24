@@ -14,6 +14,7 @@
 
 #include "c/conversation.h"
 
+#include <atomic>
 #include <memory>
 #include <optional>
 #include <string>
@@ -39,11 +40,24 @@
 #include "runtime/engine/engine_settings.h"
 #include "runtime/executor/llm_executor_settings.h"
 
-namespace {
+namespace litert::lm::c {
 
 absl::AnyInvocable<void(absl::StatusOr<litert::lm::Message>)>
 CreateConversationCallback(LiteRtLmStreamCallback callback, void* user_data) {
-  return [callback, user_data](absl::StatusOr<litert::lm::Message> message) {
+  // Agello (4.1b): one final chunk per send. A rejected tool call reports up to
+  // three errors, with generation going on in between, and a binding frees its
+  // per-send state on the first final; everything after it is dropped here.
+  auto ended = std::make_shared<std::atomic<bool>>(false);
+  return [callback, user_data,
+          ended](absl::StatusOr<litert::lm::Message> message) {
+    if (ended->load(std::memory_order_acquire)) {
+      return;
+    }
+    if (!message.ok() || message->empty()) {
+      if (ended->exchange(true, std::memory_order_acq_rel)) {
+        return;
+      }
+    }
     if (!message.ok()) {
       std::string error_str = message.status().ToString();
       LiteRtLmStreamChunk chunk;
@@ -69,6 +83,10 @@ CreateConversationCallback(LiteRtLmStreamCallback callback, void* user_data) {
     }
   };
 }
+
+}  // namespace litert::lm::c
+
+namespace {
 
 std::optional<litert::lm::DataProcessorArguments> GetDataProcessorArguments(
     const litert::lm::Conversation* conversation,
@@ -661,7 +679,8 @@ LiteRtLmStatusCode litert_lm_conversation_send_message_stream(
       conversation->conversation.get(), extra_context, optional_args);
 
   absl::Status status = conversation->conversation->SendMessageAsync(
-      json_message, CreateConversationCallback(callback, callback_data),
+      json_message,
+      litert::lm::c::CreateConversationCallback(callback, callback_data),
       std::move(litert_lm_optional_args));
 
   if (!status.ok()) {

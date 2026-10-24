@@ -19,13 +19,27 @@
 #include <optional>
 #include <string>
 
+#include "absl/functional/any_invocable.h"  // from @com_google_absl
+#include "absl/status/statusor.h"  // from @com_google_absl
 #include "c/conversation.h"
+#include "c/engine.h"
 #include "runtime/components/constrained_decoding/no_repeat_ngram_config.h"
 #include "runtime/components/constrained_decoding/repetition_penalty_config.h"
 #include "runtime/components/constrained_decoding/suppress_tokens_config.h"
 #include "runtime/conversation/conversation.h"
+#include "runtime/conversation/io_types.h"
 #include "runtime/conversation/thinking_config.h"
 #include "runtime/engine/engine_settings.h"
+
+namespace litert::lm::c {
+
+// Adapts a send's stream to `callback`: each message is a JSON text chunk, and
+// the end of the stream or an error is the final chunk. Agello (4.1b): there is
+// one final chunk per send; anything after it is dropped.
+absl::AnyInvocable<void(absl::StatusOr<litert::lm::Message>)>
+CreateConversationCallback(LiteRtLmStreamCallback callback, void* user_data);
+
+}  // namespace litert::lm::c
 
 struct LiteRtLmThinkingConfig {
   litert::lm::ThinkingConfig thinking_config;

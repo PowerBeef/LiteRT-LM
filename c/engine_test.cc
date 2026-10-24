@@ -1821,6 +1821,63 @@ void StreamCallback(void* callback_data, const LiteRtLmStreamChunk* chunk) {
   }
 }
 
+// Agello (4.1b): every chunk a send's callback receives.
+struct RecordedChunks {
+  std::vector<std::string> texts;
+  std::vector<std::string> errors;
+  int finals = 0;
+};
+
+void RecordChunk(void* callback_data, const LiteRtLmStreamChunk* chunk) {
+  auto* recorded = static_cast<RecordedChunks*>(callback_data);
+  if (const char* text =
+          GetOk<const char*>(litert_lm_stream_chunk_get_text, chunk)) {
+    recorded->texts.push_back(text);
+  }
+  if (const char* error =
+          GetOk<const char*>(litert_lm_stream_chunk_get_error, chunk)) {
+    recorded->errors.push_back(error);
+  }
+  if (GetOk<bool>(litert_lm_stream_chunk_is_final, chunk)) {
+    ++recorded->finals;
+  }
+}
+
+// A rejected tool call fails the message parse while the reply streams, again
+// for the text left at the end, and again for the complete message, and
+// generation goes on in between: one send, three errors.
+TEST(ConversationCallbackTest, EndsTheStreamOnce) {
+  RecordedChunks recorded;
+  auto on_message =
+      litert::lm::c::CreateConversationCallback(RecordChunk, &recorded);
+  litert::lm::Message text = {{"role", "assistant"}, {"content", "Hello"}};
+  on_message(text);
+  on_message(absl::InvalidArgumentError("Failed to parse the tool call."));
+  on_message(text);
+  on_message(absl::InvalidArgumentError("Failed to parse the tool call."));
+  on_message(absl::InvalidArgumentError("Failed to parse the tool call."));
+  on_message(litert::lm::Message());
+
+  EXPECT_EQ(recorded.texts.size(), 1);
+  ASSERT_EQ(recorded.errors.size(), 1);
+  EXPECT_THAT(recorded.errors[0], HasSubstr("Failed to parse the tool call."));
+  EXPECT_EQ(recorded.finals, 1);
+}
+
+TEST(ConversationCallbackTest, NothingAfterTheEndOfTheStream) {
+  RecordedChunks recorded;
+  auto on_message =
+      litert::lm::c::CreateConversationCallback(RecordChunk, &recorded);
+  on_message(litert::lm::Message({{"role", "assistant"}, {"content", "Hi"}}));
+  on_message(litert::lm::Message());
+  on_message(absl::CancelledError("Task cancelled"));
+  on_message(litert::lm::Message());
+
+  EXPECT_EQ(recorded.texts.size(), 1);
+  EXPECT_THAT(recorded.errors, IsEmpty());
+  EXPECT_EQ(recorded.finals, 1);
+}
+
 TEST(EngineCTest, GenerateContentStream) {
   const std::string task_path = GetTestdataPath(
       "litert_lm/runtime/testdata/test_lm_new_metadata.task");

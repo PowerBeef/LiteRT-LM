@@ -232,6 +232,10 @@ cc_library(
     visibility = ["//visibility:public"],
     deps = [
         ":conversation_headers",
+        ":engine_headers",
+        "@com_google_absl//absl/functional:any_invocable",
+        "@com_google_absl//absl/status:statusor",
+        "//runtime/conversation:io_types",
         "//runtime/components/constrained_decoding:no_repeat_ngram_config",
         "//runtime/components/constrained_decoding:repetition_penalty_config",
         "//runtime/components/constrained_decoding:suppress_tokens_config",
