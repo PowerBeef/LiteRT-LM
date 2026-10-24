@@ -62,6 +62,18 @@ inline int CountAcceptedPrefix(absl::Span<const int> verifier_ids,
   return accepted;
 }
 
+// Agello (4.1a): whether an MTP round stays inside a KV cache of `num_entries`
+// positions (0 to num_entries - 1). Its verify run covers `num_draft_steps + 1`
+// positions, from `current_step - 1` when the drafter is primed (the previous
+// step was an MTP round) and from `current_step` after a priming decode step.
+// Nothing downstream bounds them: past the end, the verify mask fill writes
+// beyond its tensor.
+inline bool MtpRoundFitsCache(int current_step, bool primed,
+                              int num_draft_steps, int num_entries) {
+  const int first_position = primed ? current_step - 1 : current_step;
+  return first_position + num_draft_steps < num_entries;
+}
+
 // Statistics of the last successful `LlmLiteRtMtpDrafter::Draft()` call.
 struct MtpRoundStats {
   int drafted_tokens = 0;        // Number of draft steps (γ).
@@ -121,6 +133,9 @@ class LlmLiteRtMtpDrafter {
       StateInterface& state, const Constraint* constraint = nullptr);
 
   const MtpRoundStats& last_round_stats() const { return last_round_stats_; }
+
+  // Draft tokens per round; the verify run covers one more position.
+  int num_draft_steps() const { return num_draft_steps_; }
 
  private:
   LlmLiteRtMtpDrafter(

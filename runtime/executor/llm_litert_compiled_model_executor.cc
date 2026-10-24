@@ -1330,6 +1330,19 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
   } else {
     enable_mtp_drafter = (mtp_drafter_ != nullptr);
   }
+  // Re-prime the drafter with a plain decode step unless the previous step
+  // was a successful MTP round.
+  const bool drafter_is_primed =
+      llm_context_->runtime_state().ran_decode && was_mtp_primed;
+  // Agello (4.1a): near the end of the KV cache a round would verify positions
+  // past it; decode a plain step there instead.
+  if (enable_mtp_drafter && state_ != nullptr &&
+      !MtpRoundFitsCache(llm_context_->runtime_state().current_step,
+                         drafter_is_primed, mtp_drafter_->num_draft_steps(),
+                         state_->GetNumEntries())) {
+    enable_mtp_drafter = false;
+    AGELLO_COUNT(kMtpSkippedAtCacheEnd);
+  }
 
   std::vector<std::vector<int>> output_tokens_vector;
   if (!enable_mtp_drafter) {
@@ -1356,10 +1369,6 @@ LlmLiteRtCompiledModelExecutorBase::Decode(
   } else {
     const absl::Time round_start = absl::Now();
     absl::Duration priming_time = absl::ZeroDuration();
-    // Re-prime the drafter with a plain decode step unless the previous step
-    // was a successful MTP round.
-    const bool drafter_is_primed =
-        llm_context_->runtime_state().ran_decode && was_mtp_primed;
     // MTP keeps an internal state of the last time it was called and will
     // use those projected activations to kick off the next draft steps. As
     // such, we need to do a single decode step on the first decode call after

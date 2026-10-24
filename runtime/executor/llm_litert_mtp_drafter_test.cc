@@ -257,5 +257,30 @@ TEST(LlmLiteRtMtpDrafterTest,
   EXPECT_EQ(CountAcceptedPrefix(short_verifier, drafted), 2);
 }
 
+// Agello (4.1a): a 32-position cache (0 to 31) and three draft steps, as E4B's
+// drafter has, so a round verifies four positions.
+TEST(LlmLiteRtMtpDrafterTest, MtpRoundFitsCacheWhenPrimed) {
+  // Primed: positions current_step - 1 to current_step + 2.
+  EXPECT_TRUE(MtpRoundFitsCache(/*current_step=*/29, /*primed=*/true,
+                                /*num_draft_steps=*/3, /*num_entries=*/32));
+  EXPECT_FALSE(MtpRoundFitsCache(30, true, 3, 32));  // 29 to 32.
+  // Decode continues while current_step < 32: 30 to 33 is the farthest.
+  EXPECT_FALSE(MtpRoundFitsCache(31, true, 3, 32));
+}
+
+TEST(LlmLiteRtMtpDrafterTest, MtpRoundFitsCacheAfterPriming) {
+  // After a priming step: positions current_step to current_step + 3.
+  EXPECT_TRUE(MtpRoundFitsCache(/*current_step=*/28, /*primed=*/false,
+                                /*num_draft_steps=*/3, /*num_entries=*/32));
+  EXPECT_FALSE(MtpRoundFitsCache(29, false, 3, 32));  // 29 to 32.
+  // A prefill that filled the cache: 32 to 35.
+  EXPECT_FALSE(MtpRoundFitsCache(32, false, 3, 32));
+}
+
+TEST(LlmLiteRtMtpDrafterTest, MtpRoundFitsCacheFarFromTheEnd) {
+  EXPECT_TRUE(MtpRoundFitsCache(1, false, 3, 8192));
+  EXPECT_TRUE(MtpRoundFitsCache(4000, true, 3, 8192));
+}
+
 }  // namespace
 }  // namespace litert::lm
