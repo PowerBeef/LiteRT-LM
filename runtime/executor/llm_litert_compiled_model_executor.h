@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <random>
 #include <string>
 #include <utility>
 #include <vector>
@@ -167,6 +168,10 @@ class LlmLiteRtCompiledModelExecutorBase : public LlmExecutor {
   // uses the internally stored `logits_data_type_`.
   absl::Status InitializeSampler(
       std::optional<ActivationDataType> logits_data_type = std::nullopt);
+
+  // Agello (4.1c): points the sampler at the active context's sampler
+  // parameters and random state, when they aren't the ones it uses already.
+  absl::Status SyncSamplerWithContext();
 
   // Profiling APIs.
   absl::Status StartProfiling() override;
@@ -430,6 +435,9 @@ class LlmLiteRtCompiledModelExecutorBase : public LlmExecutor {
   std::unique_ptr<Sampler> sampler_;
   int gpu_sampler_max_top_k_ = 0;
   bool sampler_handles_input_ = true;
+  // Agello (4.1c): the context parameters and random state the sampler uses.
+  std::optional<proto::SamplerParameters> sampler_params_;
+  std::shared_ptr<std::default_random_engine> sampler_rand_gen_;
 
   // Extra input tensors to swap for decode when sampler handles input tensors.
   TensorBuffer decode_prev_input_pos_;

@@ -58,6 +58,7 @@ enum Level : int { kOff = 0, kCounters = 1, kSpans = 2, kTrace = 3, kDeep = 4 };
   X(kEmbeddingLookups, "embedding_lookups")                 \
   X(kSamplerGpu, "sampler_gpu")                             \
   X(kSamplerCpu, "sampler_cpu")                             \
+  X(kSamplerUpdates, "sampler_updates")                     \
   X(kLogitMasks, "logit_masks")                             \
   X(kKvCopies, "kv_copies")                                 \
   X(kKvCopyBytes, "kv_copy_bytes")                          \

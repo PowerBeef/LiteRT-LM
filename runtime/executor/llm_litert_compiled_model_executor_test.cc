@@ -639,6 +639,38 @@ class FakeSamplerWithInputHandling : public Sampler {
   int inference_called_count_ = 0;
 };
 
+// Agello (4.1c): records the configurations the executor gives its sampler.
+class FakeRecordingSampler : public Sampler {
+ public:
+  struct Update {
+    proto::SamplerParameters params;
+    std::shared_ptr<std::default_random_engine> rand_gen;
+  };
+
+  absl::Status SampleToIdAndScoreBuffer(const TensorBuffer& logits_tensor,
+                                        TensorBuffer& ids_tensor,
+                                        TensorBuffer* scores_tensor) override {
+    LITERT_ASSIGN_OR_RETURN(auto lock_and_addr,
+                            TensorBufferScopedLock::Create(
+                                ids_tensor, TensorBuffer::LockMode::kWrite));
+    int* ptr = static_cast<int*>(const_cast<void*>(lock_and_addr.second));
+    ptr[0] = 1;
+    return absl::OkStatus();
+  }
+
+  absl::Status UpdateConfig(
+      const proto::SamplerParameters& sampler_params, int batch_size,
+      std::shared_ptr<std::default_random_engine> rand_gen) override {
+    updates_.push_back({sampler_params, std::move(rand_gen)});
+    return absl::OkStatus();
+  }
+
+  const std::vector<Update>& updates() const { return updates_; }
+
+ private:
+  std::vector<Update> updates_;
+};
+
 class TestableLlmLiteRtCompiledModelExecutorStatic
     : public LlmLiteRtCompiledModelExecutorStatic {
  public:
@@ -825,6 +857,84 @@ TEST(LlmLiteRtCompiledModelExecutorStaticTest,
   ASSERT_EQ(output_tokens.size(), 1);
   ASSERT_EQ(output_tokens[0].size(), 1);
   EXPECT_EQ(output_tokens[0][0], 0);
+}
+
+// Agello (4.1c): the sampler takes each context's parameters and random state:
+// a chat, a helper conversation in between, then the chat again.
+TEST(LlmLiteRtCompiledModelExecutorStaticTest, SamplerFollowsTheActiveContext) {
+  auto model_path =
+      std::filesystem::path(::testing::SrcDir()) / kTestStaticModelPath;
+  ASSERT_OK_AND_ASSIGN(
+      auto model_resources,
+      CreateExecutorModelResourcesLitertLm(model_path.string()));
+  ASSERT_OK_AND_ASSIGN(auto model_assets,
+                       ModelAssets::Create(model_path.string()));
+  ASSERT_OK_AND_ASSIGN(
+      auto executor_settings,
+      LlmExecutorSettings::CreateDefault(model_assets, Backend::CPU));
+  executor_settings.SetCacheDir(":nocache");
+  executor_settings.SetMaxNumTokens(kMaxNumTokens);
+  ::litert::lm::CpuConfig config;
+  config.number_of_threads = kNumThreads;
+  executor_settings.SetBackendConfig(config);
+  LITERT_ASSERT_OK_AND_ASSIGN(
+      auto env, Environment::Create(std::vector<Environment::Option>()));
+  ASSERT_OK_AND_ASSIGN(auto executor,
+                       LlmLiteRtCompiledModelExecutorStatic::Create(
+                           executor_settings, env, *model_resources));
+  ASSERT_NE(executor, nullptr);
+  auto sampler = std::make_unique<FakeRecordingSampler>();
+  const FakeRecordingSampler* recorder = sampler.get();
+  TestableLlmLiteRtCompiledModelExecutorStatic::SetSamplerForTest(
+      executor.get(), std::move(sampler));
+  auto prefill = [&executor]() {
+    ExecutorInputs inputs;
+    const std::vector<int> input_tokens = {1, 2, 0};
+    auto input_tokens_buffer =
+        CopyToTensorBuffer<int>(absl::MakeSpan(input_tokens), {1, 3});
+    inputs.SetTextData(ExecutorTextData(std::move(*input_tokens_buffer)));
+    return executor->Prefill(inputs);
+  };
+
+  RuntimeConfig chat_config;
+  proto::SamplerParameters chat_params;
+  chat_params.set_type(proto::SamplerParameters::TOP_P);
+  chat_params.set_k(40);
+  chat_params.set_p(0.95f);
+  chat_params.set_temperature(1.0f);
+  chat_params.set_seed(7);
+  chat_config.sampler_params = chat_params;
+  ASSERT_OK_AND_ASSIGN(auto chat,
+                       executor->CreateNewContext(std::nullopt, chat_config));
+  const auto chat_rand_gen = chat->runtime_state().rand_gen;
+  ASSERT_OK(executor->RestoreContext(std::move(chat)));
+  ASSERT_OK(prefill());
+  ASSERT_OK(executor->Decode());
+  ASSERT_OK(executor->Decode());
+  // One update for the chat, none for its second step.
+  ASSERT_EQ(recorder->updates().size(), 1);
+  EXPECT_EQ(recorder->updates()[0].params.k(), 40);
+  EXPECT_EQ(recorder->updates()[0].rand_gen, chat_rand_gen);
+  ASSERT_OK_AND_ASSIGN(auto saved_chat, executor->CloneContext());
+
+  // A helper without sampler parameters samples greedily, from its own state.
+  ASSERT_OK_AND_ASSIGN(auto helper,
+                       executor->CreateNewContext(std::nullopt, RuntimeConfig()));
+  const auto helper_rand_gen = helper->runtime_state().rand_gen;
+  ASSERT_OK(executor->RestoreContext(std::move(helper)));
+  ASSERT_OK(prefill());
+  ASSERT_OK(executor->Decode());
+  ASSERT_EQ(recorder->updates().size(), 2);
+  EXPECT_EQ(recorder->updates()[1].params.k(), 1);
+  EXPECT_NE(recorder->updates()[1].rand_gen, chat_rand_gen);
+  EXPECT_EQ(recorder->updates()[1].rand_gen, helper_rand_gen);
+
+  // Back to the chat: its parameters, and its random state where it was.
+  ASSERT_OK(executor->RestoreContext(std::move(saved_chat)));
+  ASSERT_OK(executor->Decode());
+  ASSERT_EQ(recorder->updates().size(), 3);
+  EXPECT_EQ(recorder->updates()[2].params.k(), 40);
+  EXPECT_EQ(recorder->updates()[2].rand_gen, chat_rand_gen);
 }
 
 TEST(LlmLiteRtCompiledModelExecutorStaticTest, ConstrainedDecodeTest) {

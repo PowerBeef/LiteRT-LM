@@ -353,6 +353,33 @@ absl::Status InitializeAuxiliaryExecutorComponents(
   return absl::OkStatus();
 }
 
+// The sampler parameters a context samples with: its own, or greedy (top-p
+// with k 1) when it has none.
+proto::SamplerParameters EffectiveSamplerParams(
+    const RuntimeConfig& runtime_config) {
+  proto::SamplerParameters sampler_params;
+  if (runtime_config.sampler_params.has_value()) {
+    sampler_params = runtime_config.sampler_params.value();
+  }
+  if (sampler_params.type() == proto::SamplerParameters::TYPE_UNSPECIFIED) {
+    sampler_params.set_type(proto::SamplerParameters::TOP_P);
+    sampler_params.set_k(1);
+    sampler_params.set_p(0.0f);
+    sampler_params.set_temperature(1.0f);
+    sampler_params.set_seed(0);
+  }
+  return sampler_params;
+}
+
+// Agello (4.1c): whether two parameter sets sample alike. The seed only seeds
+// a context's random state, which is compared on its own.
+bool SameSampling(const proto::SamplerParameters& a,
+                  const proto::SamplerParameters& b) {
+  return a.type() == b.type() && a.k() == b.k() && a.p() == b.p() &&
+         a.temperature() == b.temperature() &&
+         a.compute_exact_log_probs() == b.compute_exact_log_probs();
+}
+
 }  // namespace
 
 absl::Status LlmLiteRtCompiledModelExecutorBase::CreatePrefillInputBuffers(
@@ -1730,17 +1757,8 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::InitializeSampler(
   if (llm_context_->runtime_config().output_heads.has_value()) {
     output_heads = llm_context_->runtime_config().output_heads.value();
   }
-  proto::SamplerParameters sampler_params;
-  if (llm_context_->runtime_config().sampler_params.has_value()) {
-    sampler_params = llm_context_->runtime_config().sampler_params.value();
-  }
-  if (sampler_params.type() == proto::SamplerParameters::TYPE_UNSPECIFIED) {
-    sampler_params.set_type(proto::SamplerParameters::TOP_P);
-    sampler_params.set_k(1);
-    sampler_params.set_p(0.0f);
-    sampler_params.set_temperature(1.0f);
-    sampler_params.set_seed(0);
-  }
+  proto::SamplerParameters sampler_params =
+      EffectiveSamplerParams(llm_context_->runtime_config());
 
   gpu_sampler_max_top_k_ = sampler_params.k();
 
@@ -1842,6 +1860,38 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::SetSamplerInputHandling(
           : nullptr);
 }
 
+// Agello (4.1c): the executor made one sampler, from the first context that
+// sampled, and kept it for every context: on an engine whose first reply was a
+// default (greedy) one, a conversation's sampler parameters never applied, and
+// a helper conversation drew from the chat's random stream. Each context has
+// its parameters and a random state seeded with its seed (CreateNewContext);
+// the sampler now takes the active context's before sampling. It isn't
+// rebuilt, so the logits type stays; a sampler that runs decode on its own
+// inputs (sampler_handles_input_) keeps its configuration, as before.
+absl::Status LlmLiteRtCompiledModelExecutorBase::SyncSamplerWithContext() {
+  if (sampler_ == nullptr || sampler_handles_input_) {
+    return absl::OkStatus();
+  }
+  proto::SamplerParameters sampler_params =
+      EffectiveSamplerParams(llm_context_->runtime_config());
+  const auto& rand_gen = llm_context_->runtime_state().rand_gen;
+  if (sampler_params_.has_value() &&
+      SameSampling(*sampler_params_, sampler_params) &&
+      sampler_rand_gen_ == rand_gen) {
+    return absl::OkStatus();
+  }
+  int output_heads = 1;
+  if (llm_context_->runtime_config().output_heads.has_value()) {
+    output_heads = llm_context_->runtime_config().output_heads.value();
+  }
+  ABSL_RETURN_IF_ERROR(
+      sampler_->UpdateConfig(sampler_params, output_heads, rand_gen));
+  sampler_params_ = std::move(sampler_params);
+  sampler_rand_gen_ = rand_gen;
+  AGELLO_COUNT(kSamplerUpdates);
+  return absl::OkStatus();
+}
+
 absl::Status LlmLiteRtCompiledModelExecutorBase::SampleLogits(
     const TensorBuffer& logits, TensorBuffer& ids_tensor) {
   if (sampler_ == nullptr) {
@@ -1859,6 +1909,7 @@ absl::Status LlmLiteRtCompiledModelExecutorBase::SampleLogits(
 
     ABSL_RETURN_IF_ERROR(InitializeSampler(logits_data_type));
   }
+  ABSL_RETURN_IF_ERROR(SyncSamplerWithContext());
 
   if (sampler_handles_input_) {
     ABSL_RETURN_IF_ERROR(SwapSamplerInputTensors());
