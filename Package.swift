@@ -18,8 +18,9 @@ import PackageDescription
 let package = Package(
   name: "LiteRTLM",
   platforms: [
-    .iOS(.v15),
-    .macOS(.v12),
+    // Agello: the slices are built for iOS 27 and macOS 27 (agello/BUILD).
+    .iOS("27.0"),
+    .macOS("27.0"),
   ],
   products: [
     .library(
